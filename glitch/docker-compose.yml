@@ -1,0 +1,11 @@
+services:
+
+  frontend:
+    build: ./frontend
+    container_name: glitch_frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend/app:/app
+    tty: true
+    stdin_open: true
