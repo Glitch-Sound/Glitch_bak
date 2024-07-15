@@ -1,11 +1,23 @@
 services:
 
-  frontend:
-    build: ./frontend
-    container_name: glitch_frontend
+  # frontend:
+  #   build: ./frontend
+  #   container_name: glitch_frontend
+  #   ports:
+  #     - "5173:5173"
+  #   volumes:
+  #     - ./frontend/app:/app
+  #   tty: true
+  #   stdin_open: true
+  #   depends_on: 
+  #     - backend
+
+  backend:
+    build: ./backend
+    container_name: glitch_backend
     ports:
-      - "5173:5173"
+      - "8000:8000"
     volumes:
-      - ./frontend/app:/app
+      - ./backend/app:/app
     tty: true
     stdin_open: true
