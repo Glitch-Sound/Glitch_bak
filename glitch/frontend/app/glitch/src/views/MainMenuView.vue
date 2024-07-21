@@ -3,21 +3,21 @@
 <template>
   <v-navigation-drawer>
     <v-sheet>
-      <p>Hoge 1</p>
-      <p>Hoge 2</p>
-      <p>Hoge 3</p>
-      <p>Hoge 4</p>
-      <p>Hoge 5</p>
+      <v-btn prepend-icon="mdi-plus-circle">Event</v-btn>
+
+      <p>xxx</p>
+      <p>xxx</p>
+      <p>xxx</p>
     </v-sheet>
 
     <v-divider :thickness="3"></v-divider>
 
     <v-sheet>
-      <p>Hoge 1</p>
-      <p>Hoge 2</p>
-      <p>Hoge 3</p>
-      <p>Hoge 4</p>
-      <p>Hoge 5</p>
+      <v-btn prepend-icon="mdi-plus-circle">Filter</v-btn>
+
+      <p>xxx</p>
+      <p>xxx</p>
+      <p>xxx</p>
     </v-sheet>
   </v-navigation-drawer>
 </template>
