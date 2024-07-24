@@ -9,6 +9,7 @@ from enum import Enum
 import sys
 sys.path.append('~/app')
 
+from schema import item as schema_item
 from model.item import Item
 from model.project import Project
 from model.event import Event
@@ -104,14 +105,18 @@ def getItems(db: Session, rid_project: int):
         raise e
 
 
-def createProject(db: Session, rid_user: int, title: str, detail: str, result: str, datetime_start: str, datetime_end: str):
+def createProject(db: Session, target:schema_item.ProjectCreate):
     try:
         current_datetime = getCurrentDatetime()
 
         item = Item(
-            rid_users=rid_user, type=ItemType.PROJECT,
-            title=title, detail=detail, result=result,
-            datetime_entry=current_datetime, datetime_update=current_datetime
+            rid_users=target.rid_user,
+            type=ItemType.PROJECT,
+            title=target.title,
+            detail=target.detail,
+            result=target.result,
+            datetime_entry=current_datetime,
+            datetime_update=current_datetime
         )
         db.begin()
         db.add(item)
@@ -119,24 +124,32 @@ def createProject(db: Session, rid_user: int, title: str, detail: str, result: s
 
         addition = Project(
             rid_items=item.rid,
-            datetime_start=datetime_start, datetime_end=datetime_end
+            datetime_start=target.datetime_start,
+            datetime_end=target.datetime_end
         )
         db.add(addition)
         db.commit()
+        db.refresh(item)
+        return item
 
     except Exception as e:
         db.rollback()
         raise e
     
 
-def createEvent(db: Session, rid_project: int, rid_user: int, title: str, detail: str, result: str, datetime_end: str):
+def createEvent(db: Session, target:schema_item.EventCreate):
     try:
         current_datetime = getCurrentDatetime()
 
         item = Item(
-            rid_items=rid_project, rid_users=rid_user, type=ItemType.EVENT,
-            title=title, detail=detail, result=result,
-            datetime_entry=current_datetime, datetime_update=current_datetime
+            rid_items=target.rid_project,
+            rid_users=target.rid_user,
+            type=ItemType.EVENT,
+            title=target.title,
+            detail=target.detail,
+            result=target.result,
+            datetime_entry=current_datetime,
+            datetime_update=current_datetime
         )
         db.begin()
         db.add(item)
@@ -144,24 +157,31 @@ def createEvent(db: Session, rid_project: int, rid_user: int, title: str, detail
 
         addition = Event(
             rid_items=item.rid,
-            datetime_end=datetime_end
+            datetime_end=target.datetime_end
         )
         db.add(addition)
         db.commit()
+        db.refresh(item)
+        return item
 
     except Exception as e:
         db.rollback()
         raise e
 
 
-def createFeature(db: Session, rid_event: int, rid_user: int, title: str, detail: str, result: str):
+def createFeature(db: Session, target:schema_item.FeatureCreate):
     try:
         current_datetime = getCurrentDatetime()
 
         item = Item(
-            rid_items=rid_event, rid_users=rid_user, type=ItemType.FEATURE,
-            title=title, detail=detail, result=result,
-            datetime_entry=current_datetime, datetime_update=current_datetime
+            rid_items=target.rid_event,
+            rid_users=target.rid_user,
+            type=ItemType.FEATURE,
+            title=target.title,
+            detail=target.detail,
+            result=target.result,
+            datetime_entry=current_datetime,
+            datetime_update=current_datetime
         )
         db.begin()
         db.add(item)
@@ -172,20 +192,27 @@ def createFeature(db: Session, rid_event: int, rid_user: int, title: str, detail
         )
         db.add(addition)
         db.commit()
+        db.refresh(item)
+        return item
 
     except Exception as e:
         db.rollback()
         raise e
 
 
-def createStory(db: Session, rid_feature: int, rid_user: int, title: str, detail: str, result: str, datetime_start: str, datetime_end: str):
+def createStory(db: Session, target:schema_item.StoryCreate):
     try:
         current_datetime = getCurrentDatetime()
 
         item = Item(
-            rid_items=rid_feature, rid_users=rid_user, type=ItemType.STORY,
-            title=title, detail=detail, result=result,
-            datetime_entry=current_datetime, datetime_update=current_datetime
+            rid_items=target.rid_feature,
+            rid_users=target.rid_user,
+            type=ItemType.STORY,
+            title=target.title,
+            detail=target.detail,
+            result=target.result,
+            datetime_entry=current_datetime,
+            datetime_update=current_datetime
         )
         db.begin()
         db.add(item)
@@ -193,24 +220,32 @@ def createStory(db: Session, rid_feature: int, rid_user: int, title: str, detail
 
         addition = Story(
             rid_items=item.rid,
-            datetime_start=datetime_start, datetime_end=datetime_end
+            datetime_start=target.datetime_start,
+            datetime_end=target.datetime_end
         )
         db.add(addition)
         db.commit()
+        db.refresh(item)
+        return item
 
     except Exception as e:
         db.rollback()
         raise e
 
 
-def createTask(db: Session, rid_story: int, rid_user: int, title: str, detail: str, result: str, type: int, workload: int, number_completed: int, number_total: int):
+def createTask(db: Session, target:schema_item.TaskCreate):
     try:
         current_datetime = getCurrentDatetime()
 
         item = Item(
-            rid_items=rid_story, rid_users=rid_user, type=ItemType.TASK,
-            title=title, detail=detail, result=result,
-            datetime_entry=current_datetime, datetime_update=current_datetime
+            rid_items=target.rid_story,
+            rid_users=target.rid_user,
+            type=ItemType.TASK,
+            title=target.title,
+            detail=target.detail,
+            result=target.result,
+            datetime_entry=current_datetime,
+            datetime_update=current_datetime
         )
         db.begin()
         db.add(item)
@@ -218,10 +253,15 @@ def createTask(db: Session, rid_story: int, rid_user: int, title: str, detail: s
 
         addition = Task(
             rid_items=item.rid,
-            type=type, workload=workload, number_completed=number_completed
+            type=type,
+            workload=target.workload,
+            number_completed=target.number_completed,
+            number_total=target.number_total
         )
         db.add(addition)
         db.commit()
+        db.refresh(item)
+        return item
 
     except Exception as e:
         db.rollback()

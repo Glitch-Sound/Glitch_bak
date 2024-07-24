@@ -25,18 +25,17 @@ def get_users(db: Session = Depends(get_db)):
 def get_users(rid_users: int, db: Session = Depends(get_db)):
     try:
         result = crud_user.getUser(db, rid_users)
+        print(result)
         return result
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f'error: {str(e)}')
 
 
-@router.post('/user/', response_model=schema_user.UserCreate)
-def create_user(target=schema_user.UserCreate, db: Session = Depends(get_db)):
+@router.post('/user/', response_model=schema_user.User)
+def create_user(target:schema_user.UserCreate, db: Session = Depends(get_db)):
     try:
-        result = crud_user.createUser(
-            db, name=target.name, password=target.password, is_admin=target.is_admin
-        )
+        result = crud_user.createUser(db, target)
         return result
 
     except Exception as e:

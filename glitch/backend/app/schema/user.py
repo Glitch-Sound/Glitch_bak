@@ -3,7 +3,8 @@ from pydantic import BaseModel  # type: ignore
 
 class User(BaseModel):
     rid: int
-    name: str
+    name_user: str
+    name_display: str
     password: str
     is_admin: int
 
@@ -12,7 +13,8 @@ class User(BaseModel):
 
 
 class UserCreate(BaseModel):
-    name: str
+    name_user: str
+    name_display: str
     password: str
     is_admin: int
 
