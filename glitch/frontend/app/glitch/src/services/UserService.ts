@@ -1,12 +1,24 @@
 import http from '@/services/ApiClient'
-import type { User } from '@/types/User'
+import type { User, UserCreate } from '@/types/User'
 
-export const getUsers = async (): Promise<User[]> => {
-  try {
-    const response = await http.get<User[]>('/api/users')
-    return response.data
-  } catch (error) {
-    console.error('Error fetching users:', error)
-    throw new Error('Failed to fetch users')
+class UserService {
+  public async getUsers(): Promise<User[]> {
+    try {
+      const response = await http.get<User[]>('/api/users')
+      return response.data
+    } catch (error) {
+      throw new Error('error: ${error}')
+    }
+  }
+
+  public async createUser(user: UserCreate): Promise<User> {
+    try {
+      const response = await http.post<User>('/api/user', user)
+      return response.data
+    } catch (error) {
+      throw new Error('error: ${error}')
+    }
   }
 }
+
+export default UserService

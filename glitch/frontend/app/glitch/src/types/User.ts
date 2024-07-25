@@ -1,6 +1,13 @@
 export interface User {
   rid: number
+  user: string
   name: string
-  name_display: string
+  is_admin: boolean
+}
+
+export interface UserCreate {
+  user: string
+  password: string
+  name: string
   is_admin: boolean
 }
