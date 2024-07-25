@@ -111,7 +111,7 @@ def createProject(db: Session, target:schema_item.ProjectCreate):
 
         item = Item(
             rid_users=target.rid_user,
-            type=ItemType.PROJECT,
+            type=ItemType.PROJECT.value,
             title=target.title,
             detail=target.detail,
             result=target.result,
@@ -144,7 +144,7 @@ def createEvent(db: Session, target:schema_item.EventCreate):
         item = Item(
             rid_items=target.rid_project,
             rid_users=target.rid_user,
-            type=ItemType.EVENT,
+            type=ItemType.EVENT.value,
             title=target.title,
             detail=target.detail,
             result=target.result,
@@ -176,7 +176,7 @@ def createFeature(db: Session, target:schema_item.FeatureCreate):
         item = Item(
             rid_items=target.rid_event,
             rid_users=target.rid_user,
-            type=ItemType.FEATURE,
+            type=ItemType.FEATURE.value,
             title=target.title,
             detail=target.detail,
             result=target.result,
@@ -207,7 +207,7 @@ def createStory(db: Session, target:schema_item.StoryCreate):
         item = Item(
             rid_items=target.rid_feature,
             rid_users=target.rid_user,
-            type=ItemType.STORY,
+            type=ItemType.STORY.value,
             title=target.title,
             detail=target.detail,
             result=target.result,
@@ -240,7 +240,7 @@ def createTask(db: Session, target:schema_item.TaskCreate):
         item = Item(
             rid_items=target.rid_story,
             rid_users=target.rid_user,
-            type=ItemType.TASK,
+            type=ItemType.TASK.value,
             title=target.title,
             detail=target.detail,
             result=target.result,
