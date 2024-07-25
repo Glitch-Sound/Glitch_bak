@@ -33,9 +33,9 @@ def getUser(db: Session, rid_users: int):
 def createUser(db: Session, target: schema_user.UserCreate):
     try:
         user = User(
-             name_user=target.name_user,
-             name_display=target.name_display,
+             user=target.user,
              password=target.password,
+             name=target.name,
              is_admin=target.is_admin
         )
         db.begin()

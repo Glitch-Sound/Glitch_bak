@@ -8,6 +8,7 @@ from database import get_db
 from schema import user as schema_user
 from crud import user as crud_user
 
+
 router = APIRouter()
 
 
@@ -25,7 +26,6 @@ def get_users(db: Session = Depends(get_db)):
 def get_users(rid_users: int, db: Session = Depends(get_db)):
     try:
         result = crud_user.getUser(db, rid_users)
-        print(result)
         return result
 
     except Exception as e:

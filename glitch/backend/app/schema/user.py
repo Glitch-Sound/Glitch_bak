@@ -3,9 +3,8 @@ from pydantic import BaseModel  # type: ignore
 
 class User(BaseModel):
     rid: int
-    name_user: str
-    name_display: str
-    password: str
+    user: str
+    name: str
     is_admin: int
 
     class Config:
@@ -13,9 +12,9 @@ class User(BaseModel):
 
 
 class UserCreate(BaseModel):
-    name_user: str
-    name_display: str
+    user: str
     password: str
+    name: str
     is_admin: int
 
     class Config:
