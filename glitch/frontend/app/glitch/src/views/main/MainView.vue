@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import MainMenuView from '@/views/MainMenuView.vue'
-import MainContentView from '@/views/MainContentView.vue'
+import MainMenuView from '@/views/main/MainMenuView.vue'
+import MainContentView from '@/views/main/MainContentView.vue'
 </script>
 
 <template>

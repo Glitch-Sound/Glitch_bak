@@ -6,7 +6,6 @@ import { createPinia } from 'pinia'
 import App from '@/App.vue'
 import router from '@/router'
 
-// Vuetify
 import 'vuetify/styles'
 import '@mdi/font/css/materialdesignicons.css'
 import { createVuetify } from 'vuetify'
