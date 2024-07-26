@@ -11,11 +11,11 @@ onMounted(() => {
 })
 
 const users_manager = computed(() => {
-  return store_user.users.filter((user) => user.is_admin === 1)
+  return store_user.users.filter((user) => user.is_admin === true)
 })
 
 const users_member = computed(() => {
-  return store_user.users.filter((user) => user.is_admin === 0)
+  return store_user.users.filter((user) => user.is_admin === false)
 })
 
 const dialog = ref(false)

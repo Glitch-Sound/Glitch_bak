@@ -1,27 +1,35 @@
 <script setup lang="ts">
-import { ref, onMounted, watchEffect } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import ItemService from '@/services/ItemService'
+import { ref, onMounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import useUserStore from '@/stores/UserStore'
+import useProjectStore from '@/stores/ItemStore'
 import type { Project } from '@/types/Item'
 
-const title = ref('Glitch')
+const store_user = useUserStore()
+const store_project = useProjectStore()
+onMounted(() => {
+  store_user.fetchUsers()
+  store_project.fetchProjects()
+})
 
-const projects = ref<Project[]>([])
-const fetchProjects = async () => {
-  try {
-    const service_item = new ItemService()
-    projects.value = await service_item.getProjects()
-  } catch (err) {
-    console.error('Error:', err)
-  }
-}
+const title = ref('')
+const link_project = ref('/')
+const link_disabled = ref(true)
 
 const route = useRoute()
-const router = ref(useRouter())
-watchEffect(async () => {
-  await router.value.isReady()
-  const { rid } = route.params
-  console.log('ID:', rid)
+watch([() => route.params.rid, () => store_project.projects.length], () => {
+  title.value =
+    store_project.projects.find((project) => project.rid == Number(route.params.rid))?.title ||
+    'Glitch'
+
+  if (route.params.rid) {
+    store_project.setSelectedProjectRID(Number(route.params.rid))
+  }
+})
+
+watch([() => store_project.selected_rid_project], () => {
+  link_project.value = '/project/' + store_project.selected_rid_project
+  link_disabled.value = false
 })
 
 const projectDialog = ref(false)
@@ -30,11 +38,9 @@ const toggleDialog = () => {
 }
 
 const handleSubmit = async (project: Project) => {
-  console.log('ID:', project.rid)
+  store_project.setSelectedProjectRID(project.rid)
   projectDialog.value = false
 }
-
-onMounted(fetchProjects)
 </script>
 
 <template>
@@ -49,8 +55,8 @@ onMounted(fetchProjects)
       </v-btn>
     </router-link>
 
-    <router-link to="/">
-      <v-btn icon>
+    <router-link :to="link_project">
+      <v-btn icon :disabled="link_disabled">
         <v-icon>mdi-view-list</v-icon>
       </v-btn>
     </router-link>
@@ -58,6 +64,7 @@ onMounted(fetchProjects)
     <v-btn icon disabled>
       <v-icon>mdi-account-tag</v-icon>
     </v-btn>
+
     <v-btn icon disabled>
       <v-icon>mdi-chart-scatter-plot-hexbin</v-icon>
     </v-btn>
@@ -84,10 +91,10 @@ onMounted(fetchProjects)
     <v-card>
       <v-card-title class="headline">Project</v-card-title>
       <v-card-text>
-        <ul v-if="projects.length">
-          <li v-for="project in projects" :key="project.rid">
+        <ul v-if="store_project.projects.length">
+          <li v-for="project in store_project.projects" :key="project.rid">
             {{ project.rid }}, {{ project.state }}, {{ project.risk }},
-            <router-link to="/project/1" @click="handleSubmit(project)">{{
+            <router-link to="/project/" + {{ project.rid }} @click="handleSubmit(project)">{{
               project.title
             }}</router-link
             >, {{ project.detail }}, {{ project.result }}, {{ project.datetime_entry }},

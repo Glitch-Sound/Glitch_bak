@@ -34,7 +34,7 @@ const handleSubmit = async (data: ProjectCreate) => {
     <v-container>
       <div>
         Projects
-        <v-btn icon size="x-small" @click="openDialog(true)">
+        <v-btn icon size="x-small" @click="openDialog()">
           <v-icon>mdi-plus-circle</v-icon>
         </v-btn>
       </div>
