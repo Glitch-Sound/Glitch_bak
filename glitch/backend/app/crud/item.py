@@ -114,7 +114,6 @@ def createProject(db: Session, target:schema_item.ProjectCreate):
             type=ItemType.PROJECT.value,
             title=target.title,
             detail=target.detail,
-            result=target.result,
             datetime_entry=current_datetime,
             datetime_update=current_datetime
         )
@@ -147,7 +146,6 @@ def createEvent(db: Session, target:schema_item.EventCreate):
             type=ItemType.EVENT.value,
             title=target.title,
             detail=target.detail,
-            result=target.result,
             datetime_entry=current_datetime,
             datetime_update=current_datetime
         )
@@ -179,7 +177,6 @@ def createFeature(db: Session, target:schema_item.FeatureCreate):
             type=ItemType.FEATURE.value,
             title=target.title,
             detail=target.detail,
-            result=target.result,
             datetime_entry=current_datetime,
             datetime_update=current_datetime
         )
@@ -210,7 +207,6 @@ def createStory(db: Session, target:schema_item.StoryCreate):
             type=ItemType.STORY.value,
             title=target.title,
             detail=target.detail,
-            result=target.result,
             datetime_entry=current_datetime,
             datetime_update=current_datetime
         )
@@ -243,7 +239,6 @@ def createTask(db: Session, target:schema_item.TaskCreate):
             type=ItemType.TASK.value,
             title=target.title,
             detail=target.detail,
-            result=target.result,
             datetime_entry=current_datetime,
             datetime_update=current_datetime
         )

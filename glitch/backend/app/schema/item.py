@@ -30,7 +30,6 @@ class ProjectCreate(BaseModel):
     rid_user: int
     title: str
     detail: str
-    result: str
     datetime_start: str
     datetime_end: str
 
@@ -43,7 +42,6 @@ class EventCreate(BaseModel):
     rid_user: int
     title: str
     detail: str
-    result: str
     datetime_end: str
 
     class Config:
@@ -55,7 +53,6 @@ class FeatureCreate(BaseModel):
     rid_user: int
     title: str
     detail: str
-    result: str
 
     class Config:
         orm_mode = True
@@ -66,7 +63,6 @@ class StoryCreate(BaseModel):
     rid_user: int
     title: str
     detail: str
-    result: str
     datetime_start: str
     datetime_end: str
 
@@ -79,7 +75,6 @@ class TaskCreate(BaseModel):
     rid_user: int
     title: str
     detail: str
-    result: str
     type: int
     workload: int
     number_completed: int
