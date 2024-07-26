@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
-import { useDialog, EVENT_TYPES } from '@/utils/Dialog'
+import { useDialog, EVENT_TYPES } from '@/components/dialog/BaseDialog'
 import type { UserCreate } from '@/types/User'
 
 const props = defineProps({
