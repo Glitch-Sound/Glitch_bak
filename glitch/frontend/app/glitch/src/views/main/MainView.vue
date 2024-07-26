@@ -2,7 +2,7 @@
 
 <template>
   <v-main>
-    <v-container> Glitch‚ÌŽg‚¢•û </v-container>
+    <v-container>Glitchã®ä½¿ã„æ–¹</v-container>
   </v-main>
 </template>
 

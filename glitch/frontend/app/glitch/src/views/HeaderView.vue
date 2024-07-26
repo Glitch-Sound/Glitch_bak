@@ -64,7 +64,7 @@ onMounted(fetchProjects)
 
     <v-spacer></v-spacer>
 
-    hogehoge
+    Guest
     <v-btn icon>
       <v-icon>mdi-account-circle</v-icon>
     </v-btn>

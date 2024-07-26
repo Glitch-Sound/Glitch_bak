@@ -16,7 +16,6 @@ const classBaseDiv = computed(() => ({
 </script>
 
 <template>
-  <!-- <div class="d-flex flex-column"> -->
   <div :class="classBaseDiv">
     <div class="d-flex flex-row align-baseline">
       <div>1234</div>
@@ -27,7 +26,7 @@ const classBaseDiv = computed(() => ({
 
       <v-spacer></v-spacer>
 
-      hogehoge
+      Guest
       <v-btn icon size="x-small">
         <v-icon>mdi-account-circle</v-icon>
       </v-btn>
