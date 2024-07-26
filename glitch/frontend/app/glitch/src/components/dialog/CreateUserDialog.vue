@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, watch, defineProps, defineEmits } from 'vue'
+import { defineProps } from 'vue'
+import { useDialog, EVENT_TYPES } from '@/utils/Dialog'
 
 const props = defineProps({
   showDialog: Boolean,
@@ -14,46 +15,13 @@ const props = defineProps({
   }
 })
 
-const emits = defineEmits(['update:showDialog', 'submit'])
+const emits = defineEmits([EVENT_TYPES.UPDATE_SHOW_DIALOG, EVENT_TYPES.SUBMIT])
 
-const localDialog = ref(props.showDialog)
-const valid = ref(false)
-const formData = ref({ ...props.formData })
-const formRef = ref()
-
-const rules = {
-  required: (value: string) => !!value || 'Required field'
-}
-
-const submitData = () => {
-  if (formRef.value.validate()) {
-    emits('submit', formData.value)
-    localDialog.value = false
-  }
-}
-
-watch(
-  () => props.showDialog,
-  (newValue) => {
-    localDialog.value = newValue
-  }
-)
-
-watch(localDialog, (newValue) => {
-  emits('update:showDialog', newValue)
-})
-
-watch(
-  () => props.formData,
-  (newData) => {
-    formData.value = { ...newData }
-  },
-  { immediate: true }
-)
+const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props, emits)
 </script>
 
 <template>
-  <v-dialog v-model="localDialog" persistent max-width="600px">
+  <v-dialog v-model="dialog" persistent max-width="600px">
     <v-card>
       <v-card-title>
         <span class="text-h5">Submit Data</span>
@@ -87,7 +55,7 @@ watch(
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn text @click="localDialog = false">Cancel</v-btn>
+        <v-btn text @click="dialog = false">Cancel</v-btn>
         <v-btn text @click="submitData">Submit</v-btn>
       </v-card-actions>
     </v-card>

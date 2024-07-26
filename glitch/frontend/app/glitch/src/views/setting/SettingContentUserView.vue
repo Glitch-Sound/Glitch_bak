@@ -9,39 +9,35 @@ const users_member = ref<User[]>([])
 const dialog = ref(false)
 const dialogFormData = ref({ is_admin: false })
 
-onMounted(async () => {
+const fetchUsers = async () => {
   try {
     const service_user = new UserService()
     const users = await service_user.getUsers()
 
-    users_manager.value = users.filter((user) => user.is_admin == true)
-    users_member.value = users.filter((user) => user.is_admin == false)
+    users_manager.value = users.filter((user) => user.is_admin)
+    users_member.value = users.filter((user) => !user.is_admin)
   } catch (err) {
     console.error('Error fetching users:', err)
   }
-})
+}
 
-const openDialog = (data: { is_admin: Boolean }) => {
-  dialogFormData.value = data
+const openDialog = (is_admin: boolean) => {
+  dialogFormData.value = { is_admin }
   dialog.value = true
 }
 
-const handleSubmit = (data: {
-  user: string
-  password: string
-  name: string
-  is_admin: Boolean
-}) => {
-  const service_user = new UserService()
-  service_user.createUser({
-    user: data.user,
-    password: data.password,
-    name: data.name,
-    is_admin: data.is_admin
-  })
-
-  dialog.value = false
+const handleSubmit = async (data: User) => {
+  try {
+    const service_user = new UserService()
+    await service_user.createUser(data)
+    await fetchUsers()
+    dialog.value = false
+  } catch (err) {
+    console.error('Error creating user:', err)
+  }
 }
+
+onMounted(fetchUsers)
 </script>
 
 <template>
@@ -49,12 +45,12 @@ const handleSubmit = (data: {
     <v-container>
       <div>
         Manager
-        <v-btn icon size="x-small" @click="openDialog({ is_admin: true })">
+        <v-btn icon size="x-small" @click="openDialog(true)">
           <v-icon>mdi-plus-circle</v-icon>
         </v-btn>
       </div>
       <div>
-        <ul v-if="0 < users_manager.length">
+        <ul v-if="users_manager.length">
           <li v-for="user in users_manager" :key="user.rid">
             {{ user.rid }}, {{ user.user }}, {{ user.name }}, {{ user.is_admin }}
           </li>
@@ -65,12 +61,12 @@ const handleSubmit = (data: {
     <v-container>
       <div>
         Member
-        <v-btn icon size="x-small" @click="openDialog({ is_admin: false })">
+        <v-btn icon size="x-small" @click="openDialog(false)">
           <v-icon>mdi-plus-circle</v-icon>
         </v-btn>
       </div>
       <div>
-        <ul v-if="0 < users_member.length">
+        <ul v-if="users_member.length">
           <li v-for="user in users_member" :key="user.rid">
             {{ user.rid }}, {{ user.user }}, {{ user.name }}, {{ user.is_admin }}
           </li>
