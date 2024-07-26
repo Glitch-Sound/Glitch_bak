@@ -7,6 +7,7 @@ export interface Item {
   rid: number
   type: number
   state: number
+  risk: number
   title: string
   detail: string
   result: string
@@ -27,6 +28,7 @@ export interface Item {
 export interface Project {
   rid: number
   state: number
+  risk: number
   title: string
   detail: string
   result: string
@@ -44,10 +46,3 @@ export interface ProjectCreate {
   datetime_start: string
   datetime_end: string
 }
-
-// // 文字列から Date へ変換
-// const dateString = '2024-07-26T12:34:56Z'
-// const dateObject = new Date(dateString)
-
-// // Date から文字列へ変換
-// const formattedDateString = dateObject.toISOString()

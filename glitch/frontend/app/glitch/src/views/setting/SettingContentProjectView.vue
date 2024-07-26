@@ -47,8 +47,9 @@ onMounted(fetchProjects)
       <div>
         <ul v-if="projects.length">
           <li v-for="project in projects" :key="project.rid">
-            {{ project.rid }}, {{ project.title }}, {{ project.detail }}, {{ project.result }},
-            {{ project.datetime_entry }}, {{ project.datetime_update }}, {{ project.name }},
+            {{ project.rid }}, {{ project.state }}, {{ project.risk }}, {{ project.title }},
+            {{ project.detail }}, {{ project.result }}, {{ project.datetime_entry }},
+            {{ project.datetime_update }}, {{ project.name }},
             {{ project.project_datetime_start }},{{ project.project_datetime_end }}
           </li>
         </ul>
