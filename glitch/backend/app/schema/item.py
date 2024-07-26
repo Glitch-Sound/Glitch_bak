@@ -30,6 +30,7 @@ class Item(BaseModel):
 class Project(BaseModel):
     rid: int
     state: int
+    risk: int
     title: str
     detail: str
     result: str
