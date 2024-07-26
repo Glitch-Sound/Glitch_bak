@@ -21,6 +21,16 @@ def get_items(rid_project: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail=f'error: {str(e)}')
 
 
+@router.get('/projects/', response_model=list[schema_item.Project])
+def get_items(db: Session = Depends(get_db)):
+    try:
+        result = crud_item.getProjects(db)
+        return result
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f'error: {str(e)}')
+
+
 @router.post('/project/', response_model=schema_item.Item)
 def create_project(target:schema_item.ProjectCreate, db: Session = Depends(get_db)):
     try:

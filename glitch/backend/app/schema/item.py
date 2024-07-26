@@ -26,6 +26,22 @@ class Item(BaseModel):
         orm_mode = True
 
 
+class Project(BaseModel):
+    rid: int
+    state: int
+    title: str
+    detail: str
+    result: str
+    datetime_entry: str
+    datetime_update: str
+    user_name: Optional[str] = None
+    project_datetime_start: Optional[str] = None
+    project_datetime_end: Optional[str] = None
+
+    class Config:
+        orm_mode = True
+
+
 class ProjectCreate(BaseModel):
     rid_user: int
     title: str

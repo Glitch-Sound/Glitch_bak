@@ -1,6 +1,7 @@
 from sqlalchemy import Text                     # type: ignore
 from sqlalchemy.orm import Session, aliased     # type: ignore
 from sqlalchemy.sql import func                 # type: ignore
+from sqlalchemy.sql import select               # type: ignore
 
 import pytz                                     # type: ignore
 from datetime import datetime
@@ -80,7 +81,7 @@ def getItems(db: Session, rid_project: int):
             query_recursive.c.result,
             query_recursive.c.datetime_entry,
             query_recursive.c.datetime_update,
-            User.name.label('user_name'),
+            User.name.label('name'),
             Project.datetime_start.label('project_datetime_start'),
             Project.datetime_end.label('project_datetime_end'),
             Event.datetime_end.label('event_datetime_end'),
@@ -89,8 +90,8 @@ def getItems(db: Session, rid_project: int):
             Task.type.label('task_type'),
             Task.workload.label('task_workload'),
             Task.number_completed.label('task_number_completed'),
-            Task.number_total.label('task_number_total')
-        ).outerjoin(User,  User.rid == query_recursive.c.rid_users)\
+            Task.number_total.label('task_number_total'))\
+        .outerjoin(User,  User.rid == query_recursive.c.rid_users)\
         .outerjoin(Project, Project.rid_items == query_recursive.c.rid)\
         .outerjoin(Event, Event.rid_items == query_recursive.c.rid)\
         .outerjoin(Feature, Feature.rid_items == query_recursive.c.rid)\
@@ -99,6 +100,30 @@ def getItems(db: Session, rid_project: int):
         .order_by(query_recursive.c.path)
 
         result = query_final.all()
+        return result
+
+    except Exception as e:
+        raise e
+
+
+def getProjects(db: Session):
+    try:
+        query = db.query(
+            Item.rid,
+            Item.state,
+            Item.title,
+            Item.detail,
+            Item.result,
+            Item.datetime_entry,
+            Item.datetime_update,
+            User.name.label('name'),
+            Project.datetime_start.label('project_datetime_start'),
+            Project.datetime_end.label('project_datetime_end'))\
+        .outerjoin(User,  User.rid == Item.rid_users)\
+        .outerjoin(Project, Project.rid_items == Item.rid)\
+        .order_by(Item.rid)
+         
+        result = query.all()
         return result
 
     except Exception as e:
