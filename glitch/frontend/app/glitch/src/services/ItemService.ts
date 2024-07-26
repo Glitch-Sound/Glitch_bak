@@ -1,10 +1,19 @@
 import http from '@/services/ApiClient'
-import type { Item, ProjectCreate } from '@/types/Item'
+import type { Item, Project, ProjectCreate } from '@/types/Item'
 
 class ItemService {
   public async getItems(): Promise<Item[]> {
     try {
       const response = await http.get<Item[]>('/api/items')
+      return response.data
+    } catch (error) {
+      throw new Error('error: ${error}')
+    }
+  }
+
+  public async getProjects(): Promise<Project[]> {
+    try {
+      const response = await http.get<Project[]>('/api/projects')
       return response.data
     } catch (error) {
       throw new Error('error: ${error}')

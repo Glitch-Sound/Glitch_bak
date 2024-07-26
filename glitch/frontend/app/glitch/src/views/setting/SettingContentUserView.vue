@@ -17,7 +17,7 @@ const fetchUsers = async () => {
     users_manager.value = users.filter((user) => user.is_admin)
     users_member.value = users.filter((user) => !user.is_admin)
   } catch (err) {
-    console.error('Error fetching users:', err)
+    console.error('Error:', err)
   }
 }
 
@@ -33,7 +33,7 @@ const handleSubmit = async (data: UserCreate) => {
     await fetchUsers()
     dialog.value = false
   } catch (err) {
-    console.error('Error creating user:', err)
+    console.error('Error:', err)
   }
 }
 

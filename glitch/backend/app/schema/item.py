@@ -11,7 +11,7 @@ class Item(BaseModel):
     result: str
     datetime_entry: str
     datetime_update: str
-    user_name: Optional[str] = None
+    name: Optional[str] = None
     project_datetime_start: Optional[str] = None
     project_datetime_end: Optional[str] = None
     event_datetime_end: Optional[str] = None
@@ -34,7 +34,7 @@ class Project(BaseModel):
     result: str
     datetime_entry: str
     datetime_update: str
-    user_name: Optional[str] = None
+    name: Optional[str] = None
     project_datetime_start: Optional[str] = None
     project_datetime_end: Optional[str] = None
 

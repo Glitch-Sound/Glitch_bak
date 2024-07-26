@@ -12,7 +12,7 @@ export interface Item {
   result: string
   datetime_entry: string
   datetime_update: string
-  user_name: string
+  name: string
   project_datetime_start: string
   project_datetime_end: string
   event_datetime_end: string
@@ -22,6 +22,19 @@ export interface Item {
   task_workload: number
   task_number_completed: number
   task_number_total: number
+}
+
+export interface Project {
+  rid: number
+  state: number
+  title: string
+  detail: string
+  result: string
+  datetime_entry: string
+  datetime_update: string
+  name: string
+  project_datetime_start: string
+  project_datetime_end: string
 }
 
 export interface ProjectCreate {
