@@ -15,6 +15,7 @@ class Item(Base):
     rid_users       = Column(Integer, ForeignKey('users.rid'))
     type            = Column(Integer, index=True, default=0)
     state           = Column(Integer, index=True, default=1)
+    risk            = Column(Integer, index=True, default=0)
     title           = Column(String, index=True, default='')
     detail          = Column(String, default='')
     result          = Column(String, default='')

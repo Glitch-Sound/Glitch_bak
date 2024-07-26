@@ -6,6 +6,7 @@ class Item(BaseModel):
     rid: int
     type: int
     state: int
+    risk: int
     title: str
     detail: str
     result: str
