@@ -46,3 +46,11 @@ export interface ProjectCreate {
   datetime_start: string
   datetime_end: string
 }
+
+export interface EventCreate {
+  rid_items: number
+  rid_user: number
+  title: string
+  detail: string
+  datetime_end: string
+}

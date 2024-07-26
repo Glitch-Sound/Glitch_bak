@@ -94,7 +94,7 @@ const handleSubmit = async (project: Project) => {
         <ul v-if="store_project.projects.length">
           <li v-for="project in store_project.projects" :key="project.rid">
             {{ project.rid }}, {{ project.state }}, {{ project.risk }},
-            <router-link to="/project/" + {{ project.rid }} @click="handleSubmit(project)">{{
+            <router-link :to="`/project/${project.rid}`" @click="handleSubmit(project)">{{
               project.title
             }}</router-link
             >, {{ project.detail }}, {{ project.result }}, {{ project.datetime_entry }},

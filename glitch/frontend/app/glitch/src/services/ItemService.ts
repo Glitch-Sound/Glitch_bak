@@ -1,5 +1,5 @@
 import http from '@/services/ApiClient'
-import type { Item, Project, ProjectCreate } from '@/types/Item'
+import type { Item, Project, ProjectCreate, EventCreate } from '@/types/Item'
 
 class ItemService {
   public async getItems(): Promise<Item[]> {
@@ -23,6 +23,15 @@ class ItemService {
   public async createProject(project: ProjectCreate): Promise<Item> {
     try {
       const response = await http.post<Item>('/api/project', project)
+      return response.data
+    } catch (error) {
+      throw new Error('error: ${error}')
+    }
+  }
+
+  public async createEvent(event: EventCreate): Promise<Item> {
+    try {
+      const response = await http.post<Item>('/api/event', event)
       return response.data
     } catch (error) {
       throw new Error('error: ${error}')
