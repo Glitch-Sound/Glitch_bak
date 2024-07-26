@@ -1,11 +1,9 @@
-<script setup lang="ts">
-import MainMenuView from '@/views/main/MainMenuView.vue'
-import MainContentView from '@/views/main/MainContentView.vue'
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <MainMenuView />
-  <MainContentView />
+  <v-main>
+    <v-container> Glitch‚ÌŽg‚¢•û </v-container>
+  </v-main>
 </template>
 
 <style scoped></style>

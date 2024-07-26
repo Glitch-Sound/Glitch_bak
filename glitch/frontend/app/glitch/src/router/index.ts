@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import MainView from '@/views/main/MainView.vue'
+import ProjectView from '@/views/main/ProjectView.vue'
 import SettingMainView from '@/views/setting/SettingMainView.vue'
 import SettingUserView from '@/views/setting/SettingUserView.vue'
 import SettingProjectView from '@/views/setting/SettingProjectView.vue'
@@ -10,6 +11,10 @@ const router = createRouter({
     {
       path: '/',
       component: MainView
+    },
+    {
+      path: '/project/:rid',
+      component: ProjectView
     },
     {
       path: '/setting',

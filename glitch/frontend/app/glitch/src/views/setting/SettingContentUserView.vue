@@ -1,25 +1,25 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import useUserStore from '@/stores/UserStore'
 import UserService from '@/services/UserService'
 import CreateUserDialog from '@/components/dialog/CreateUserDialog.vue'
-import type { User, UserCreate } from '@/types/User'
+import type { UserCreate } from '@/types/User'
 
-const users_manager = ref<User[]>([])
-const users_member = ref<User[]>([])
+const store_user = useUserStore()
+onMounted(() => {
+  store_user.fetchUsers()
+})
+
+const users_manager = computed(() => {
+  return store_user.users.filter((user) => user.is_admin === 1)
+})
+
+const users_member = computed(() => {
+  return store_user.users.filter((user) => user.is_admin === 0)
+})
+
 const dialog = ref(false)
 const dialogFormData = ref({ is_admin: false })
-
-const fetchUsers = async () => {
-  try {
-    const service_user = new UserService()
-    const users = await service_user.getUsers()
-
-    users_manager.value = users.filter((user) => user.is_admin)
-    users_member.value = users.filter((user) => !user.is_admin)
-  } catch (err) {
-    console.error('Error:', err)
-  }
-}
 
 const openDialog = (is_admin: boolean) => {
   dialogFormData.value = { is_admin }
@@ -30,14 +30,12 @@ const handleSubmit = async (data: UserCreate) => {
   try {
     const service_user = new UserService()
     await service_user.createUser(data)
-    await fetchUsers()
+    store_user.fetchUsers()
     dialog.value = false
   } catch (err) {
     console.error('Error:', err)
   }
 }
-
-onMounted(fetchUsers)
 </script>
 
 <template>
