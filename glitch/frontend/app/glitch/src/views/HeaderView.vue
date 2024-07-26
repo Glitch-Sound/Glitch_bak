@@ -1,8 +1,24 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+
+const title = computed(() => {
+  switch (route.path.split('/')[1]) {
+    case '':
+      return 'Project'
+    case 'setting':
+      return 'Settings'
+    default:
+      return 'Default Title'
+  }
+})
+</script>
 
 <template>
   <v-app-bar class="elevation-0">
-    <v-app-bar-title> Project name </v-app-bar-title>
+    <v-app-bar-title>{{ title }}</v-app-bar-title>
 
     <router-link to="/">
       <v-btn icon>

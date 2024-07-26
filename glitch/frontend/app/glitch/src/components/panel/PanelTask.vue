@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import PanelBase from '@/components/PanelBase.vue'
+import PanelBase from '@/components/panel/PanelBase.vue'
 </script>
 
 <template>

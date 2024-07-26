@@ -1,17 +1,12 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 import { useDialog, EVENT_TYPES } from '@/utils/Dialog'
+import type { UserCreate } from '@/types/User'
 
 const props = defineProps({
   showDialog: Boolean,
   formData: {
-    type: Object as () => {
-      user: string
-      password: string
-      name: string
-      is_admin: boolean
-    },
-    default: () => ({ user: '', password: '', name: '', is_admin: false })
+    type: Object as UserCreate
   }
 })
 

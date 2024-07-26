@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import UserService from '@/services/UserService'
 import CreateUserDialog from '@/components/dialog/CreateUserDialog.vue'
-import type { User } from '@/types/User'
+import type { User, UserCreate } from '@/types/User'
 
 const users_manager = ref<User[]>([])
 const users_member = ref<User[]>([])
@@ -26,7 +26,7 @@ const openDialog = (is_admin: boolean) => {
   dialog.value = true
 }
 
-const handleSubmit = async (data: User) => {
+const handleSubmit = async (data: UserCreate) => {
   try {
     const service_user = new UserService()
     await service_user.createUser(data)

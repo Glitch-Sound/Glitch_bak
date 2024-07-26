@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import PanelEvent from '@/components/PanelEvent.vue'
-import PanelFeature from '@/components/PanelFeature.vue'
-import PanelStory from '@/components/PanelStory.vue'
-import PanelTask from '@/components/PanelTask.vue'
+import PanelEvent from '@/components/panel/PanelEvent.vue'
+import PanelFeature from '@/components/panel/PanelFeature.vue'
+import PanelStory from '@/components/panel/PanelStory.vue'
+import PanelTask from '@/components/panel/PanelTask.vue'
 </script>
 
 <template>
