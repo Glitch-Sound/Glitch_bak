@@ -3,6 +3,7 @@ import { defineProps } from 'vue'
 
 import type { FeatureCreate } from '@/types/Item'
 import { useDialog, EVENT_TYPES } from '@/components/dialog/BaseDialog'
+import AccountSelect from '@/components/common/AccountSelect.vue'
 
 const props = defineProps({
   showDialog: Boolean,
@@ -11,8 +12,11 @@ const props = defineProps({
   }
 })
 
-const emits = defineEmits([EVENT_TYPES.UPDATE_SHOW_DIALOG, EVENT_TYPES.SUBMIT])
+const handleItemSelected = (item: User) => {
+  formData.rid_user = item.rid
+}
 
+const emits = defineEmits([EVENT_TYPES.UPDATE_SHOW_DIALOG, EVENT_TYPES.SUBMIT])
 const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props, emits)
 </script>
 
@@ -25,12 +29,10 @@ const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props,
 
       <v-card-text>
         <v-form ref="formRef" v-model="valid" lazy-validation>
-          <v-text-field
+          <AccountSelect
             v-model="formData.rid_user"
-            :rules="[rules.required]"
-            label="User ID"
-            required
-          ></v-text-field>
+            @itemSelected="handleItemSelected"
+          ></AccountSelect>
 
           <v-text-field
             v-model="formData.title"
