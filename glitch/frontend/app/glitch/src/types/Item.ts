@@ -23,8 +23,8 @@ export enum TaskType {
 
 export interface Item {
   rid: number
-  type: number
-  state: number
+  type: ItemType
+  state: ItemState
   risk: number
   title: string
   detail: string
@@ -37,6 +37,7 @@ export interface Item {
   event_datetime_end: string
   story_datetime_start: string
   story_datetime_end: string
+  task_priority: number
   task_type: TaskType
   task_workload: number
   task_number_completed: number

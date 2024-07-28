@@ -75,6 +75,7 @@ watch([() => store_project.projects.length], () => {
           :datetime_entry="item.datetime_entry"
           :datetime_update="item.datetime_update"
           :name="item.name"
+          :task_priority="item.task_priority"
           :task_type="item.task_type"
           :task_workload="item.task_workload"
           :task_number_completed="item.task_number_completed"
