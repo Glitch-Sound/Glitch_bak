@@ -10,9 +10,12 @@ from database import Base
 class Project(Base):
     __tablename__ = 'projects'
 
-    rid            = Column(Integer, primary_key=True)
-    rid_items      = Column(Integer, ForeignKey('items.rid'))
-    datetime_start = Column(String, default='')
-    datetime_end   = Column(String, default='')
+    rid              = Column(Integer, primary_key=True)
+    rid_items        = Column(Integer, ForeignKey('items.rid'))
+    datetime_start   = Column(String, default='')
+    datetime_end     = Column(String, default='')
+    workload         = Column(Integer, default=0)
+    number_completed = Column(Integer, default=0)
+    number_total     = Column(Integer, default=0)
 
     items = relationship('Item', back_populates='project')

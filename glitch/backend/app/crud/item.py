@@ -89,9 +89,21 @@ def getItems(db: Session, rid_project: int):
             User.name.label('name'),
             Project.datetime_start.label('project_datetime_start'),
             Project.datetime_end.label('project_datetime_end'),
+            Project.workload.label('project_workload'),
+            Project.number_completed.label('project_number_completed'),
+            Project.number_total.label('project_number_total'),
             Event.datetime_end.label('event_datetime_end'),
+            Event.workload.label('event_workload'),
+            Event.number_completed.label('event_number_completed'),
+            Event.number_total.label('event_number_total'),
+            Feature.workload.label('feature_workload'),
+            Feature.number_completed.label('feature_number_completed'),
+            Feature.number_total.label('feature_number_total'),
             Story.datetime_start.label('story_datetime_start'),
             Story.datetime_end.label('story_datetime_end'),
+            Story.workload.label('story_workload'),
+            Story.number_completed.label('story_number_completed'),
+            Story.number_total.label('story_number_total'),
             Task.priority.label('task_priority'),
             Task.type.label('task_type'),
             Task.workload.label('task_workload'),
@@ -126,7 +138,10 @@ def getProjects(db: Session):
             User.rid.label('rid_users'),
             User.name.label('name'),
             Project.datetime_start.label('project_datetime_start'),
-            Project.datetime_end.label('project_datetime_end'))\
+            Project.datetime_end.label('project_datetime_end'),
+            Project.workload.label('project_workload'),
+            Project.number_completed.label('project_number_completed'),
+            Project.number_total.label('project_number_total'))\
         .outerjoin(User,  User.rid == Item.rid_users)\
         .outerjoin(Project, Project.rid_items == Item.rid)\
         .filter(Item.type == ItemType.PROJECT.value)\

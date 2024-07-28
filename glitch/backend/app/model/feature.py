@@ -10,7 +10,10 @@ from database import Base
 class Feature(Base):
     __tablename__ = 'features'
 
-    rid       = Column(Integer, primary_key=True)
-    rid_items = Column(Integer, ForeignKey('items.rid'))
+    rid              = Column(Integer, primary_key=True)
+    rid_items        = Column(Integer, ForeignKey('items.rid'))
+    workload         = Column(Integer, default=0)
+    number_completed = Column(Integer, default=0)
+    number_total     = Column(Integer, default=0)
 
     items = relationship('Item', back_populates='feature')
