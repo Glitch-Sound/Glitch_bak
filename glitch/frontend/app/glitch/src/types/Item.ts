@@ -31,7 +31,7 @@ export interface Item {
   result: string
   datetime_entry: string
   datetime_update: string
-  rid_user: number
+  rid_users: number
   name: string
   project_datetime_start: string
   project_datetime_end: string
@@ -54,7 +54,7 @@ export interface Project {
   result: string
   datetime_entry: string
   datetime_update: string
-  rid_user: number
+  rid_users: number
   name: string
   project_datetime_start: string
   project_datetime_end: string

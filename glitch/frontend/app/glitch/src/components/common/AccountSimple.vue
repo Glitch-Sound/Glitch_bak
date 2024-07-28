@@ -2,7 +2,7 @@
 import { defineProps } from 'vue'
 
 const props = defineProps({
-  rid_user: Number,
+  rid_users: Number,
   name: String
 })
 </script>
