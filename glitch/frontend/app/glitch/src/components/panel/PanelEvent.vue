@@ -26,7 +26,10 @@ const props = defineProps({
   datetime_update: String,
   rid_users: Number,
   name: String,
-  event_datetime_end: String
+  event_datetime_end: String,
+  event_workload: Number,
+  event_number_completed: Number,
+  event_number_total: Number
 })
 
 const openDialog = () => {

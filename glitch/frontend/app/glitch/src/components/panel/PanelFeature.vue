@@ -25,7 +25,10 @@ const props = defineProps({
   datetime_entry: String,
   datetime_update: String,
   rid_users: Number,
-  name: String
+  name: String,
+  feature_workload: Number,
+  feature_number_completed: Number,
+  feature_number_total: Number
 })
 
 const openDialog = () => {
