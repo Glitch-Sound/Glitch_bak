@@ -90,6 +90,7 @@ def getItems(db: Session, rid_project: int):
             Event.datetime_end.label('event_datetime_end'),
             Story.datetime_start.label('story_datetime_start'),
             Story.datetime_end.label('story_datetime_end'),
+            Task.priority.label('task_priority'),
             Task.type.label('task_type'),
             Task.workload.label('task_workload'),
             Task.number_completed.label('task_number_completed'),
@@ -277,7 +278,8 @@ def createTask(db: Session, target:schema_item.TaskCreate):
 
         addition = Task(
             rid_items=item.rid,
-            type=type,
+            priority=target.priority,
+            type=target.type,
             workload=target.workload,
             number_completed=target.number_completed,
             number_total=target.number_total
@@ -286,88 +288,6 @@ def createTask(db: Session, target:schema_item.TaskCreate):
         db.commit()
         db.refresh(item)
         return item
-
-    except Exception as e:
-        db.rollback()
-        raise e
-
-
-
-# TODO:削除
-def addItems(db: Session):
-    try:
-        current_datetime = getCurrentDatetime()
-
-        # プロジェクト.
-        project_item = Item(
-            rid_users=1, type=1, state=1, title='project', detail='xxx', result='xxx', datetime_entry=current_datetime, datetime_update=current_datetime, is_deleted=0
-        )
-        db.begin()
-        db.add(project_item)
-        db.flush()
-
-        project_info = Project(
-            rid_items=project_item.rid, datetime_start='xxx', datetime_end='xxx'
-        )
-        db.add(project_info)
-
-
-        # イベント.
-        event_item = Item(
-            rid_items=project_item.rid,
-            rid_users=1, type=2, state=1, title='event', detail='xxx', result='xxx', datetime_entry=current_datetime, datetime_update=current_datetime, is_deleted=0
-        )
-        db.add(event_item)
-        db.flush()
-
-        event_info = Event(
-            rid_items=event_item.rid, datetime_end='xxx'
-        )
-        db.add(event_info)
-
-
-        # 機能.
-        feature_item = Item(
-            rid_items=event_item.rid,
-            rid_users=1, type=3, state=1, title='feature', detail='xxx', result='xxx', datetime_entry=current_datetime, datetime_update=current_datetime, is_deleted=0
-        )
-        db.add(feature_item)
-        db.flush()
-
-        feature_info = Feature(
-            rid_items=feature_item.rid
-        )
-        db.add(feature_info)
-
-
-        # ストーリー.
-        story_item = Item(
-            rid_items=feature_item.rid,
-            rid_users=1, type=4, state=1, title='story', detail='xxx', result='xxx', datetime_entry=current_datetime, datetime_update=current_datetime, is_deleted=0
-        )
-        db.add(story_item)
-        db.flush()
-
-        story_info = Story(
-            rid_items=story_item.rid, datetime_start='xxx', datetime_end='xxx'
-        )
-        db.add(story_info)
-
-
-        # タスク.
-        task_item = Item(
-            rid_items=story_item.rid,
-            rid_users=1, type=5, state=1, title='task', detail='xxx', result='xxx', datetime_entry=current_datetime, datetime_update=current_datetime, is_deleted=0
-        )
-        db.add(task_item)
-        db.flush()
-
-        task_info = Task(
-            rid_items=task_item.rid, type=1, workload=0, number_completed=0, number_total=0
-        )
-        db.add(task_info)
-
-        db.commit()
 
     except Exception as e:
         db.rollback()

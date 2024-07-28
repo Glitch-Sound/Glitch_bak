@@ -79,14 +79,3 @@ def create_task(target:schema_item.TaskCreate, db: Session = Depends(get_db)):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f'error: {str(e)}')
-
-
-# TODO:削除
-@router.get('/addItems/')
-def add_items(db: Session = Depends(get_db)):
-    try:
-        crud_item.addItems(db)
-        return {'message": "success'}
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f'error: {str(e)}')

@@ -12,6 +12,7 @@ class Task(Base):
 
     rid              = Column(Integer, primary_key=True)
     rid_items        = Column(Integer, ForeignKey('items.rid'))
+    priority         = Column(Integer)
     type             = Column(Integer)
     workload         = Column(Integer)
     number_completed = Column(Integer)

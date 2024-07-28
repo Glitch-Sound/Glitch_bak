@@ -18,6 +18,7 @@ class Item(BaseModel):
     event_datetime_end: Optional[str] = None
     story_datetime_start: Optional[str] = None
     story_datetime_end: Optional[str] = None
+    task_priority: Optional[int] = None
     task_type: Optional[int] = None
     task_workload: Optional[int] = None
     task_number_completed: Optional[int] = None
@@ -93,6 +94,7 @@ class TaskCreate(BaseModel):
     rid_user: int
     title: str
     detail: str
+    priority: int
     type: int
     workload: int
     number_completed: int
