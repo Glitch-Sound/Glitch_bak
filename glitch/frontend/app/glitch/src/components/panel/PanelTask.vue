@@ -44,7 +44,7 @@ const props = defineProps({
       <div>&nbsp;information&nbsp;</div>
 
       <v-btn icon size="x-small">
-        <v-icon>mdi-plus-thick</v-icon>
+        <v-icon>mdi-comment-plus-outline</v-icon>
       </v-btn>
     </div>
     <v-expand-transition>
@@ -53,10 +53,6 @@ const props = defineProps({
 
         <v-btn icon size="x-small">
           <v-icon>mdi-pencil</v-icon>
-        </v-btn>
-
-        <v-btn icon size="x-small">
-          <v-icon>mdi-comment-plus-outline</v-icon>
         </v-btn>
       </div>
     </v-expand-transition>

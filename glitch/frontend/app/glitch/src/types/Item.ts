@@ -73,3 +73,30 @@ export interface EventCreate {
   detail: string
   datetime_end: string
 }
+
+export interface FeatureCreate {
+  rid_items: number
+  rid_user: number
+  title: string
+  detail: string
+}
+
+export interface StoryCreate {
+  rid_items: number
+  rid_user: number
+  title: string
+  detail: string
+  datetime_start: string
+  datetime_end: string
+}
+
+export interface TaskCreate {
+  rid_items: number
+  rid_user: number
+  title: string
+  detail: string
+  type: number
+  workload: number
+  number_completed: number
+  number_total: number
+}

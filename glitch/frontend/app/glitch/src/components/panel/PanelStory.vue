@@ -1,9 +1,18 @@
 <script setup lang="ts">
 import { ref, defineProps } from 'vue'
+import { useRoute } from 'vue-router'
 
-import { ItemState } from '@/types/Item'
+import { ItemState, TaskCreate } from '@/types/Item'
+import useItemStore from '@/stores/ItemStore'
+import ItemService from '@/services/ItemService'
+import CreateTaskDialog from '@/components/dialog/CreateTaskDialog.vue'
+
+const route = useRoute()
+const store_item = useItemStore()
 
 const expand = ref(false)
+const dialog = ref(false)
+const dialogFormData = ref({ rid_items: 0 })
 
 const props = defineProps({
   rid: Number,
@@ -18,6 +27,25 @@ const props = defineProps({
   story_datetime_start: String,
   story_datetime_end: String
 })
+
+const openDialog = () => {
+  const rid_items = props.rid
+  dialogFormData.value = { rid_items }
+  dialog.value = true
+}
+
+const handleSubmit = async (data: TaskCreate) => {
+  try {
+    console.log(data)
+
+    const service_item = new ItemService()
+    await service_item.createTask(data)
+    store_item.fetchItems(Number(route.params.rid))
+    dialog.value = false
+  } catch (err) {
+    console.error('Error:', err)
+  }
+}
 </script>
 
 <template>
@@ -40,7 +68,7 @@ const props = defineProps({
 
       <div>&nbsp;information&nbsp;</div>
 
-      <v-btn icon size="x-small">
+      <v-btn icon size="x-small" @click="openDialog()">
         <v-icon>mdi-plus-thick</v-icon>
       </v-btn>
     </div>
@@ -51,13 +79,16 @@ const props = defineProps({
         <v-btn icon size="x-small">
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
-
-        <v-btn icon size="x-small">
-          <v-icon>mdi-comment-plus-outline</v-icon>
-        </v-btn>
       </div>
     </v-expand-transition>
   </div>
+
+  <CreateTaskDialog
+    :showDialog="dialog"
+    :formData="dialogFormData"
+    @update:showDialog="dialog = $event"
+    @submit="handleSubmit"
+  />
 </template>
 
 <style scoped></style>

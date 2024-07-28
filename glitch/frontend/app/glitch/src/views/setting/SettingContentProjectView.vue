@@ -1,17 +1,19 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+
+import type { ProjectCreate } from '@/types/Item'
 import useProjectStore from '@/stores/ProjectStore'
 import ItemService from '@/services/ItemService'
 import CreateProjectDialog from '@/components/dialog/CreateProjectDialog.vue'
-import type { ProjectCreate } from '@/types/Item'
 
 const store_project = useProjectStore()
-onMounted(() => {
-  store_project.fetchProjects()
-})
 
 const dialog = ref(false)
 const dialogFormData = ref(null)
+
+onMounted(() => {
+  store_project.fetchProjects()
+})
 
 const openDialog = () => {
   dialog.value = true

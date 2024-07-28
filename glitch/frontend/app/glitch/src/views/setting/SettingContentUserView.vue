@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
+
+import type { UserCreate } from '@/types/User'
 import useUserStore from '@/stores/UserStore'
 import UserService from '@/services/UserService'
 import CreateUserDialog from '@/components/dialog/CreateUserDialog.vue'
-import type { UserCreate } from '@/types/User'
 
 const store_user = useUserStore()
+
+const dialog = ref(false)
+const dialogFormData = ref({ is_admin: false })
+
 onMounted(() => {
   store_user.fetchUsers()
 })
@@ -17,9 +22,6 @@ const users_manager = computed(() => {
 const users_member = computed(() => {
   return store_user.users.filter((user) => user.is_admin == false)
 })
-
-const dialog = ref(false)
-const dialogFormData = ref({ is_admin: false })
 
 const openDialog = (is_admin: boolean) => {
   dialogFormData.value = { is_admin }
