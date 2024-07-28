@@ -51,7 +51,6 @@ const handleSubmit = async (data: FeatureCreate) => {
   <div class="d-flex flex-column ma-0 pl-0">
     <div class="d-flex flex-row align-baseline">
       <p class="mx-1">{{ props.rid }}</p>
-      <p class="mx-1">[{{ props.risk }}]</p>
       <p class="mx-1">state:{{ props.state }}</p>
       <p class="mx-1 font-weight-bold" @click="expand = !expand">{{ props.title }}</p>
 
@@ -70,7 +69,7 @@ const handleSubmit = async (data: FeatureCreate) => {
       </p>
     </div>
     <v-expand-transition>
-      <div class="ml-1" v-show="expand">
+      <div class="ml-6" v-show="expand">
         Detail : {{ props.detail }}
 
         <v-btn icon size="x-small">
