@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 import { useDialog, EVENT_TYPES } from '@/components/dialog/BaseDialog'
-import type { ProjectCreate } from '@/types/Item'
+import type { EventCreate } from '@/types/Item'
 
 const props = defineProps({
   showDialog: Boolean,
   formData: {
-    type: Object as ProjectCreate
+    type: Object as EventCreate
   }
 })
 
@@ -42,14 +42,6 @@ const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props,
             v-model="formData.detail"
             :rules="[rules.required]"
             label="Detail"
-            required
-          ></v-text-field>
-
-          <v-text-field
-            v-model="formData.datetime_start"
-            :rules="[rules.required]"
-            label="Start"
-            type="date"
             required
           ></v-text-field>
 
