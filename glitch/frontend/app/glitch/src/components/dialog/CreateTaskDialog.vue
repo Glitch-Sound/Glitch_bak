@@ -59,21 +59,18 @@ const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props,
             v-model="formData.workload"
             :rules="[rules.required]"
             label="Workload"
-            required
           ></v-text-field>
 
           <v-text-field
             v-model="formData.number_completed"
             :rules="[rules.required]"
             label="Number completed"
-            required
           ></v-text-field>
 
           <v-text-field
             v-model="formData.number_total"
             :rules="[rules.required]"
             label="Number total"
-            required
           ></v-text-field>
         </v-form>
       </v-card-text>
