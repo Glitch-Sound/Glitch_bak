@@ -84,6 +84,7 @@ def getItems(db: Session, rid_project: int):
             query_recursive.c.result,
             query_recursive.c.datetime_entry,
             query_recursive.c.datetime_update,
+            User.rid.label('rid_user'),
             User.name.label('name'),
             Project.datetime_start.label('project_datetime_start'),
             Project.datetime_end.label('project_datetime_end'),
@@ -121,6 +122,7 @@ def getProjects(db: Session):
             Item.result,
             Item.datetime_entry,
             Item.datetime_update,
+            User.rid.label('rid_user'),
             User.name.label('name'),
             Project.datetime_start.label('project_datetime_start'),
             Project.datetime_end.label('project_datetime_end'))\
