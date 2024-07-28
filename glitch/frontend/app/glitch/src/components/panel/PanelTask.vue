@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref, defineProps } from 'vue'
+
 import { ItemState, TaskType } from '@/types/Item'
+
+const expand = ref(false)
 
 const props = defineProps({
   rid: Number,
@@ -18,8 +21,6 @@ const props = defineProps({
   task_number_completed: Number,
   task_number_total: Number
 })
-
-const expand = ref(false)
 </script>
 
 <template>

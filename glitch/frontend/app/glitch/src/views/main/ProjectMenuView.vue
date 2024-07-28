@@ -1,22 +1,23 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
+
+import type { EventCreate } from '@/types/Item'
 import useItemStore from '@/stores/ItemStore'
 import ItemService from '@/services/ItemService'
 import CreateEventDialog from '@/components/dialog/CreateEventDialog.vue'
-import type { EventCreate } from '@/types/Item'
+
+const route = useRoute()
+const store_item = useItemStore()
 
 const dialog = ref(false)
 const dialogFormData = ref({ rid_items: 0 })
 
-const route = useRoute()
 const openDialog = () => {
   const rid_items = Number(route.params.rid)
   dialogFormData.value = { rid_items }
   dialog.value = true
 }
-
-const store_item = useItemStore()
 
 const handleSubmit = async (data: EventCreate) => {
   try {

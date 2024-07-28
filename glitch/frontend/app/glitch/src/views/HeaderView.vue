@@ -1,19 +1,21 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import useProjectStore from '@/stores/ProjectStore'
-import type { Project } from '@/types/Item'
 
+import type { Project } from '@/types/Item'
+import useProjectStore from '@/stores/ProjectStore'
+
+const route = useRoute()
 const store_project = useProjectStore()
-onMounted(() => {
-  store_project.fetchProjects()
-})
 
 const title = ref('')
 const link_project = ref('/')
 const link_disabled = ref(true)
 
-const route = useRoute()
+onMounted(() => {
+  store_project.fetchProjects()
+})
+
 watch([() => route.params.rid, () => store_project.projects.length], () => {
   title.value =
     store_project.projects.find((project) => project.rid == Number(route.params.rid))?.title ||

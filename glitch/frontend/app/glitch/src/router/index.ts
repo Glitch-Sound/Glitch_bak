@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+
 import MainView from '@/views/main/MainView.vue'
 import ProjectView from '@/views/main/ProjectView.vue'
 import SettingMainView from '@/views/setting/SettingMainView.vue'

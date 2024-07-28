@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
-import ItemService from '@/services/ItemService'
+
 import type { Project } from '@/types/Item'
+import ItemService from '@/services/ItemService'
 
 const useProjectStore = defineStore('project', {
   state: () => ({

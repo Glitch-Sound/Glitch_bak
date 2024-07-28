@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
-import { useDialog, EVENT_TYPES } from '@/components/dialog/BaseDialog'
+
 import type { UserCreate } from '@/types/User'
+import { useDialog, EVENT_TYPES } from '@/components/dialog/BaseDialog'
 
 const props = defineProps({
   showDialog: Boolean,

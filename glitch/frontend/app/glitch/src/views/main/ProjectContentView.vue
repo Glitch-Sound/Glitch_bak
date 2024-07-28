@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import { watch } from 'vue'
 import { useRoute } from 'vue-router'
+
+import { ItemType } from '@/types/Item'
 import useItemStore from '@/stores/ItemStore'
 import useProjectStore from '@/stores/ProjectStore'
 import PanelEvent from '@/components/panel/PanelEvent.vue'
 import PanelFeature from '@/components/panel/PanelFeature.vue'
 import PanelStory from '@/components/panel/PanelStory.vue'
 import PanelTask from '@/components/panel/PanelTask.vue'
-import { ItemType } from '@/types/Item'
 
+const route = useRoute()
 const store_item = useItemStore()
 const store_project = useProjectStore()
 
-const route = useRoute()
 watch([() => store_project.projects.length], () => {
   store_item.fetchItems(Number(route.params.rid))
 })

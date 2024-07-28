@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref, defineProps } from 'vue'
+
 import { ItemState } from '@/types/Item'
+
+const expand = ref(false)
 
 const props = defineProps({
   rid: Number,
@@ -15,8 +18,6 @@ const props = defineProps({
   story_datetime_start: String,
   story_datetime_end: String
 })
-
-const expand = ref(false)
 </script>
 
 <template>
