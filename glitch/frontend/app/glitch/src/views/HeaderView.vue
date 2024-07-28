@@ -8,7 +8,7 @@ import useProjectStore from '@/stores/ProjectStore'
 const route = useRoute()
 const store_project = useProjectStore()
 
-const title = ref('')
+const title = ref('Glitch')
 const link_project = ref('/')
 const link_disabled = ref(true)
 
