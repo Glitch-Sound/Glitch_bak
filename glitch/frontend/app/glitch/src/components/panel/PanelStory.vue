@@ -6,6 +6,7 @@ import { ItemState, TaskCreate } from '@/types/Item'
 import useItemStore from '@/stores/ItemStore'
 import ItemService from '@/services/ItemService'
 import CreateTaskDialog from '@/components/dialog/CreateTaskDialog.vue'
+import AccountSimple from '@/components/common/AccountSimple.vue'
 
 const route = useRoute()
 const store_item = useItemStore()
@@ -59,10 +60,7 @@ const handleSubmit = async (data: TaskCreate) => {
       <v-spacer></v-spacer>
 
       <p class="mx-1">
-        {{ props.name }}
-        <v-btn icon size="x-small">
-          <v-icon>mdi-account-circle</v-icon>
-        </v-btn>
+        <AccountSimple :rid="props.rid" :name="props.name"></AccountSimple>
       </p>
 
       <p class="mx-2">information</p>
@@ -74,7 +72,7 @@ const handleSubmit = async (data: TaskCreate) => {
       </p>
     </div>
     <v-expand-transition>
-      <div class="ml-14" v-show="expand">
+      <div class="ml-1" v-show="expand">
         Detail : {{ props.detail }}
 
         <v-btn icon size="x-small">
