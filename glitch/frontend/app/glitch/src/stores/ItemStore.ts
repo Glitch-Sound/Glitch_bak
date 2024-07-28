@@ -1,25 +1,21 @@
 import { defineStore } from 'pinia'
 import ItemService from '@/services/ItemService'
-import type { Project } from '@/types/Item'
+import type { Item } from '@/types/Item'
 
-const useProjectStore = defineStore('project', {
+const userItemStore = defineStore('item', {
   state: () => ({
-    projects: [] as Array<Project>,
-    selected_rid_project: null as number | null
+    items: [] as Array<Item>
   }),
   actions: {
-    async fetchProjects() {
+    async fetchItems(rid_items: number) {
       try {
         const service_item = new ItemService()
-        this.projects = await service_item.getProjects()
+        this.items = await service_item.getItems(rid_items)
       } catch (error) {
         console.error('Error:', error)
       }
-    },
-    setSelectedProjectRID(rid_project: number | null) {
-      this.selected_rid_project = rid_project
     }
   }
 })
 
-export default useProjectStore
+export default userItemStore

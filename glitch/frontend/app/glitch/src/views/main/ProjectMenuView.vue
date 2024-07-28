@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
+import useItemStore from '@/stores/ItemStore'
 import ItemService from '@/services/ItemService'
 import CreateEventDialog from '@/components/dialog/CreateEventDialog.vue'
 import type { EventCreate } from '@/types/Item'
@@ -15,10 +16,13 @@ const openDialog = () => {
   dialog.value = true
 }
 
+const store_item = useItemStore()
+
 const handleSubmit = async (data: EventCreate) => {
   try {
     const service_item = new ItemService()
     await service_item.createEvent(data)
+    store_item.fetchItems(Number(route.params.rid))
     dialog.value = false
   } catch (err) {
     console.error('Error:', err)

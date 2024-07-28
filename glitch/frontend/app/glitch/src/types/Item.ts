@@ -1,5 +1,23 @@
+export enum ItemType {
+  NONE = 0,
+  PROJECT,
+  EVENT,
+  FEATURE,
+  STORY,
+  TASK
+}
+
+export enum ItemState {
+  IDLE = 0,
+  WAIT,
+  RUN,
+  REVIEW,
+  COMPLETE
+}
+
 export enum TaskType {
-  WORKLOAD = 1,
+  NONE = 0,
+  WORKLOAD,
   NUMBER
 }
 

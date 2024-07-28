@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import useProjectStore from '@/stores/ItemStore'
+import useProjectStore from '@/stores/ProjectStore'
 import ItemService from '@/services/ItemService'
 import CreateProjectDialog from '@/components/dialog/CreateProjectDialog.vue'
 import type { ProjectCreate } from '@/types/Item'

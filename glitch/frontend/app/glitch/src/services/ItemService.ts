@@ -2,9 +2,9 @@ import http from '@/services/ApiClient'
 import type { Item, Project, ProjectCreate, EventCreate } from '@/types/Item'
 
 class ItemService {
-  public async getItems(): Promise<Item[]> {
+  public async getItems(rid_items: number): Promise<Item[]> {
     try {
-      const response = await http.get<Item[]>('/api/items')
+      const response = await http.get<Item[]>('/api/items/' + String(rid_items))
       return response.data
     } catch (error) {
       throw new Error('error: ${error}')

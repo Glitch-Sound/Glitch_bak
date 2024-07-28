@@ -1,14 +1,11 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import useUserStore from '@/stores/UserStore'
-import useProjectStore from '@/stores/ItemStore'
+import useProjectStore from '@/stores/ProjectStore'
 import type { Project } from '@/types/Item'
 
-const store_user = useUserStore()
 const store_project = useProjectStore()
 onMounted(() => {
-  store_user.fetchUsers()
   store_project.fetchProjects()
 })
 
