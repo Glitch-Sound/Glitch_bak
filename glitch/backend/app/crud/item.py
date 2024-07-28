@@ -170,7 +170,7 @@ def createEvent(db: Session, target:schema_item.EventCreate):
         current_datetime = getCurrentDatetime()
 
         item = Item(
-            rid_items=target.rid_project,
+            rid_items=target.rid_items,
             rid_users=target.rid_user,
             type=ItemType.EVENT.value,
             title=target.title,
@@ -201,7 +201,7 @@ def createFeature(db: Session, target:schema_item.FeatureCreate):
         current_datetime = getCurrentDatetime()
 
         item = Item(
-            rid_items=target.rid_event,
+            rid_items=target.rid_items,
             rid_users=target.rid_user,
             type=ItemType.FEATURE.value,
             title=target.title,
@@ -231,7 +231,7 @@ def createStory(db: Session, target:schema_item.StoryCreate):
         current_datetime = getCurrentDatetime()
 
         item = Item(
-            rid_items=target.rid_feature,
+            rid_items=target.rid_items,
             rid_users=target.rid_user,
             type=ItemType.STORY.value,
             title=target.title,
@@ -263,7 +263,7 @@ def createTask(db: Session, target:schema_item.TaskCreate):
         current_datetime = getCurrentDatetime()
 
         item = Item(
-            rid_items=target.rid_story,
+            rid_items=target.rid_items,
             rid_users=target.rid_user,
             type=ItemType.TASK.value,
             title=target.title,

@@ -56,7 +56,7 @@ class ProjectCreate(BaseModel):
 
 
 class EventCreate(BaseModel):
-    rid_project: int
+    rid_items: int
     rid_user: int
     title: str
     detail: str
@@ -67,7 +67,7 @@ class EventCreate(BaseModel):
 
 
 class FeatureCreate(BaseModel):
-    rid_event: int
+    rid_items: int
     rid_user: int
     title: str
     detail: str
@@ -77,7 +77,7 @@ class FeatureCreate(BaseModel):
 
 
 class StoryCreate(BaseModel):
-    rid_feature: int
+    rid_items: int
     rid_user: int
     title: str
     detail: str
@@ -89,7 +89,7 @@ class StoryCreate(BaseModel):
 
 
 class TaskCreate(BaseModel):
-    rid_story: int
+    rid_items: int
     rid_user: int
     title: str
     detail: str
