@@ -24,6 +24,7 @@ const props = defineProps({
   result: String,
   datetime_entry: String,
   datetime_update: String,
+  rid_user: Number,
   name: String
 })
 
@@ -56,7 +57,7 @@ const handleSubmit = async (data: StoryCreate) => {
       <v-spacer></v-spacer>
 
       <p class="mx-1">
-        <AccountSimple :rid="props.rid" :name="props.name"></AccountSimple>
+        <AccountSimple :rid_user="props.rid_user" :name="props.name"></AccountSimple>
       </p>
 
       <p class="mx-2">information</p>

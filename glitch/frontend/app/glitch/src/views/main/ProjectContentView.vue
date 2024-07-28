@@ -33,6 +33,7 @@ watch([() => store_project.projects.length], () => {
           :result="item.result"
           :datetime_entry="item.datetime_entry"
           :datetime_update="item.datetime_update"
+          :rid_user="item.rid_user"
           :name="item.name"
           :event_datetime_end="item.event_datetime_end"
         />
@@ -47,6 +48,7 @@ watch([() => store_project.projects.length], () => {
           :result="item.result"
           :datetime_entry="item.datetime_entry"
           :datetime_update="item.datetime_update"
+          :rid_user="item.rid_user"
           :name="item.name"
         />
 
@@ -60,6 +62,7 @@ watch([() => store_project.projects.length], () => {
           :result="item.result"
           :datetime_entry="item.datetime_entry"
           :datetime_update="item.datetime_update"
+          :rid_user="item.rid_user"
           :name="item.name"
           :story_datetime_start="item.story_datetime_start"
           :story_datetime_end="item.story_datetime_end"
@@ -75,6 +78,7 @@ watch([() => store_project.projects.length], () => {
           :result="item.result"
           :datetime_entry="item.datetime_entry"
           :datetime_update="item.datetime_update"
+          :rid_user="item.rid_user"
           :name="item.name"
           :task_priority="item.task_priority"
           :task_type="item.task_type"

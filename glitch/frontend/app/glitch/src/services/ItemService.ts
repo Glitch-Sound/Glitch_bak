@@ -14,6 +14,7 @@ class ItemService {
   public async getItems(rid_items: number): Promise<Item[]> {
     try {
       const response = await http.get<Item[]>('/api/items/' + String(rid_items))
+      console.log(response.data)
       return response.data
     } catch (error) {
       throw new Error('error: ${error}')
