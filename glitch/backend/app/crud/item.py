@@ -28,6 +28,7 @@ class ItemType(Enum):
     TASK    = 5
 
 
+# TODO:共通化.
 def getCurrentDatetime():
     current_utc_time = datetime.now(pytz.timezone('Asia/Tokyo'))
     current_datetime = current_utc_time.isoformat()
