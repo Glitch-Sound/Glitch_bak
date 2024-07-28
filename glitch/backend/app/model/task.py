@@ -12,10 +12,10 @@ class Task(Base):
 
     rid              = Column(Integer, primary_key=True)
     rid_items        = Column(Integer, ForeignKey('items.rid'))
-    priority         = Column(Integer)
-    type             = Column(Integer)
-    workload         = Column(Integer)
-    number_completed = Column(Integer)
-    number_total     = Column(Integer)
+    priority         = Column(Integer, default=0)
+    type             = Column(Integer, default=0)
+    workload         = Column(Integer, default=0)
+    number_completed = Column(Integer, default=0)
+    number_total     = Column(Integer, default=0)
 
     items = relationship('Item', back_populates='task')

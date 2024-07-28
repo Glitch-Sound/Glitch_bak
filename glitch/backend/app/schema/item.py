@@ -94,7 +94,6 @@ class TaskCreate(BaseModel):
     rid_user: int
     title: str
     detail: str
-    priority: int
     type: int
     workload: int
     number_completed: int
@@ -102,6 +101,3 @@ class TaskCreate(BaseModel):
 
     class Config:
         orm_mode = True
-
-
-

@@ -12,7 +12,7 @@ class Project(Base):
 
     rid            = Column(Integer, primary_key=True)
     rid_items      = Column(Integer, ForeignKey('items.rid'))
-    datetime_start = Column(String)
-    datetime_end   = Column(String)
+    datetime_start = Column(String, default='')
+    datetime_end   = Column(String, default='')
 
     items = relationship('Item', back_populates='project')
