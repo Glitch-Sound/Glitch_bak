@@ -26,29 +26,30 @@ const props = defineProps({
 <template>
   <div class="d-flex flex-column ma-0 pl-15">
     <div class="d-flex flex-row align-baseline">
-      <div>ID[{{ props.rid }}]</div>
-
-      <div>RISK[{{ props.risk }}]</div>
-
-      <div>STATE[{{ props.state }}]</div>
-
-      <div @click="expand = !expand">TITLE[{{ props.title }}]</div>
+      <p class="mx-1">{{ props.rid }}</p>
+      <p class="mx-1">[{{ props.risk }}]</p>
+      <p class="mx-1">state:{{ props.state }}</p>
+      <p class="mx-1 font-weight-bold" @click="expand = !expand">{{ props.title }}</p>
 
       <v-spacer></v-spacer>
 
-      {{ props.name }}
-      <v-btn icon size="x-small">
-        <v-icon>mdi-account-circle</v-icon>
-      </v-btn>
+      <p class="mx-1">
+        {{ props.name }}
+        <v-btn icon size="x-small">
+          <v-icon>mdi-account-circle</v-icon>
+        </v-btn>
+      </p>
 
-      <div>&nbsp;information&nbsp;</div>
+      <p class="mx-2">information</p>
 
-      <v-btn icon size="x-small">
-        <v-icon>mdi-comment-plus-outline</v-icon>
-      </v-btn>
+      <p class="mx-1">
+        <v-btn icon size="x-small" @click="openDialog()">
+          <v-icon>mdi-comment-plus-outline</v-icon>
+        </v-btn>
+      </p>
     </div>
     <v-expand-transition>
-      <div v-show="expand">
+      <div class="ml-14" v-show="expand">
         Detail : {{ props.detail }}
 
         <v-btn icon size="x-small">
