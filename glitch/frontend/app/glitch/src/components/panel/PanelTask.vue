@@ -5,6 +5,7 @@ import { ItemState, TaskType } from '@/types/Item'
 import AccountSimple from '@/components/common/AccountSimple.vue'
 
 const expand = ref(false)
+const dialog = ref(false)
 
 const props = defineProps({
   rid: Number,
@@ -23,6 +24,10 @@ const props = defineProps({
   task_number_completed: Number,
   task_number_total: Number
 })
+
+const openDialog = () => {
+  dialog.value = true
+}
 </script>
 
 <template>
@@ -56,6 +61,14 @@ const props = defineProps({
       </div>
     </v-expand-transition>
   </div>
+
+  <v-dialog v-model="dialog" width="auto">
+    <v-card max-width="1000" title="Activity" text="・・・・・・・・・・・・・・・・・・・・・">
+      <template v-slot:actions>
+        <v-btn class="ms-auto" text="Ok" @click="dialog = false"></v-btn>
+      </template>
+    </v-card>
+  </v-dialog>
 </template>
 
 <style scoped></style>
