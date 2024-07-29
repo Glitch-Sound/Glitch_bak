@@ -72,7 +72,7 @@ const openDialog = () => {
   </div>
 
   <v-dialog v-model="dialog" width="auto">
-    <v-card max-width="1000" title="Activity" text="・・・・・・・・・・・・・・・・・・・・・">
+    <v-card max-width="1000" title="Activity" text="繝ｻ繝ｻ繝ｻ繝ｻ繝ｻ繝ｻ繝ｻ繝ｻ繝ｻ繝ｻ繝ｻ繝ｻ繝ｻ繝ｻ繝ｻ繝ｻ繝ｻ繝ｻ繝ｻ繝ｻ繝ｻ">
       <template v-slot:actions>
         <v-btn class="ms-auto" text="Ok" @click="dialog = false"></v-btn>
       </template>
