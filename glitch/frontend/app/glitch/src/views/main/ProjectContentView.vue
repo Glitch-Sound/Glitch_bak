@@ -26,6 +26,7 @@ watch([() => store_project.projects.length], () => {
         <PanelEvent
           v-if="item.type == ItemType.EVENT"
           :rid="item.rid"
+          :type="item.type"
           :state="item.state"
           :risk="item.risk"
           :title="item.title"
@@ -44,6 +45,7 @@ watch([() => store_project.projects.length], () => {
         <PanelFeature
           v-if="item.type == ItemType.FEATURE"
           :rid="item.rid"
+          :type="item.type"
           :state="item.state"
           :risk="item.risk"
           :title="item.title"
@@ -61,6 +63,7 @@ watch([() => store_project.projects.length], () => {
         <PanelStory
           v-if="item.type == ItemType.STORY"
           :rid="item.rid"
+          :type="item.type"
           :state="item.state"
           :risk="item.risk"
           :title="item.title"
@@ -80,6 +83,7 @@ watch([() => store_project.projects.length], () => {
         <PanelTask
           v-if="item.type == ItemType.TASK"
           :rid="item.rid"
+          :type="item.type"
           :state="item.state"
           :risk="item.risk"
           :title="item.title"

@@ -4,7 +4,8 @@ export enum ItemType {
   EVENT,
   FEATURE,
   STORY,
-  TASK
+  TASK,
+  BUG
 }
 
 export enum ItemState {

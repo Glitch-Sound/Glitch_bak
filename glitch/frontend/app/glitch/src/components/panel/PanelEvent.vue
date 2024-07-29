@@ -2,11 +2,13 @@
 import { ref, defineProps } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { ItemState, FeatureCreate } from '@/types/Item'
+import { ItemType, ItemState, FeatureCreate } from '@/types/Item'
 import useItemStore from '@/stores/ItemStore'
 import ItemService from '@/services/ItemService'
 import CreateFeatureDialog from '@/components/dialog/CreateFeatureDialog.vue'
-import AccountSimple from '@/components/common/AccountSimple.vue'
+import TypeLabel from '@/components/common/TypeLabel.vue'
+import StateLabel from '@/components/common/StateLabel.vue'
+import AccountLabel from '@/components/common/AccountLabel.vue'
 
 const route = useRoute()
 const store_item = useItemStore()
@@ -17,6 +19,7 @@ const dialogFormData = ref({ rid_items: 0 })
 
 const props = defineProps({
   rid: Number,
+  type: ItemType,
   state: ItemState,
   risk: Number,
   title: String,
@@ -53,14 +56,20 @@ const handleSubmit = async (data: FeatureCreate) => {
 <template>
   <div class="d-flex flex-column ma-0 pl-0">
     <div class="d-flex flex-row align-baseline">
-      <p class="mx-1">{{ props.rid }}</p>
-      <p class="mx-1">state:{{ props.state }}</p>
+      <p class="mx-1">
+        <TypeLabel :type="props.type" />
+      </p>
+
+      <p class="mx-1">
+        <StateLabel :state="props.state" />
+      </p>
+
       <p class="mx-1 font-weight-bold" @click="expand = !expand">{{ props.title }}</p>
 
       <v-spacer></v-spacer>
 
       <p class="mx-1">
-        <AccountSimple :rid_users="props.rid_users" :name="props.name"></AccountSimple>
+        <AccountLabel :rid_users="props.rid_users" :name="props.name" />
       </p>
 
       <p class="mx-2">information</p>
