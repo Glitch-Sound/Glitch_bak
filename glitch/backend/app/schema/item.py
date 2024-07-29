@@ -36,6 +36,8 @@ class Item(BaseModel):
     task_workload: Optional[int] = None
     task_number_completed: Optional[int] = None
     task_number_total: Optional[int] = None
+    bug_priority: Optional[int] = None
+    bug_workload: Optional[int] = None
 
     class Config:
         orm_mode = True
@@ -115,6 +117,17 @@ class TaskCreate(BaseModel):
     workload: int
     number_completed: int
     number_total: int
+
+    class Config:
+        orm_mode = True
+
+
+class BugCreate(BaseModel):
+    rid_items: int
+    rid_user: int
+    title: str
+    detail: str
+    workload: int
 
     class Config:
         orm_mode = True

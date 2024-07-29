@@ -11,7 +11,6 @@ from crud import user as crud_user
 
 router = APIRouter()
 
-
 @router.get('/users/', response_model=list[schema_user.User])
 def get_users(db: Session = Depends(get_db)):
     try:

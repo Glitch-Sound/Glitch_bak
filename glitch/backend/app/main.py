@@ -11,6 +11,7 @@ from endpoints.user import router as router_user
 from endpoints.activity import router as router_activity
 from endpoints.log import router as router_log
 
+
 Base.metadata.create_all(bind=engine, checkfirst=True)
 
 app = FastAPI(title='Glitch', version='0.5.0')

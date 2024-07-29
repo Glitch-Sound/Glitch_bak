@@ -79,3 +79,13 @@ def create_task(target:schema_item.TaskCreate, db: Session = Depends(get_db)):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f'error: {str(e)}')
+
+
+@router.post('/bug/', response_model=schema_item.Item)
+def create_bug(target:schema_item.BugCreate, db: Session = Depends(get_db)):
+    try:
+        result = crud_item.createBug(db, target)
+        return result
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f'error: {str(e)}')

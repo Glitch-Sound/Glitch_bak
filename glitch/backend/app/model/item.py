@@ -29,5 +29,6 @@ class Item(Base):
     feature  = relationship('Feature', back_populates='items')
     story    = relationship('Story', back_populates='items')
     task     = relationship('Task', back_populates='items')
+    bug      = relationship('Bug', back_populates='items')
     activity = relationship('Activity', back_populates='items')
     user     = relationship('User', back_populates='items')

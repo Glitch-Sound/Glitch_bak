@@ -17,6 +17,7 @@ from model.event import Event
 from model.feature import Feature
 from model.story import Story
 from model.task import Task
+from model.bug import Bug
 from model.user import User
 
 
@@ -26,6 +27,7 @@ class ItemType(Enum):
     FEATURE = 3
     STORY   = 4
     TASK    = 5
+    BUG     = 6
 
 
 # TODO:共通化.
@@ -108,13 +110,16 @@ def getItems(db: Session, rid_project: int):
             Task.type.label('task_type'),
             Task.workload.label('task_workload'),
             Task.number_completed.label('task_number_completed'),
-            Task.number_total.label('task_number_total'))\
+            Task.number_total.label('task_number_total'),
+            Bug.priority.label('bug_priority'),
+            Bug.workload.label('bug_workload'))\
         .outerjoin(User,  User.rid == query_recursive.c.rid_users)\
         .outerjoin(Project, Project.rid_items == query_recursive.c.rid)\
         .outerjoin(Event, Event.rid_items == query_recursive.c.rid)\
         .outerjoin(Feature, Feature.rid_items == query_recursive.c.rid)\
         .outerjoin(Story, Story.rid_items == query_recursive.c.rid)\
         .outerjoin(Task, Task.rid_items == query_recursive.c.rid)\
+        .outerjoin(Bug, Bug.rid_items == query_recursive.c.rid)\
         .order_by(query_recursive.c.path)
 
         result = query_final.all()
@@ -301,6 +306,37 @@ def createTask(db: Session, target:schema_item.TaskCreate):
             workload=target.workload,
             number_completed=target.number_completed,
             number_total=target.number_total
+        )
+        db.add(addition)
+        db.commit()
+        db.refresh(item)
+        return item
+
+    except Exception as e:
+        db.rollback()
+        raise e
+
+
+def createBug(db: Session, target:schema_item.BugCreate):
+    try:
+        current_datetime = getCurrentDatetime()
+
+        item = Item(
+            rid_items=target.rid_items,
+            rid_users=target.rid_user,
+            type=ItemType.BUG.value,
+            title=target.title,
+            detail=target.detail,
+            datetime_entry=current_datetime,
+            datetime_update=current_datetime
+        )
+        db.begin()
+        db.add(item)
+        db.flush()
+
+        addition = Bug(
+            rid_items=item.rid,
+            workload=target.workload,
         )
         db.add(addition)
         db.commit()
