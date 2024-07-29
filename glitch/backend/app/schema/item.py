@@ -56,9 +56,11 @@ class Project(BaseModel):
     name: Optional[str] = None
     project_datetime_start: Optional[str] = None
     project_datetime_end: Optional[str] = None
-    project_workload: Optional[int] = None
-    project_number_completed: Optional[int] = None
-    project_number_total: Optional[int] = None
+    task_workload: Optional[int] = None
+    task_number_completed: Optional[int] = None
+    task_number_total: Optional[int] = None
+    bug_priority: Optional[int] = None
+    bug_workload: Optional[int] = None
 
     class Config:
         orm_mode = True
