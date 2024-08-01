@@ -56,6 +56,8 @@ export interface Item {
   task_workload: number
   task_number_completed: number
   task_number_total: number
+  bug_priority: number
+  bug_workload: number
 }
 
 export interface Project {
@@ -74,6 +76,8 @@ export interface Project {
   project_workload: number
   project_number_completed: number
   project_number_total: number
+  bug_priority: number
+  bug_workload: number
 }
 
 export interface ProjectCreate {
@@ -117,4 +121,12 @@ export interface TaskCreate {
   workload: number
   number_completed: number
   number_total: number
+}
+
+export interface BugCreate {
+  rid_items: number
+  rid_user: number
+  title: string
+  detail: string
+  workload: number
 }

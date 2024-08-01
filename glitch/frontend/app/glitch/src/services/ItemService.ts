@@ -7,7 +7,8 @@ import type {
   EventCreate,
   FeatureCreate,
   StoryCreate,
-  TaskCreate
+  TaskCreate,
+  BugCreate
 } from '@/types/Item'
 
 class ItemService {
@@ -68,6 +69,15 @@ class ItemService {
   public async createTask(task: TaskCreate): Promise<Item> {
     try {
       const response = await http.post<Item>('/api/task', task)
+      return response.data
+    } catch (error) {
+      throw new Error('error: ${error}')
+    }
+  }
+
+  public async createBug(bug: BugCreate): Promise<Item> {
+    try {
+      const response = await http.post<Item>('/api/bug', bug)
       return response.data
     } catch (error) {
       throw new Error('error: ${error}')

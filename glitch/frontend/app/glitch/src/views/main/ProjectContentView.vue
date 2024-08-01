@@ -9,6 +9,7 @@ import PanelEvent from '@/components/panel/PanelEvent.vue'
 import PanelFeature from '@/components/panel/PanelFeature.vue'
 import PanelStory from '@/components/panel/PanelStory.vue'
 import PanelTask from '@/components/panel/PanelTask.vue'
+import PanelBug from '@/components/panel/PanelBug.vue'
 
 const route = useRoute()
 const store_item = useItemStore()
@@ -98,6 +99,23 @@ watch([() => store_project.projects.length], () => {
           :task_workload="item.task_workload"
           :task_number_completed="item.task_number_completed"
           :task_number_total="item.task_number_total"
+        />
+
+        <PanelBug
+          v-if="item.type == ItemType.BUG"
+          :rid="item.rid"
+          :type="item.type"
+          :state="item.state"
+          :risk="item.risk"
+          :title="item.title"
+          :detail="item.detail"
+          :result="item.result"
+          :datetime_entry="item.datetime_entry"
+          :datetime_update="item.datetime_update"
+          :rid_users="item.rid_users"
+          :name="item.name"
+          :bug_priority="item.task_priority"
+          :bug_workload="item.task_workload"
         />
       </template>
     </v-sheet>
