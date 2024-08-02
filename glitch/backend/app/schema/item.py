@@ -16,21 +16,9 @@ class Item(BaseModel):
     name: Optional[str] = None
     project_datetime_start: Optional[str] = None
     project_datetime_end: Optional[str] = None
-    project_workload: Optional[int] = None
-    project_number_completed: Optional[int] = None
-    project_number_total: Optional[int] = None
     event_datetime_end: Optional[str] = None
-    event_workload: Optional[int] = None
-    event_number_completed: Optional[int] = None
-    event_number_total: Optional[int] = None
-    feature_workload: Optional[int] = None
-    feature_number_completed: Optional[int] = None
-    feature_number_total: Optional[int] = None
     story_datetime_start: Optional[str] = None
     story_datetime_end: Optional[str] = None
-    story_workload: Optional[int] = None
-    story_number_completed: Optional[int] = None
-    story_number_total: Optional[int] = None
     task_priority: Optional[int] = None
     task_type: Optional[int] = None
     task_workload: Optional[int] = None
@@ -56,11 +44,16 @@ class Project(BaseModel):
     name: Optional[str] = None
     project_datetime_start: Optional[str] = None
     project_datetime_end: Optional[str] = None
-    task_workload: Optional[int] = None
-    task_number_completed: Optional[int] = None
-    task_number_total: Optional[int] = None
-    bug_priority: Optional[int] = None
-    bug_workload: Optional[int] = None
+    project_task_count_completed: Optional[int] = None
+    project_task_count_total: Optional[int] = None
+    project_task_workload_completed: Optional[int] = None
+    project_task_workload_total: Optional[int] = None
+    project_task_number_completed: Optional[int] = None
+    project_task_number_total: Optional[int] = None
+    project_bug_count_completed: Optional[int] = None
+    project_bug_count_total: Optional[int] = None
+    project_bug_workload_completed: Optional[int] = None
+    project_bug_workload_total: Optional[int] = None
 
     class Config:
         orm_mode = True
