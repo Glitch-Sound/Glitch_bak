@@ -36,27 +36,14 @@ export interface Item {
   name: string
   project_datetime_start: string
   project_datetime_end: string
-  project_workload: number
-  project_number_completed: number
-  project_number_total: number
   event_datetime_end: string
-  event_workload: number
-  event_number_completed: number
-  event_number_total: number
-  feature_workload: number
-  feature_number_completed: number
-  feature_number_total: number
   story_datetime_start: string
   story_datetime_end: string
-  story_workload: number
-  story_number_completed: number
-  story_number_total: number
-  task_priority: number
+  task_priority: boolean
   task_type: TaskType
   task_workload: number
   task_number_completed: number
   task_number_total: number
-  bug_priority: number
   bug_workload: number
 }
 
@@ -73,11 +60,16 @@ export interface Project {
   name: string
   project_datetime_start: string
   project_datetime_end: string
-  project_workload: number
-  project_number_completed: number
-  project_number_total: number
-  bug_priority: number
-  bug_workload: number
+  project_task_count_completed: number
+  project_task_count_total: number
+  project_task_workload_completed: number
+  project_task_workload_total: number
+  project_task_number_completed: number
+  project_task_number_total: number
+  project_bug_count_completed: number
+  project_bug_count_total: number
+  project_bug_workload_completed: number
+  project_bug_workload_total: number
 }
 
 export interface ProjectCreate {

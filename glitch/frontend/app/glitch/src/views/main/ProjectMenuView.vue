@@ -36,9 +36,11 @@ const handleSubmit = async (data: EventCreate) => {
     <v-sheet>
       <v-btn prepend-icon="mdi-plus-circle" @click="openDialog()">Event</v-btn>
 
-      <p>xxx</p>
-      <p>xxx</p>
-      <p>xxx</p>
+      <p><v-icon icon="mdi-moon-full" />All</p>
+      <p><v-icon icon="mdi-moon-waning-crescent" />Incomplete</p>
+      <p><v-icon icon="mdi-alert" />High Risk</p>
+      <p><v-icon icon="mdi-alert-box" />Alert</p>
+      <p><v-icon icon="mdi-account" />Assignment</p>
     </v-sheet>
 
     <v-divider :thickness="3"></v-divider>
