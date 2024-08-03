@@ -9,8 +9,8 @@ export enum ItemType {
 }
 
 export enum ItemState {
-  IDLE = 0,
-  WAIT,
+  NONE = 0,
+  IDLE,
   RUN,
   REVIEW,
   COMPLETE
