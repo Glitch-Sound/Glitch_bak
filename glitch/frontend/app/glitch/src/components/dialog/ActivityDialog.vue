@@ -1,11 +1,22 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, defineProps, watch } from 'vue'
 
-const dialog = ref(false)
+const props = defineProps({
+  showDialog: Boolean
+})
+
+const dialog = ref(props.showDialog)
+
+watch(
+  () => props.showDialog,
+  (newValue) => {
+    dialog.value = newValue
+  }
+)
 </script>
 
 <template>
-  <v-dialog v-model="dialog" width="auto">
+  <v-dialog v-model="dialog" persistent max-width="600px">
     <v-card
       max-width="400"
       prepend-icon="mdi-update"

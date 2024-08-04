@@ -2,6 +2,7 @@
 import { ref, defineProps } from 'vue'
 
 import { ItemType, ItemState, TaskType } from '@/types/Item'
+import ActivityDialog from '@/components/dialog/ActivityDialog.vue'
 import TypeLabel from '@/components/common/TypeLabel.vue'
 import StateLabel from '@/components/common/StateLabel.vue'
 import AccountLabel from '@/components/common/AccountLabel.vue'
@@ -71,13 +72,15 @@ const openDialog = () => {
     </v-expand-transition>
   </div>
 
-  <v-dialog v-model="dialog" width="auto">
+  <!-- <v-dialog v-model="dialog" width="auto">
     <v-card max-width="1000" title="Activity" text="・・・・・・・・・・・・・・・・・・・・・">
       <template v-slot:actions>
         <v-btn class="ms-auto" text="Ok" @click="dialog = false"></v-btn>
       </template>
     </v-card>
-  </v-dialog>
+  </v-dialog> -->
+
+  <ActivityDialog :showDialog="dialog" />
 </template>
 
 <style scoped></style>

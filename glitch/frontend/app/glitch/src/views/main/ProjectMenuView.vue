@@ -52,6 +52,16 @@ const handleSubmit = async (data: EventCreate) => {
     <v-divider :thickness="3"></v-divider>
 
     <v-sheet>
+      <p><v-icon icon="mdi-calendar-arrow-left" />Event</p>
+      <p><v-icon icon="mdi-apps" />Feature</p>
+      <p><v-icon icon="mdi-arrow-expand-horizontal" />Story</p>
+      <p><v-icon icon="mdi-label" />Task</p>
+      <p><v-icon icon="mdi-spider" />Bug</p>
+    </v-sheet>
+
+    <v-divider :thickness="3"></v-divider>
+
+    <v-sheet>
       <p><v-icon icon="mdi-circle-outline" />IDLE</p>
       <p><v-icon icon="mdi-circle" />RUN</p>
       <p><v-icon icon="mdi-circle-multiple" />REVIEW</p>
