@@ -17,5 +17,7 @@ class User(Base):
     is_admin   = Column(Integer, index=True)
     is_deleted = Column(Integer, index=True, default=0)
 
-    items      = relationship('Item', back_populates='user')
-    activities = relationship('Activity', back_populates='user')
+    items        = relationship('Item', foreign_keys='Item.rid_users', back_populates='user')
+    items_review = relationship('Item', foreign_keys='Item.rid_users_review', back_populates='user_review')
+    activities   = relationship('Activity', back_populates='user')
+

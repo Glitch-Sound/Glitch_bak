@@ -39,11 +39,15 @@ def getCurrentDatetime():
 
 def getItems(db: Session, rid_project: int):
     try:
+        UserAlias1 = aliased(User)
+        UserAlias2 = aliased(User)
+
         t0 = aliased(Item, name='t0')
         query_base = db.query(
             t0.rid,
             t0.rid_items,
             t0.rid_users,
+            t0.rid_users_review,
             t0.type,
             t0.state,
             t0.risk,
@@ -65,6 +69,7 @@ def getItems(db: Session, rid_project: int):
                 n.rid,
                 n.rid_items,
                 n.rid_users,
+                n.rid_users_review,
                 n.type,
                 n.state,
                 n.risk,
@@ -87,8 +92,10 @@ def getItems(db: Session, rid_project: int):
             query_recursive.c.result,
             query_recursive.c.datetime_entry,
             query_recursive.c.datetime_update,
-            User.rid.label('rid_users'),
-            User.name.label('name'),
+            UserAlias1.rid.label('rid_users'),
+            UserAlias1.name.label('name'),
+            UserAlias2.rid.label('rid_users_review'),
+            UserAlias2.name.label('name_review'),
             Project.datetime_start.label('project_datetime_start'),
             Project.datetime_end.label('project_datetime_end'),
             Event.datetime_end.label('event_datetime_end'),
@@ -101,7 +108,8 @@ def getItems(db: Session, rid_project: int):
             Task.number_total.label('task_number_total'),
             Bug.priority.label('bug_priority'),
             Bug.workload.label('bug_workload'))\
-        .outerjoin(User,  User.rid == query_recursive.c.rid_users)\
+        .outerjoin(UserAlias1,  UserAlias1.rid == query_recursive.c.rid_users)\
+        .outerjoin(UserAlias2,  UserAlias2.rid == query_recursive.c.rid_users_review)\
         .outerjoin(Project, Project.rid_items == query_recursive.c.rid)\
         .outerjoin(Event, Event.rid_items == query_recursive.c.rid)\
         .outerjoin(Feature, Feature.rid_items == query_recursive.c.rid)\
@@ -119,6 +127,8 @@ def getItems(db: Session, rid_project: int):
 
 def getProjects(db: Session):
     try:
+        UserAlias = aliased(User)
+
         query = db.query(
             Item.rid,
             Item.state,
@@ -128,8 +138,8 @@ def getProjects(db: Session):
             Item.result,
             Item.datetime_entry,
             Item.datetime_update,
-            User.rid.label('rid_users'),
-            User.name.label('name'),
+            UserAlias.rid.label('rid_users'),
+            UserAlias.name.label('name'),
             Project.datetime_start.label('project_datetime_start'),
             Project.datetime_end.label('project_datetime_end'),
             Project.task_count_completed.label('project_task_count_completed'),
@@ -142,7 +152,7 @@ def getProjects(db: Session):
             Project.bug_count_total.label('project_bug_count_total'),
             Project.bug_workload_completed.label('project_bug_workload_completed'),
             Project.bug_workload_total.label('project_bug_workload_total'))\
-        .outerjoin(User,  User.rid == Item.rid_users)\
+        .outerjoin(UserAlias,  UserAlias.rid == Item.rid_users)\
         .outerjoin(Project, Project.rid_items == Item.rid)\
         .filter(Item.type == ItemType.PROJECT.value)\
         .order_by(Item.rid)

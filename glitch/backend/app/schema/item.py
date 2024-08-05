@@ -14,6 +14,8 @@ class Item(BaseModel):
     datetime_update: str
     rid_users: int
     name: Optional[str] = None
+    rid_users_review: int
+    name_review: Optional[str] = None
     project_datetime_start: Optional[str] = None
     project_datetime_end: Optional[str] = None
     event_datetime_end: Optional[str] = None
