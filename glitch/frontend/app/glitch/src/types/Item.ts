@@ -34,6 +34,8 @@ export interface Item {
   datetime_update: string
   rid_users: number
   name: string
+  rid_users_review: number
+  name_review: string
   project_datetime_start: string
   project_datetime_end: string
   event_datetime_end: string

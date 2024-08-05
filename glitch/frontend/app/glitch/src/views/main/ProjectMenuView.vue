@@ -1,23 +1,17 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 import type { EventCreate } from '@/types/Item'
 import useItemStore from '@/stores/ItemStore'
-import useUserStore from '@/stores/UserStore'
 import ItemService from '@/services/ItemService'
 import CreateEventDialog from '@/components/dialog/CreateEventDialog.vue'
 
 const route = useRoute()
 const store_item = useItemStore()
-const store_user = useUserStore()
 
 const dialog = ref(false)
 const dialogFormData = ref({ rid_items: 0 })
-
-onMounted(() => {
-  store_user.fetchUsers()
-})
 
 const openDialog = () => {
   const rid_items = Number(route.params.rid)
@@ -66,16 +60,6 @@ const handleSubmit = async (data: EventCreate) => {
       <p><v-icon icon="mdi-circle" />RUN</p>
       <p><v-icon icon="mdi-circle-multiple" />REVIEW</p>
       <p><v-icon icon="mdi-circle-slice-8" />COMPLETE</p>
-    </v-sheet>
-
-    <v-divider :thickness="3"></v-divider>
-
-    <v-sheet>
-      <ul v-if="store_user.users.length">
-        <li v-for="user in store_user.users" :key="user.rid">
-          {{ user.name }}
-        </li>
-      </ul>
     </v-sheet>
   </v-navigation-drawer>
 
