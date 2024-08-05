@@ -170,6 +170,7 @@ def createProject(db: Session, target:schema_item.ProjectCreate):
 
         item = Item(
             rid_users=target.rid_user,
+            rid_users_review=None,
             type=ItemType.PROJECT.value,
             title=target.title,
             detail=target.detail,
@@ -202,6 +203,7 @@ def createEvent(db: Session, target:schema_item.EventCreate):
         item = Item(
             rid_items=target.rid_items,
             rid_users=target.rid_user,
+            rid_users_review=None,
             type=ItemType.EVENT.value,
             title=target.title,
             detail=target.detail,
@@ -233,6 +235,7 @@ def createFeature(db: Session, target:schema_item.FeatureCreate):
         item = Item(
             rid_items=target.rid_items,
             rid_users=target.rid_user,
+            rid_users_review=None,
             type=ItemType.FEATURE.value,
             title=target.title,
             detail=target.detail,
@@ -263,6 +266,7 @@ def createStory(db: Session, target:schema_item.StoryCreate):
         item = Item(
             rid_items=target.rid_items,
             rid_users=target.rid_user,
+            rid_users_review=None,
             type=ItemType.STORY.value,
             title=target.title,
             detail=target.detail,
@@ -295,6 +299,7 @@ def createTask(db: Session, target:schema_item.TaskCreate):
         item = Item(
             rid_items=target.rid_items,
             rid_users=target.rid_user,
+            rid_users_review=None,
             type=ItemType.TASK.value,
             title=target.title,
             detail=target.detail,
@@ -329,6 +334,7 @@ def createBug(db: Session, target:schema_item.BugCreate):
         item = Item(
             rid_items=target.rid_items,
             rid_users=target.rid_user,
+            rid_users_review=None,
             type=ItemType.BUG.value,
             title=target.title,
             detail=target.detail,

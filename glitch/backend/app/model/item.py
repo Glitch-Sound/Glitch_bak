@@ -13,7 +13,7 @@ class Item(Base):
     rid              = Column(Integer, primary_key=True)
     rid_items        = Column(Integer, ForeignKey('items.rid'))
     rid_users        = Column(Integer, ForeignKey('users.rid'))
-    rid_users_review = Column(Integer, ForeignKey('users.rid'))
+    rid_users_review = Column(Integer, ForeignKey('users.rid'), nullable=True)
     type             = Column(Integer, index=True, default=0)
     state            = Column(Integer, index=True, default=1)
     risk             = Column(Integer, index=True, default=0)
