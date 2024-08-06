@@ -31,6 +31,8 @@ const props = defineProps({
   datetime_update: String,
   rid_users: Number,
   name: String,
+  rid_users_review: Number,
+  name_review: String,
   story_datetime_start: String,
   story_datetime_end: String,
   story_workload: Number,
@@ -115,7 +117,8 @@ const handleBugSubmit = async (data: BugCreate) => {
     </div>
     <v-expand-transition>
       <div class="ml-6" v-show="expand">
-        Detail : {{ props.detail }}
+        <p>Detail : {{ props.detail }}</p>
+        <p>Result : {{ props.result }}</p>
 
         <v-btn icon size="x-small">
           <v-icon>mdi-pencil</v-icon>
