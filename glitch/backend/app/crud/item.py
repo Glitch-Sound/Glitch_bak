@@ -29,6 +29,13 @@ class ItemType(Enum):
     TASK    = 5
     BUG     = 6
 
+class ItemState(Enum):
+    IDLE     = 1
+    RUN      = 2
+    ALERT    = 3
+    REVIEW   = 4
+    COMPLETE = 5
+
 
 # TODO:共通化.
 def getCurrentDatetime():
