@@ -12,6 +12,7 @@ export enum ItemState {
   NONE = 0,
   IDLE,
   RUN,
+  ALERT,
   REVIEW,
   COMPLETE
 }

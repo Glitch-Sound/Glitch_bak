@@ -52,15 +52,6 @@ const handleSubmit = async (data: EventCreate) => {
       <p><v-icon icon="mdi-label" />Task</p>
       <p><v-icon icon="mdi-spider" />Bug</p>
     </v-sheet>
-
-    <v-divider :thickness="3"></v-divider>
-
-    <v-sheet>
-      <p><v-icon icon="mdi-circle-outline" />IDLE</p>
-      <p><v-icon icon="mdi-circle" />RUN</p>
-      <p><v-icon icon="mdi-circle-multiple" />REVIEW</p>
-      <p><v-icon icon="mdi-circle-slice-8" />COMPLETE</p>
-    </v-sheet>
   </v-navigation-drawer>
 
   <CreateEventDialog

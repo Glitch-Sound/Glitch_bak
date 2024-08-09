@@ -75,14 +75,6 @@ const openDialog = () => {
     </v-expand-transition>
   </div>
 
-  <!-- <v-dialog v-model="dialog" width="auto">
-    <v-card max-width="1000" title="Activity" text="・・・・・・・・・・・・・・・・・・・・・">
-      <template v-slot:actions>
-        <v-btn class="ms-auto" text="Ok" @click="dialog = false"></v-btn>
-      </template>
-    </v-card>
-  </v-dialog> -->
-
   <ActivityDialog :showDialog="dialog" />
 </template>
 

@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 
 import type { Project } from '@/types/Item'
 import useProjectStore from '@/stores/ProjectStore'
+import AccountLabel from '@/components/common/AccountLabel.vue'
 
 const route = useRoute()
 const store_project = useProjectStore()
@@ -70,10 +71,9 @@ const handleSubmit = async (project: Project) => {
 
     <v-spacer></v-spacer>
 
-    Guest
-    <v-btn icon>
-      <v-icon>mdi-account-circle</v-icon>
-    </v-btn>
+    <p class="mx-1">
+      <AccountLabel :rid_users="0" :name="'Guest'"></AccountLabel>
+    </p>
 
     <v-btn icon disabled>
       <v-icon>mdi-magnify</v-icon>
