@@ -22,7 +22,7 @@ watch([() => store_project.projects.length], () => {
 
 <template>
   <v-main>
-    <v-sheet>
+    <v-sheet class="mt-1 ml-1 pa-3 rounded-lg">
       <template v-for="item in store_item.items" :key="item.rid">
         <PanelEvent
           v-if="item.type == ItemType.EVENT"

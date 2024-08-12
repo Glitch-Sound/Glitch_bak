@@ -15,7 +15,7 @@ const hash = computed(() => {
 
 const identiconDataUri = computed(() => {
   const options = {
-    background: [255, 255, 255, 255],
+    background: [255, 255, 255, 0],
     format: 'svg'
   }
   return 'data:image/svg+xml;base64,' + new Identicon(hash.value, options).toString()

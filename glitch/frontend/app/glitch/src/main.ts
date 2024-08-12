@@ -14,7 +14,6 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
 import WebFont from 'webfontloader'
-import './assets/main.css'
 
 const app = createApp(App)
 const pinia = createPinia()
@@ -30,7 +29,8 @@ const myDarkTheme: ThemeDefinition = {
   colors: {
     background: '#000000',
     surface: '#0a0a0a',
-    'on-surface': '#cdcdcd'
+    'on-surface': '#cdcdcd',
+    iconColor: '#ededed'
   },
   variables: {
     fontFamily: 'Noto Sans JP, sans-serif'

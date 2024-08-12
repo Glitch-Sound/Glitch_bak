@@ -56,13 +56,13 @@ const handleSubmit = async (data: FeatureCreate) => {
 </script>
 
 <template>
-  <div class="d-flex flex-column ma-0 pl-0">
+  <div class="d-flex flex-column ma-0 py-2 pl-1">
     <div class="d-flex flex-row align-baseline">
       <p class="mx-1">
         <TypeLabel :type="props.type" />
       </p>
 
-      <p class="mx-1">
+      <p class="mx-1" style="width: 100px; text-align: center">
         <StateLabel :state="props.state" />
       </p>
 
@@ -74,7 +74,7 @@ const handleSubmit = async (data: FeatureCreate) => {
         <AccountLabel :rid_users="props.rid_users" :name="props.name" />
       </p>
 
-      <p class="mx-2">information</p>
+      <p class="mx-6">information</p>
 
       <p class="mx-1">
         <v-btn icon size="x-small" @click="openDialog()">

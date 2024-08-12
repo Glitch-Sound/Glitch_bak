@@ -4,7 +4,7 @@ import { useRoute } from 'vue-router'
 
 import type { Project } from '@/types/Item'
 import useProjectStore from '@/stores/ProjectStore'
-import AccountLabel from '@/components/common/AccountLabel.vue'
+import AccountDetail from '@/components/common/AccountDetail.vue'
 
 const route = useRoute()
 const store_project = useProjectStore()
@@ -44,19 +44,19 @@ const handleSubmit = async (project: Project) => {
 </script>
 
 <template>
-  <v-app-bar class="elevation-0">
+  <v-app-bar color="#272d38">
     <v-app-bar-title @click="toggleDialog">
       {{ title }}
     </v-app-bar-title>
 
     <router-link to="/">
-      <v-btn icon>
+      <v-btn icon color="iconColor">
         <v-icon>mdi-home</v-icon>
       </v-btn>
     </router-link>
 
     <router-link :to="link_project">
-      <v-btn icon :disabled="link_disabled">
+      <v-btn icon color="iconColor" :disabled="link_disabled">
         <v-icon>mdi-view-list</v-icon>
       </v-btn>
     </router-link>
@@ -71,16 +71,16 @@ const handleSubmit = async (project: Project) => {
 
     <v-spacer></v-spacer>
 
-    <p class="mx-1">
-      <AccountLabel :rid_users="0" :name="'Guest'"></AccountLabel>
-    </p>
+    <div class="mx-1">
+      <AccountDetail :rid_users="0" :name="'Guest'"></AccountDetail>
+    </div>
 
-    <v-btn icon disabled>
+    <v-btn icon disabled class="mx-1">
       <v-icon>mdi-magnify</v-icon>
     </v-btn>
 
     <router-link to="/setting">
-      <v-btn icon>
+      <v-btn icon color="iconColor" class="mx-1">
         <v-icon>mdi-cog</v-icon>
       </v-btn>
     </router-link>
@@ -110,4 +110,10 @@ const handleSubmit = async (project: Project) => {
   </v-dialog>
 </template>
 
-<style scoped></style>
+<style scoped>
+.v-toolbar-title {
+  font-size: 26px;
+  color: #ffffff;
+  line-height: 1.5;
+}
+</style>

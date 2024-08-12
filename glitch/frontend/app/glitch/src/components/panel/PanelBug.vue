@@ -34,13 +34,13 @@ const openDialog = () => {
 </script>
 
 <template>
-  <div class="d-flex flex-column ma-0 pl-15">
+  <div class="d-flex flex-column ma-0 py-2 pl-16">
     <div class="d-flex flex-row align-baseline">
       <p class="mx-1">
         <TypeLabel :type="props.type" />
       </p>
 
-      <p class="mx-1">
+      <p class="mx-1" style="width: 100px; text-align: center">
         <StateLabel :state="props.state" />
       </p>
 
@@ -52,7 +52,7 @@ const openDialog = () => {
         <AccountLabel :rid_users="props.rid_users" :name="props.name"></AccountLabel>
       </p>
 
-      <p class="mx-2">information</p>
+      <p class="mx-6">information</p>
 
       <p class="mx-1">
         <v-btn icon size="x-small" @click="openDialog()">

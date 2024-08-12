@@ -76,13 +76,13 @@ const handleBugSubmit = async (data: BugCreate) => {
 </script>
 
 <template>
-  <div class="d-flex flex-column ma-0 pl-10">
+  <div class="d-flex flex-column ma-0 py-2 pl-11">
     <div class="d-flex flex-row align-baseline">
       <p class="mx-1">
         <TypeLabel :type="props.type" />
       </p>
 
-      <p class="mx-1">
+      <p class="mx-1" style="width: 100px; text-align: center">
         <StateLabel :state="props.state" />
       </p>
 
@@ -94,7 +94,7 @@ const handleBugSubmit = async (data: BugCreate) => {
         <AccountLabel :rid_users="props.rid_users" :name="props.name"></AccountLabel>
       </p>
 
-      <p class="mx-2">information</p>
+      <p class="mx-6">information</p>
 
       <p class="mx-1">
         <v-menu>

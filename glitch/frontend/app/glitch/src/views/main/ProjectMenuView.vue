@@ -32,25 +32,26 @@ const handleSubmit = async (data: EventCreate) => {
 </script>
 
 <template>
-  <v-navigation-drawer>
-    <v-sheet>
-      <v-btn prepend-icon="mdi-plus-circle" @click="openDialog()">Event</v-btn>
-
-      <p><v-icon icon="mdi-moon-full" />All</p>
-      <p><v-icon icon="mdi-moon-waning-crescent" />Incomplete</p>
-      <p><v-icon icon="mdi-alert" />High Risk</p>
-      <p><v-icon icon="mdi-alert-box" />Alert</p>
-      <p><v-icon icon="mdi-account" />Assignment</p>
+  <v-navigation-drawer color="background" class="no-border">
+    <v-sheet color="#1d1d1d" class="rounded-lg mt-1 ml-1 py-3">
+      <v-list-item>
+        <v-btn width="250px" color="#9D0B28" prepend-icon="mdi-plus-circle" @click="openDialog()"
+          >Event</v-btn
+        >
+      </v-list-item>
+      <v-list-item><v-icon icon="mdi-moon-full" />All</v-list-item>
+      <v-list-item><v-icon icon="mdi-moon-waning-crescent" />Incomplete</v-list-item>
+      <v-list-item><v-icon icon="mdi-alert" />High Risk</v-list-item>
+      <v-list-item><v-icon icon="mdi-alert-box" />Alert</v-list-item>
+      <v-list-item><v-icon icon="mdi-account" />Assignment</v-list-item>
     </v-sheet>
 
-    <v-divider :thickness="3"></v-divider>
-
-    <v-sheet>
-      <p><v-icon icon="mdi-calendar-arrow-left" />Event</p>
-      <p><v-icon icon="mdi-apps" />Feature</p>
-      <p><v-icon icon="mdi-arrow-expand-horizontal" />Story</p>
-      <p><v-icon icon="mdi-label" />Task</p>
-      <p><v-icon icon="mdi-spider" />Bug</p>
+    <v-sheet color="#1d1d1d" class="rounded-lg mt-1 ml-1 py-3">
+      <v-list-item><v-icon icon="mdi-calendar-arrow-left" />Event</v-list-item>
+      <v-list-item><v-icon icon="mdi-apps" />Feature</v-list-item>
+      <v-list-item><v-icon icon="mdi-arrow-expand-horizontal" />Story</v-list-item>
+      <v-list-item><v-icon icon="mdi-label" />Task</v-list-item>
+      <v-list-item><v-icon icon="mdi-spider" />Bug</v-list-item>
     </v-sheet>
   </v-navigation-drawer>
 
@@ -62,4 +63,10 @@ const handleSubmit = async (data: EventCreate) => {
   />
 </template>
 
-<style scoped></style>
+<style scoped>
+@import '@/assets/main.css';
+
+.v-icon {
+  margin: 0 15px 0 0;
+}
+</style>
