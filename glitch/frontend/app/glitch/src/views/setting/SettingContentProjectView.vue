@@ -24,7 +24,7 @@ const headers = [
   { title: 'TITLE', key: 'title' },
   { title: 'DETAIL', key: 'detail' },
   { title: 'RESULT', key: 'result' },
-  { title: 'ENTRY', key: 'datetime_entry', width: '350px' },
+  { title: 'ENTRY', key: 'datetime_entry', width: '300px' },
   { title: 'USER', key: 'name', width: '100px' }
 ]
 
@@ -84,8 +84,4 @@ const handleSubmit = async (data: ProjectCreate) => {
   />
 </template>
 
-<style scoped>
-.data-table {
-  width: 90%;
-}
-</style>
+<style scoped></style>

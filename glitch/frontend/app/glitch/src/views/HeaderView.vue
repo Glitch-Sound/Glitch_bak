@@ -2,9 +2,9 @@
 import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import type { Project } from '@/types/Item'
 import useProjectStore from '@/stores/ProjectStore'
 import AccountDetail from '@/components/common/AccountDetail.vue'
+import ProjectDialog from '@/components/dialog/ProjectDialog.vue'
 
 const route = useRoute()
 const store_project = useProjectStore()
@@ -12,6 +12,11 @@ const store_project = useProjectStore()
 const title = ref('Glitch')
 const link_project = ref('/')
 const link_disabled = ref(true)
+const dialog = ref(false)
+
+const toggleDialog = () => {
+  dialog.value = !dialog.value
+}
 
 onMounted(() => {
   store_project.fetchProjects()
@@ -32,19 +37,14 @@ watch([() => store_project.selected_rid_project], () => {
   link_disabled.value = false
 })
 
-const projectDialog = ref(false)
-const toggleDialog = () => {
-  projectDialog.value = !projectDialog.value
-}
-
-const handleSubmit = async (project: Project) => {
-  store_project.setSelectedProjectRID(project.rid)
-  projectDialog.value = false
+const handleSubmit = async () => {
+  dialog.value = false
 }
 </script>
 
 <template>
   <v-app-bar color="#272d38">
+    <!-- <v-app-bar-title @click="toggleDialog"> -->
     <v-app-bar-title @click="toggleDialog">
       {{ title }}
     </v-app-bar-title>
@@ -86,28 +86,7 @@ const handleSubmit = async (project: Project) => {
     </router-link>
   </v-app-bar>
 
-  <v-dialog v-model="projectDialog" max-width="1500px">
-    <v-card>
-      <v-card-title class="headline">Project</v-card-title>
-      <v-card-text>
-        <ul v-if="store_project.projects.length">
-          <li v-for="project in store_project.projects" :key="project.rid">
-            {{ project.rid }}, {{ project.state }}, {{ project.risk }},
-            <router-link :to="`/project/${project.rid}`" @click="handleSubmit(project)">{{
-              project.title
-            }}</router-link
-            >, {{ project.detail }}, {{ project.result }}, {{ project.datetime_entry }},
-            {{ project.datetime_update }}, {{ project.name }},
-            {{ project.project_datetime_start }},{{ project.project_datetime_end }}
-          </li>
-        </ul>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="primary" @click="projectDialog = false">Close</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+  <ProjectDialog :showDialog="dialog" @submit="handleSubmit" />
 </template>
 
 <style scoped>
