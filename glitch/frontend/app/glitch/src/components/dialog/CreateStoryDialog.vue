@@ -28,10 +28,7 @@ const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props,
 
       <v-card-text>
         <v-form ref="formRef" v-model="valid" lazy-validation>
-          <AccountSelect
-            v-model="formData.rid_user"
-            @itemSelected="handleItemSelected"
-          ></AccountSelect>
+          <AccountSelect @itemSelected="handleItemSelected"></AccountSelect>
 
           <v-text-field
             v-model="formData.title"
