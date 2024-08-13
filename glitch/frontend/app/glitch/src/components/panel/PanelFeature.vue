@@ -37,8 +37,8 @@ const props = defineProps<{
   datetime_update: string
   rid_users: number
   name: string
-  rid_users_review: number
-  name_review: string
+  rid_users_review: number | null
+  name_review: string | null
 }>()
 
 const openDialog = () => {

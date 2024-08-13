@@ -354,6 +354,7 @@ def createBug(db: Session, target:schema_item.BugCreate):
 
         addition = Bug(
             rid_items=item.rid,
+            priority=0,
             workload=target.workload,
         )
         db.add(addition)
