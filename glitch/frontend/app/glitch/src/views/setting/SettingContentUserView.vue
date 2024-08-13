@@ -17,6 +17,13 @@ const dialogFormData = ref<UserCreate>({
   is_admin: false
 })
 
+const headers = [
+  { title: 'RID', key: 'rid', width: '50px' },
+  { title: 'USER', key: 'user', width: '150px' },
+  { title: 'NAME', key: 'name', width: '150px' },
+  { title: 'ADMIN', key: 'is_admin', width: '100px' }
+]
+
 onMounted(() => {
   store_user.fetchUsers()
 })
@@ -48,45 +55,50 @@ const handleSubmit = async (data: UserCreate) => {
 
 <template>
   <v-main>
-    <v-container>
-      <div>
-        Manager
-        <v-btn icon size="x-small" @click="openDialog(true)">
-          <v-icon>mdi-plus-circle</v-icon>
-        </v-btn>
-      </div>
-      <div>
-        <ul v-if="users_manager.length">
-          <li v-for="user in users_manager" :key="user.rid">
-            {{ user.rid }}, {{ user.user }}, {{ user.name }}, {{ user.is_admin }}
-          </li>
-        </ul>
-      </div>
-    </v-container>
+    <v-sheet class="mt-1 ml-1 pa-1 rounded-lg">
+      <v-container class="mb-5">
+        <div class="text-h6">
+          Manager
+          <v-btn icon size="x-small" @click="openDialog(true)">
+            <v-icon>mdi-plus-thick</v-icon>
+          </v-btn>
+        </div>
 
-    <v-container>
-      <div>
-        Member
-        <v-btn icon size="x-small" @click="openDialog(false)">
-          <v-icon>mdi-plus-circle</v-icon>
-        </v-btn>
-      </div>
-      <div>
-        <ul v-if="users_member.length">
-          <li v-for="user in users_member" :key="user.rid">
-            {{ user.rid }}, {{ user.user }}, {{ user.name }}, {{ user.is_admin }}
-          </li>
-        </ul>
-      </div>
-    </v-container>
+        <v-data-table class="ml-5 data-table" :items="users_manager"></v-data-table>
+      </v-container>
 
-    <CreateUserDialog
-      :showDialog="dialog"
-      :formData="dialogFormData"
-      @update:showDialog="dialog = $event"
-      @submit="handleSubmit"
-    />
+      <v-container class="mb-5">
+        <div class="text-h6">
+          Member
+          <v-btn icon size="x-small" @click="openDialog(false)">
+            <v-icon>mdi-plus-thick</v-icon>
+          </v-btn>
+        </div>
+
+        <v-data-table class="ml-5 data-table" :items="users_member" :headers="headers">
+          <template v-slot:item="{ item }">
+            <tr>
+              <td>{{ item.rid }}</td>
+              <td>{{ item.user }}</td>
+              <td>{{ item.name }}</td>
+              <td>{{ item.is_admin }}</td>
+            </tr>
+          </template>
+        </v-data-table>
+      </v-container>
+    </v-sheet>
   </v-main>
+
+  <CreateUserDialog
+    :showDialog="dialog"
+    :formData="dialogFormData"
+    @update:showDialog="dialog = $event"
+    @submit="handleSubmit"
+  />
 </template>
 
-<style scoped></style>
+<style scoped>
+.data-table {
+  width: 1000px;
+}
+</style>

@@ -57,13 +57,13 @@ const props = defineProps<{
 
 const openTaskDialog = () => {
   const rid_items = props.rid
-  dialogFormDataTask.value.rid_items = rid_items
+  dialogFormDataTask.value = { ...dialogFormDataTask.value, rid_items }
   dialogTask.value = true
 }
 
 const openBugDialog = () => {
   const rid_items = props.rid
-  dialogFormDataBug.value.rid_items = rid_items
+  dialogFormDataBug.value = { ...dialogFormDataBug.value, rid_items }
   dialogBug.value = true
 }
 

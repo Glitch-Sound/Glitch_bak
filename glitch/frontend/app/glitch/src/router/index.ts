@@ -21,7 +21,7 @@ const router = createRouter({
       path: '/setting',
       children: [
         {
-          path: '',
+          path: 'main',
           component: SettingMainView
         },
         {

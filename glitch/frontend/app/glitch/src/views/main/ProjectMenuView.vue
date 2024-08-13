@@ -22,7 +22,7 @@ const dialogFormData = ref<EventCreate>({
 
 const openDialog = () => {
   const rid_items = Number(route.params.rid)
-  dialogFormData.value.rid_items = rid_items
+  dialogFormData.value = { ...dialogFormData.value, rid_items }
   dialog.value = true
 }
 

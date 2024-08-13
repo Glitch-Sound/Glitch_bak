@@ -42,7 +42,7 @@ const props = defineProps<{
 
 const openDialog = () => {
   const rid_items = props.rid
-  dialogFormData.value.rid_items = rid_items
+  dialogFormData.value = { ...dialogFormData.value, rid_items }
   dialog.value = true
 }
 

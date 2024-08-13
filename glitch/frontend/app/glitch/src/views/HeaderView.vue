@@ -79,7 +79,7 @@ const handleSubmit = async (project: Project) => {
       <v-icon>mdi-magnify</v-icon>
     </v-btn>
 
-    <router-link to="/setting">
+    <router-link to="/setting/main">
       <v-btn icon color="iconColor" class="mx-1">
         <v-icon>mdi-cog</v-icon>
       </v-btn>
