@@ -113,8 +113,8 @@ onMounted(() => {
           :name="item.name"
           :rid_users_review="item.rid_users_review"
           :name_review="item.name_review"
-          :bug_priority="item.task_priority"
-          :bug_workload="item.task_workload"
+          :bug_priority="item.bug_priority"
+          :bug_workload="item.bug_workload"
         />
       </template>
     </v-sheet>

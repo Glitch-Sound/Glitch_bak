@@ -47,6 +47,7 @@ export interface Item {
   task_workload: number
   task_number_completed: number
   task_number_total: number
+  bug_priority: number
   bug_workload: number
 }
 
