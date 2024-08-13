@@ -2,7 +2,7 @@
 import { ref, defineProps } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { ItemType, ItemState, FeatureCreate } from '@/types/Item'
+import { ItemType, ItemState, type FeatureCreate } from '@/types/Item'
 import useItemStore from '@/stores/ItemStore'
 import ItemService from '@/services/ItemService'
 import CreateFeatureDialog from '@/components/dialog/CreateFeatureDialog.vue'
@@ -15,31 +15,34 @@ const store_item = useItemStore()
 
 const expand = ref(false)
 const dialog = ref(false)
-const dialogFormData = ref({ rid_items: 0 })
 
-const props = defineProps({
-  rid: Number,
-  type: ItemType,
-  state: ItemState,
-  risk: Number,
-  title: String,
-  detail: String,
-  result: String,
-  datetime_entry: String,
-  datetime_update: String,
-  rid_users: Number,
-  name: String,
-  rid_users_review: Number,
-  name_review: String,
-  event_datetime_end: String,
-  event_workload: Number,
-  event_number_completed: Number,
-  event_number_total: Number
+const dialogFormData = ref<FeatureCreate>({
+  rid_items: 0,
+  rid_user: 0,
+  title: '',
+  detail: ''
 })
+
+const props = defineProps<{
+  rid: number
+  type: ItemType
+  state: ItemState
+  risk: number
+  title: string
+  detail: string
+  result: string
+  datetime_entry: string
+  datetime_update: string
+  rid_users: number
+  name: string
+  rid_users_review: number
+  name_review: string
+  event_datetime_end: string
+}>()
 
 const openDialog = () => {
   const rid_items = props.rid
-  dialogFormData.value = { rid_items }
+  dialogFormData.value.rid_items = rid_items
   dialog.value = true
 }
 

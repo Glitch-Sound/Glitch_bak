@@ -4,10 +4,10 @@ import * as CryptoJS from 'crypto-js'
 
 import { defineProps, computed } from 'vue'
 
-const props = defineProps({
-  rid_users: Number,
-  name: String
-})
+const props = defineProps<{
+  rid_users: number
+  name: string
+}>()
 
 const hash = computed(() => {
   return CryptoJS.MD5(props.rid_users + props.name || '').toString()
@@ -15,8 +15,8 @@ const hash = computed(() => {
 
 const identiconDataUri = computed(() => {
   const options = {
-    background: [255, 255, 255, 0],
-    format: 'svg'
+    background: [255, 255, 255, 0] as [number, number, number, number],
+    format: 'svg' as 'svg'
   }
   return 'data:image/svg+xml;base64,' + new Identicon(hash.value, options).toString()
 })

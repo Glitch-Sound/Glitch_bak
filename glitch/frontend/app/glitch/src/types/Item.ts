@@ -42,7 +42,7 @@ export interface Item {
   event_datetime_end: string
   story_datetime_start: string
   story_datetime_end: string
-  task_priority: boolean
+  task_priority: number
   task_type: TaskType
   task_workload: number
   task_number_completed: number

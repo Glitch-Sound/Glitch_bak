@@ -6,13 +6,18 @@ import useUserStore from '@/stores/UserStore'
 const store_user = useUserStore()
 
 const selectedOption = ref<number | null>(null)
+const options = ref<{ name: string; rid: number }[]>([])
+
+const emit = defineEmits<{
+  (e: 'itemSelected', selectedItem: any): void
+}>()
 
 onMounted(() => {
   store_user.fetchUsers()
 })
 
 const emitSelected = () => {
-  const selectedItem = options.value.find((item) => item.rid === selected.value)
+  const selectedItem = options.value.find((item) => item.rid === selectedOption.value)
   if (selectedItem) {
     emit('itemSelected', selectedItem)
   }

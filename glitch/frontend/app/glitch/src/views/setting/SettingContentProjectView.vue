@@ -9,7 +9,14 @@ import CreateProjectDialog from '@/components/dialog/CreateProjectDialog.vue'
 const store_project = useProjectStore()
 
 const dialog = ref(false)
-const dialogFormData = ref(null)
+
+const dialogFormData = ref<ProjectCreate>({
+  rid_user: 0,
+  title: '',
+  detail: '',
+  datetime_start: '',
+  datetime_end: ''
+})
 
 onMounted(() => {
   store_project.fetchProjects()

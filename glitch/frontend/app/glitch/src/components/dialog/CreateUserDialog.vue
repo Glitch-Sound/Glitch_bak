@@ -4,12 +4,10 @@ import { defineProps } from 'vue'
 import type { UserCreate } from '@/types/User'
 import { useDialog, EVENT_TYPES } from '@/components/dialog/BaseDialog'
 
-const props = defineProps({
-  showDialog: Boolean,
-  formData: {
-    type: Object as UserCreate
-  }
-})
+const props = defineProps<{
+  showDialog: boolean
+  formData: UserCreate
+}>()
 
 const emits = defineEmits([EVENT_TYPES.UPDATE_SHOW_DIALOG, EVENT_TYPES.SUBMIT])
 
@@ -51,8 +49,8 @@ const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props,
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn text @click="dialog = false">Cancel</v-btn>
-        <v-btn text @click="submitData">Submit</v-btn>
+        <v-btn @click="dialog = false">Cancel</v-btn>
+        <v-btn @click="submitData">Submit</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

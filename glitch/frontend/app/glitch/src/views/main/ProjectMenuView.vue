@@ -11,11 +11,18 @@ const route = useRoute()
 const store_item = useItemStore()
 
 const dialog = ref(false)
-const dialogFormData = ref({ rid_items: 0 })
+
+const dialogFormData = ref<EventCreate>({
+  rid_items: 0,
+  rid_user: 0,
+  title: '',
+  detail: '',
+  datetime_end: ''
+})
 
 const openDialog = () => {
   const rid_items = Number(route.params.rid)
-  dialogFormData.value = { rid_items }
+  dialogFormData.value.rid_items = rid_items
   dialog.value = true
 }
 

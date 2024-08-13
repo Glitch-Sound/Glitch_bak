@@ -10,23 +10,23 @@ import AccountLabel from '@/components/common/AccountLabel.vue'
 const expand = ref(false)
 const dialog = ref(false)
 
-const props = defineProps({
-  rid: Number,
-  type: ItemType,
-  state: ItemState,
-  risk: Number,
-  title: String,
-  detail: String,
-  result: String,
-  datetime_entry: String,
-  datetime_update: String,
-  rid_users: Number,
-  name: String,
-  rid_users_review: Number,
-  name_review: String,
-  bug_priority: Number,
-  bug_workload: Number
-})
+const props = defineProps<{
+  rid: number
+  type: ItemType
+  state: ItemState
+  risk: number
+  title: string
+  detail: string
+  result: string
+  datetime_entry: string
+  datetime_update: string
+  rid_users: number
+  name: string
+  rid_users_review: number
+  name_review: string
+  bug_priority: number
+  bug_workload: number
+}>()
 
 const openDialog = () => {
   dialog.value = true

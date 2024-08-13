@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, defineProps, watch } from 'vue'
 
-const props = defineProps({
-  showDialog: Boolean
-})
+const props = defineProps<{
+  showDialog: boolean
+}>()
 
 const dialog = ref(props.showDialog)
 

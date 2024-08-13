@@ -2,7 +2,7 @@
 import { ref, defineProps } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { ItemType, ItemState, TaskCreate } from '@/types/Item'
+import { ItemType, ItemState, type TaskCreate, type BugCreate } from '@/types/Item'
 import useItemStore from '@/stores/ItemStore'
 import ItemService from '@/services/ItemService'
 import CreateTaskDialog from '@/components/dialog/CreateTaskDialog.vue'
@@ -17,38 +17,53 @@ const store_item = useItemStore()
 const expand = ref(false)
 const dialogTask = ref(false)
 const dialogBug = ref(false)
-const dialogFormData = ref({ rid_items: 0 })
 
-const props = defineProps({
-  rid: Number,
-  type: ItemType,
-  state: ItemState,
-  risk: Number,
-  title: String,
-  detail: String,
-  result: String,
-  datetime_entry: String,
-  datetime_update: String,
-  rid_users: Number,
-  name: String,
-  rid_users_review: Number,
-  name_review: String,
-  story_datetime_start: String,
-  story_datetime_end: String,
-  story_workload: Number,
-  story_number_completed: Number,
-  story_number_total: Number
+const dialogFormDataTask = ref<TaskCreate>({
+  rid_items: 0,
+  rid_user: 0,
+  title: '',
+  detail: '',
+  type: 0,
+  workload: 0,
+  number_completed: 0,
+  number_total: 0
 })
+
+const dialogFormDataBug = ref<BugCreate>({
+  rid_items: 0,
+  rid_user: 0,
+  title: '',
+  detail: '',
+  workload: 0
+})
+
+const props = defineProps<{
+  rid: number
+  type: ItemType
+  state: ItemState
+  risk: number
+  title: string
+  detail: string
+  result: string
+  datetime_entry: string
+  datetime_update: string
+  rid_users: number
+  name: string
+  rid_users_review: number
+  name_review: string
+  story_datetime_start: string
+  story_datetime_end: string
+}>()
 
 const openTaskDialog = () => {
   const rid_items = props.rid
-  dialogFormData.value = { rid_items }
+  dialogFormDataTask.value.rid_items = rid_items
   dialogTask.value = true
 }
 
 const openBugDialog = () => {
   const rid_items = props.rid
-  dialogFormData.value = { rid_items }
+  dialogFormDataBug.value.rid_items = rid_items
   dialogBug.value = true
 }
 
@@ -129,15 +144,15 @@ const handleBugSubmit = async (data: BugCreate) => {
 
   <CreateTaskDialog
     :showDialog="dialogTask"
-    :formData="dialogFormData"
-    @update:showDialog="dialog = $event"
+    :formData="dialogFormDataTask"
+    @update:showDialog="dialogTask = $event"
     @submit="handleTaskSubmit"
   />
 
   <CreateBugDialog
     :showDialog="dialogBug"
-    :formData="dialogFormData"
-    @update:showDialog="dialog = $event"
+    :formData="dialogFormDataBug"
+    @update:showDialog="dialogBug = $event"
     @submit="handleBugSubmit"
   />
 </template>

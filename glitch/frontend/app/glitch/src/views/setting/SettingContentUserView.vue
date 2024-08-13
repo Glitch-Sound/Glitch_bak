@@ -9,7 +9,13 @@ import CreateUserDialog from '@/components/dialog/CreateUserDialog.vue'
 const store_user = useUserStore()
 
 const dialog = ref(false)
-const dialogFormData = ref({ is_admin: false })
+
+const dialogFormData = ref<UserCreate>({
+  user: '',
+  password: '',
+  name: '',
+  is_admin: false
+})
 
 onMounted(() => {
   store_user.fetchUsers()
@@ -24,7 +30,7 @@ const users_member = computed(() => {
 })
 
 const openDialog = (is_admin: boolean) => {
-  dialogFormData.value = { is_admin }
+  dialogFormData.value.is_admin = is_admin
   dialog.value = true
 }
 

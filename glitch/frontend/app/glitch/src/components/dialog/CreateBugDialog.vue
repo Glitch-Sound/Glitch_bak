@@ -2,18 +2,17 @@
 import { defineProps } from 'vue'
 
 import type { BugCreate } from '@/types/Item'
+import type { User } from '@/types/User'
 import { useDialog, EVENT_TYPES } from '@/components/dialog/BaseDialog'
 import AccountSelect from '@/components/common/AccountSelect.vue'
 
-const props = defineProps({
-  showDialog: Boolean,
-  formData: {
-    type: Object as BugCreate
-  }
-})
+const props = defineProps<{
+  showDialog: boolean
+  formData: BugCreate
+}>()
 
 const handleItemSelected = (item: User) => {
-  formData.rid_user = item.rid
+  formData.value.rid_user = item.rid
 }
 
 const emits = defineEmits([EVENT_TYPES.UPDATE_SHOW_DIALOG, EVENT_TYPES.SUBMIT])
@@ -58,8 +57,8 @@ const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props,
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn text @click="dialog = false">Cancel</v-btn>
-        <v-btn text @click="submitData">Submit</v-btn>
+        <v-btn @click="dialog = false">Cancel</v-btn>
+        <v-btn @click="submitData">Submit</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { watch } from 'vue'
+import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { ItemType } from '@/types/Item'
 import useItemStore from '@/stores/ItemStore'
-import useProjectStore from '@/stores/ProjectStore'
 import PanelEvent from '@/components/panel/PanelEvent.vue'
 import PanelFeature from '@/components/panel/PanelFeature.vue'
 import PanelStory from '@/components/panel/PanelStory.vue'
@@ -13,9 +12,8 @@ import PanelBug from '@/components/panel/PanelBug.vue'
 
 const route = useRoute()
 const store_item = useItemStore()
-const store_project = useProjectStore()
 
-watch([() => store_project.projects.length], () => {
+onMounted(() => {
   store_item.fetchItems(Number(route.params.rid))
 })
 </script>
@@ -40,9 +38,6 @@ watch([() => store_project.projects.length], () => {
           :rid_users_review="item.rid_users_review"
           :name_review="item.name_review"
           :event_datetime_end="item.event_datetime_end"
-          :event_workload="item.event_workload"
-          :event_number_completed="item.event_number_completed"
-          :event_number_total="item.event_number_total"
         />
 
         <PanelFeature
@@ -60,9 +55,6 @@ watch([() => store_project.projects.length], () => {
           :name="item.name"
           :rid_users_review="item.rid_users_review"
           :name_review="item.name_review"
-          :feature_workload="item.feature_workload"
-          :feature_number_completed="item.feature_number_completed"
-          :feature_number_total="item.feature_number_total"
         />
 
         <PanelStory
@@ -82,9 +74,6 @@ watch([() => store_project.projects.length], () => {
           :name_review="item.name_review"
           :story_datetime_start="item.story_datetime_start"
           :story_datetime_end="item.story_datetime_end"
-          :story_workload="item.story_workload"
-          :story_number_completed="item.story_number_completed"
-          :story_number_total="item.story_number_total"
         />
 
         <PanelTask

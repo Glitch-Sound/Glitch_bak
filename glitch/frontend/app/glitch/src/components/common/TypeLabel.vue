@@ -3,9 +3,9 @@ import { defineProps } from 'vue'
 
 import { ItemType } from '@/types/Item'
 
-const props = defineProps({
+const props = defineProps<{
   type: ItemType
-})
+}>()
 </script>
 
 <template>
