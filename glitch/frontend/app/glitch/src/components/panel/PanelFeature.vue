@@ -60,40 +60,56 @@ const handleSubmit = async (data: StoryCreate) => {
 </script>
 
 <template>
-  <div class="d-flex flex-column ma-0 py-2 pl-6">
-    <div class="d-flex flex-row align-baseline">
-      <p class="mx-1">
+  <div class="panel-common panel-feature">
+    <v-row class="align-baseline">
+      <v-col cols="auto">
         <TypeLabel :type="props.type" />
-      </p>
+      </v-col>
 
-      <p class="mx-1" style="width: 100px; text-align: center">
+      <v-col cols="auto">
         <StateLabel :state="props.state" />
-      </p>
+      </v-col>
 
-      <p class="mx-1 font-weight-bold" @click="expand = !expand">{{ props.title }}</p>
+      <v-col>
+        <span class="title" @click="expand = !expand">{{ props.title }}</span>
+      </v-col>
 
-      <v-spacer></v-spacer>
+      <v-col cols="auto">
+        <AccountLabel :rid_users="props.rid_users" :name="props.name" />
+      </v-col>
 
-      <p class="mx-1">
-        <AccountLabel :rid_users="props.rid_users" :name="props.name"></AccountLabel>
-      </p>
+      <v-col cols="auto"> information </v-col>
 
-      <p class="mx-6">information</p>
-
-      <p class="mx-1">
+      <v-col cols="auto">
         <v-btn icon size="x-small" @click="openDialog()">
           <v-icon>mdi-plus-thick</v-icon>
         </v-btn>
-      </p>
-    </div>
-    <v-expand-transition>
-      <div class="ml-6" v-show="expand">
-        <p>Detail : {{ props.detail }}</p>
-        <p>Result : {{ props.result }}</p>
+      </v-col>
+    </v-row>
 
-        <v-btn icon size="x-small">
-          <v-icon>mdi-pencil</v-icon>
-        </v-btn>
+    <v-expand-transition class="panel-detail-expand">
+      <div v-show="expand">
+        <v-row class="panel-detail-expand-row">
+          <v-col cols="auto">
+            <span>Detail :</span>
+          </v-col>
+
+          <v-col>
+            <span>{{ props.detail }}</span>
+          </v-col>
+
+          <v-col cols="auto">
+            <span>Result :</span>
+          </v-col>
+
+          <v-col>
+            <span>{{ props.result }}</span>
+          </v-col>
+
+          <v-col cols="auto">
+            <v-btn size="small" prepend-icon="mdi-pencil" variant="outlined">UPDATE</v-btn>
+          </v-col>
+        </v-row>
       </div>
     </v-expand-transition>
   </div>
@@ -106,4 +122,6 @@ const handleSubmit = async (data: StoryCreate) => {
   />
 </template>
 
-<style scoped></style>
+<style scoped>
+@import '@/components/panel/panel.css';
+</style>

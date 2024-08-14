@@ -69,7 +69,7 @@ const handleSubmit = async () => {
       <v-icon>mdi-chart-scatter-plot-hexbin</v-icon>
     </v-btn>
 
-    <v-spacer></v-spacer>
+    <v-spacer />
 
     <div class="mx-1">
       <AccountDetail :rid_users="0" :name="'Guest'"></AccountDetail>

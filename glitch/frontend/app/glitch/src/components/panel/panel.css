@@ -1,0 +1,54 @@
+.panel-common {
+    display: flex;
+    flex-direction: column;
+}
+
+.panel-event {
+    margin: 0 0 0 8px;
+    padding: 10px 0 10px 10px;
+}
+
+.panel-feature {
+    margin: 0 0 0 32px;
+    padding: 10px 0 10px 10px;
+}
+
+.panel-story {
+    margin: 0 0 0 56px;
+    padding: 10px 0 10px 10px;
+}
+
+.panel-task {
+    margin: 0 0 0 80px;
+    padding: 10px 0 10px 10px;
+}
+
+.panel-bug {
+    margin: 0 0 0 104px;
+    padding: 10px 0 10px 10px;
+}
+
+.title {
+    margin: 2px;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.panel-detail-expand {
+    margin: 8px 0;
+    padding: 8px 16px;
+}
+
+.panel-detail-expand-row {
+    padding: 0 8px;
+    display: flex;
+    align-items: baseline;
+    background-color: #212121;
+    border-radius: 6px;
+}
+
+
+
+
+
+

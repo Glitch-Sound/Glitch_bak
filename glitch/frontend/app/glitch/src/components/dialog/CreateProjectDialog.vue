@@ -63,7 +63,7 @@ const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props,
       </v-card-text>
 
       <v-card-actions>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-btn @click="dialog = false">Cancel</v-btn>
         <v-btn @click="submitData">Submit</v-btn>
       </v-card-actions>
