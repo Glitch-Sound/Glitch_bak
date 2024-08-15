@@ -28,15 +28,25 @@
     padding: 10px 0 10px 10px;
 }
 
+.state {
+    width: 40px;
+}
+
 .title {
     margin: 2px;
     color: #ffffff;
     font-weight: bold;
 }
 
+.information {
+    width: 160px;
+    padding: 5px;
+    text-align: center;
+}
+
 .panel-detail-expand {
-    margin: 8px 0;
-    padding: 8px 16px;
+    margin: 15px 0;
+    padding: 0 16px;
 }
 
 .panel-detail-expand-row {

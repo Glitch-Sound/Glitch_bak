@@ -6,6 +6,7 @@ import ActivityDialog from '@/components/dialog/ActivityDialog.vue'
 import TypeLabel from '@/components/common/TypeLabel.vue'
 import StateLabel from '@/components/common/StateLabel.vue'
 import AccountLabel from '@/components/common/AccountLabel.vue'
+import InformationTask from '@/components/panel/InformationTask.vue'
 
 const expand = ref(false)
 const dialog = ref(false)
@@ -39,7 +40,7 @@ const openDialog = () => {
 <template>
   <div class="panel-common panel-task">
     <v-row class="align-baseline">
-      <v-col cols="auto">
+      <v-col cols="auto" class="state">
         <TypeLabel :type="props.type" />
       </v-col>
 
@@ -55,7 +56,15 @@ const openDialog = () => {
         <AccountLabel :rid_users="props.rid_users" :name="props.name" />
       </v-col>
 
-      <v-col cols="auto"> information </v-col>
+      <v-col cols="auto" class="information">
+        <InformationTask
+          :risk="props.risk"
+          :task_type="props.task_type"
+          :task_workload="props.task_workload"
+          :task_number_completed="props.task_number_completed"
+          :task_number_total="props.task_number_total"
+        />
+      </v-col>
 
       <v-col cols="auto">
         <v-btn icon size="x-small" @click="openDialog()">

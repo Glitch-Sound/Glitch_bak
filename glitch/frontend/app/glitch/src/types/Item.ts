@@ -23,6 +23,16 @@ export enum TaskType {
   NUMBER
 }
 
+export enum WorkloadType {
+  NONE = 0,
+  WITHIN_AN_HOUR,
+  WITHIN_HALF_A_DAY,
+  WITHIN_A_DAY,
+  WITHIN_2_DAYS,
+  WITHIN_3_DAYS,
+  WITHIN_A_WEEK
+}
+
 export interface Item {
   rid: number
   type: ItemType

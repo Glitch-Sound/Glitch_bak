@@ -6,7 +6,6 @@ import useUserStore from '@/stores/UserStore'
 const store_user = useUserStore()
 
 const selectedOption = ref<number | null>(null)
-const options = ref<{ name: string; rid: number }[]>([])
 
 const emit = defineEmits<{
   (e: 'itemSelected', selectedItem: any): void
@@ -17,7 +16,7 @@ onMounted(() => {
 })
 
 const emitSelected = () => {
-  const selectedItem = options.value.find((item) => item.rid === selectedOption.value)
+  const selectedItem = store_user.users.find((item) => item.rid === selectedOption.value)
   if (selectedItem) {
     emit('itemSelected', selectedItem)
   }
@@ -32,7 +31,7 @@ const emitSelected = () => {
     item-title="name"
     item-value="rid"
     required
-    @change="emitSelected"
+    @update:modelValue="emitSelected"
   ></v-select>
 </template>
 

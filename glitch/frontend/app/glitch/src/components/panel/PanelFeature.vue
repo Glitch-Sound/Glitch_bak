@@ -9,6 +9,7 @@ import CreateStoryDialog from '@/components/dialog/CreateStoryDialog.vue'
 import TypeLabel from '@/components/common/TypeLabel.vue'
 import StateLabel from '@/components/common/StateLabel.vue'
 import AccountLabel from '@/components/common/AccountLabel.vue'
+import InformationFeature from '@/components/panel/InformationFeature.vue'
 
 const route = useRoute()
 const store_item = useItemStore()
@@ -62,7 +63,7 @@ const handleSubmit = async (data: StoryCreate) => {
 <template>
   <div class="panel-common panel-feature">
     <v-row class="align-baseline">
-      <v-col cols="auto">
+      <v-col cols="auto" class="state">
         <TypeLabel :type="props.type" />
       </v-col>
 
@@ -78,7 +79,9 @@ const handleSubmit = async (data: StoryCreate) => {
         <AccountLabel :rid_users="props.rid_users" :name="props.name" />
       </v-col>
 
-      <v-col cols="auto"> information </v-col>
+      <v-col cols="auto" class="information">
+        <InformationFeature />
+      </v-col>
 
       <v-col cols="auto">
         <v-btn icon size="x-small" @click="openDialog()">

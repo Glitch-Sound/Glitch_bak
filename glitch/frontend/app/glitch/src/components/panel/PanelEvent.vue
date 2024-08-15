@@ -9,6 +9,7 @@ import CreateFeatureDialog from '@/components/dialog/CreateFeatureDialog.vue'
 import TypeLabel from '@/components/common/TypeLabel.vue'
 import StateLabel from '@/components/common/StateLabel.vue'
 import AccountLabel from '@/components/common/AccountLabel.vue'
+import InformationEvent from '@/components/panel/InformationEvent.vue'
 
 const route = useRoute()
 const store_item = useItemStore()
@@ -61,7 +62,7 @@ const handleSubmit = async (data: FeatureCreate) => {
 <template>
   <div class="panel-common panel-event">
     <v-row class="align-baseline">
-      <v-col cols="auto">
+      <v-col cols="auto" class="state">
         <TypeLabel :type="props.type" />
       </v-col>
 
@@ -77,7 +78,9 @@ const handleSubmit = async (data: FeatureCreate) => {
         <AccountLabel :rid_users="props.rid_users" :name="props.name" />
       </v-col>
 
-      <v-col cols="auto"> information </v-col>
+      <v-col cols="auto" class="information">
+        <InformationEvent :risk="props.risk" :event_datetime_end="props.event_datetime_end" />
+      </v-col>
 
       <v-col cols="auto">
         <v-btn icon size="x-small" @click="openDialog()">

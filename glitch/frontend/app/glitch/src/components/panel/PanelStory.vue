@@ -10,6 +10,7 @@ import CreateBugDialog from '@/components/dialog/CreateBugDialog.vue'
 import TypeLabel from '@/components/common/TypeLabel.vue'
 import StateLabel from '@/components/common/StateLabel.vue'
 import AccountLabel from '@/components/common/AccountLabel.vue'
+import InformationStory from '@/components/panel/InformationStory.vue'
 
 const route = useRoute()
 const store_item = useItemStore()
@@ -93,7 +94,7 @@ const handleBugSubmit = async (data: BugCreate) => {
 <template>
   <div class="panel-common panel-story">
     <v-row class="align-baseline">
-      <v-col cols="auto">
+      <v-col cols="auto" class="state">
         <TypeLabel :type="props.type" />
       </v-col>
 
@@ -109,7 +110,14 @@ const handleBugSubmit = async (data: BugCreate) => {
         <AccountLabel :rid_users="props.rid_users" :name="props.name" />
       </v-col>
 
-      <v-col cols="auto"> information </v-col>
+      <v-col cols="auto" class="information">
+        <InformationStory
+          :state="props.state"
+          :risk="props.risk"
+          :story_datetime_start="props.story_datetime_start"
+          :story_datetime_end="props.story_datetime_end"
+        />
+      </v-col>
 
       <v-col cols="auto">
         <v-menu>
