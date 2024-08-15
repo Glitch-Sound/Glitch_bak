@@ -28,7 +28,7 @@ const identiconDataUri = computed(() => {
   </span>
 
   <v-btn icon size="small">
-    <img :src="identiconDataUri" width="25" height="25" />
+    <img :src="identiconDataUri" width="22" height="22" />
   </v-btn>
 </template>
 

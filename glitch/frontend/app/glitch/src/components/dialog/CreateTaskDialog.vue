@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import { defineProps, ref, watch } from 'vue'
 
-import type { TaskCreate } from '@/types/Item'
+import { TaskType, type TaskCreate } from '@/types/Item'
 import type { User } from '@/types/User'
 import { useDialog, EVENT_TYPES } from '@/components/dialog/BaseDialog'
 import AccountSelect from '@/components/common/AccountSelect.vue'
@@ -11,12 +11,21 @@ const props = defineProps<{
   formData: TaskCreate
 }>()
 
+const emits = defineEmits([EVENT_TYPES.UPDATE_SHOW_DIALOG, EVENT_TYPES.SUBMIT])
+const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props, emits)
+
+const workloadOption = ref<TaskType>(TaskType.WORKLOAD)
+
 const handleItemSelected = (item: User) => {
   formData.value.rid_user = item.rid
 }
 
-const emits = defineEmits([EVENT_TYPES.UPDATE_SHOW_DIALOG, EVENT_TYPES.SUBMIT])
-const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props, emits)
+watch(workloadOption, (newValue) => {
+  if (newValue === TaskType.WORKLOAD) {
+    formData.value.number_completed = null
+    formData.value.number_total = null
+  }
+})
 </script>
 
 <template>
@@ -44,26 +53,30 @@ const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props,
             required
           ></v-text-field>
 
+          <div class="mb-4 text-center">
+            <v-btn-toggle v-model="workloadOption" mandatory>
+              <v-btn :value="TaskType.WORKLOAD">Workload</v-btn>
+              <v-btn :value="TaskType.NUMBER">Number</v-btn>
+            </v-btn-toggle>
+          </div>
+
           <v-text-field
-            v-model="formData.type"
+            v-if="workloadOption === TaskType.WORKLOAD"
+            v-model="formData.workload"
             :rules="[rules.required]"
-            label="Type"
+            label="Workload"
             required
           ></v-text-field>
 
           <v-text-field
-            v-model="formData.workload"
-            :rules="[rules.required]"
-            label="Workload"
-          ></v-text-field>
-
-          <v-text-field
+            v-if="workloadOption === TaskType.NUMBER"
             v-model="formData.number_completed"
             :rules="[rules.required]"
             label="Number completed"
           ></v-text-field>
 
           <v-text-field
+            v-if="workloadOption === TaskType.NUMBER"
             v-model="formData.number_total"
             :rules="[rules.required]"
             label="Number total"

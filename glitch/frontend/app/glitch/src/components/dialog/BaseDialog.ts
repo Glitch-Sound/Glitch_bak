@@ -38,7 +38,7 @@ export const useDialog = (props: any, emits: any) => {
     (newData) => {
       formData.value = { ...newData }
     },
-    { immediate: true }
+    { immediate: true, deep: true }
   )
 
   return {
