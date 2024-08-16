@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
-
 import { marked } from 'marked'
 
-const props = defineProps<{
-  src: string
-}>()
+import { defineProps } from 'vue'
 
 marked.setOptions({
   breaks: true
 })
+
+const props = defineProps<{
+  src: string
+}>()
 </script>
 
 <template>

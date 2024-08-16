@@ -39,7 +39,7 @@ const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props,
 
           <v-textarea v-model="formData.detail" :rules="[rules.required]" label="Detail" required />
 
-          <WorkloadSelect @valueSelected="handleValueSelected" />
+          <WorkloadSelect @itemSelected="handleValueSelected" />
         </v-form>
       </v-card-text>
 

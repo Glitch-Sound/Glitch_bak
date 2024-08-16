@@ -12,6 +12,7 @@ const props = defineProps<{
   <v-chip
     size="small"
     class="mx-1"
+    :value="ItemState.IDLE"
     v-if="props.state == ItemState.IDLE"
     prepend-icon="mdi-circle-outline"
     color="#b8e1dd"
@@ -22,6 +23,7 @@ const props = defineProps<{
   <v-chip
     size="small"
     class="mx-1"
+    :value="ItemState.RUN"
     v-if="props.state == ItemState.RUN"
     prepend-icon="mdi-circle"
     color="#84c69b"
@@ -32,6 +34,7 @@ const props = defineProps<{
   <v-chip
     size="small"
     class="mx-1"
+    :value="ItemState.ALERT"
     v-if="props.state == ItemState.ALERT"
     prepend-icon="mdi-alert-box"
     color="#e94560"
@@ -42,6 +45,7 @@ const props = defineProps<{
   <v-chip
     size="small"
     class="mx-1"
+    :value="ItemState.REVIEW"
     v-if="props.state == ItemState.REVIEW"
     prepend-icon="mdi-circle-multiple"
     color="#dece9c"
@@ -52,6 +56,7 @@ const props = defineProps<{
   <v-chip
     size="small"
     class="mx-1"
+    :value="ItemState.COMPLETE"
     v-if="props.state == ItemState.COMPLETE"
     prepend-icon="mdi-circle-slice-8"
     color="#aaaaaa"

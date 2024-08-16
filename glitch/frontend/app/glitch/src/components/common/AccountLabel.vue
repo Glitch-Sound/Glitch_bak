@@ -23,7 +23,10 @@ const identiconDataUri = computed(() => {
 </script>
 
 <template>
-  {{ props.name }}
+  <span class="mr-1">
+    {{ props.name }}
+  </span>
+
   <v-btn icon size="x-small">
     <img :src="identiconDataUri" width="20" height="20" />
   </v-btn>

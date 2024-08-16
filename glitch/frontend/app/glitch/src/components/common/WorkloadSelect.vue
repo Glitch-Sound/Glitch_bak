@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 
+import { type EmitEvents } from '@/components/common/events'
+
 const tickLabels: { [value: number]: string } = {
   1: 'Within an hour',
   3: 'Within half a day',
@@ -9,9 +11,18 @@ const tickLabels: { [value: number]: string } = {
   21: 'Within 3 days',
   35: 'Within a week'
 }
-const customSteps = [1, 3, 7, 14, 21, 35]
+const customSteps = Object.keys(tickLabels).map((key) => Number(key))
 
 const sliderValue = ref(1)
+
+const emit = defineEmits<EmitEvents>()
+onMounted(() => {
+  emit('itemSelected', sliderValue.value)
+})
+
+const emitSelected = () => {
+  emit('itemSelected', sliderValue.value)
+}
 
 const color = () => {
   let value = ''
@@ -38,24 +49,12 @@ const color = () => {
   return value
 }
 
-const emit = defineEmits<{
-  (e: 'valueSelected', value: any): void
-}>()
-
 const onSliderInput = (value: number) => {
   const closestStep = customSteps.reduce((prev, curr) => {
     return Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev
   })
   sliderValue.value = closestStep
 }
-
-const emitSelected = () => {
-  emit('valueSelected', sliderValue.value)
-}
-
-onMounted(() => {
-  emit('valueSelected', sliderValue.value)
-})
 </script>
 
 <template>

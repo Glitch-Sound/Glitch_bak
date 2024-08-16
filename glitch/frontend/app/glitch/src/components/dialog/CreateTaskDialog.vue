@@ -58,7 +58,7 @@ watch(workloadOption, (newValue) => {
 
           <WorkloadSelect
             v-if="formData.type == TaskType.WORKLOAD"
-            @valueSelected="handleValueSelected"
+            @itemSelected="handleValueSelected"
           />
 
           <v-text-field
