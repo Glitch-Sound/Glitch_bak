@@ -13,10 +13,17 @@ const tickLabels: { [value: number]: string } = {
 }
 const customSteps = Object.keys(tickLabels).map((key) => Number(key))
 
+const props = defineProps<{
+  workload: number | null
+}>()
+
 const sliderValue = ref(1)
 
 const emit = defineEmits<EmitItemSelected>()
 onMounted(() => {
+  if (props.workload) {
+    sliderValue.value = props.workload
+  }
   emit('itemSelected', sliderValue.value)
 })
 

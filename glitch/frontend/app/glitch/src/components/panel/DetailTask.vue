@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import { ref, defineProps } from 'vue'
 
-import { ItemType, ItemState, TaskType } from '@/types/Item'
+import { ItemType, ItemState, TaskType, type TaskUpdate } from '@/types/Item'
+import UpdateTaskDialog from '@/components/dialog/UpdateTaskDialog.vue'
 
 import MarkedText from '@/components/common/MarkedText.vue'
 
@@ -27,6 +28,48 @@ const props = defineProps<{
   task_number_completed: number
   task_number_total: number
 }>()
+
+const dialog = ref(false)
+
+const dialogFormData = ref<TaskUpdate>({
+  rid: 0,
+  state: 0,
+  rid_user: 0,
+  rid_users_review: null,
+  title: '',
+  detail: '',
+  result: '',
+  type: 0,
+  workload: 0,
+  number_completed: 0,
+  number_total: 0
+})
+
+const openDialog = () => {
+  dialogFormData.value = {
+    rid: props.rid,
+    state: props.state,
+    rid_user: props.rid_users,
+    rid_users_review: props.rid_users_review,
+    title: props.title,
+    detail: props.detail,
+    result: props.result,
+    type: props.task_type,
+    workload: props.task_workload,
+    number_completed: props.task_number_completed,
+    number_total: props.task_number_total
+  }
+  dialog.value = true
+}
+
+const handleSubmit = async (data: TaskUpdate) => {
+  try {
+    console.log(data)
+    dialog.value = false
+  } catch (err) {
+    console.error('Error:', err)
+  }
+}
 </script>
 
 <template>
@@ -50,11 +93,20 @@ const props = defineProps<{
         </v-col>
 
         <v-col cols="auto">
-          <v-btn size="small" prepend-icon="mdi-pencil" variant="outlined">UPDATE</v-btn>
+          <v-btn size="small" prepend-icon="mdi-pencil" variant="outlined" @click="openDialog()">
+            UPDATE
+          </v-btn>
         </v-col>
       </v-row>
     </div>
   </v-expand-transition>
+
+  <UpdateTaskDialog
+    :showDialog="dialog"
+    :formData="dialogFormData"
+    @update:showDialog="dialog = $event"
+    @submit="handleSubmit"
+  />
 </template>
 
 <style scoped>

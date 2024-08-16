@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import { ref, defineProps } from 'vue'
 
-import { ItemType, ItemState } from '@/types/Item'
+import { ItemType, ItemState, type BugUpdate } from '@/types/Item'
+import UpdateBugDialog from '@/components/dialog/UpdateBugDialog.vue'
 
 import MarkedText from '@/components/common/MarkedText.vue'
 
@@ -24,6 +25,42 @@ const props = defineProps<{
   bug_priority: number
   bug_workload: number
 }>()
+
+const dialog = ref(false)
+
+const dialogFormData = ref<BugUpdate>({
+  rid: 0,
+  state: 0,
+  rid_user: 0,
+  rid_users_review: null,
+  title: '',
+  detail: '',
+  result: '',
+  workload: 0
+})
+
+const openDialog = () => {
+  dialogFormData.value = {
+    rid: props.rid,
+    state: props.state,
+    rid_user: props.rid_users,
+    rid_users_review: props.rid_users_review,
+    title: props.title,
+    detail: props.detail,
+    result: props.result,
+    workload: props.bug_workload
+  }
+  dialog.value = true
+}
+
+const handleSubmit = async (data: BugUpdate) => {
+  try {
+    console.log(data)
+    dialog.value = false
+  } catch (err) {
+    console.error('Error:', err)
+  }
+}
 </script>
 
 <template>
@@ -47,11 +84,20 @@ const props = defineProps<{
         </v-col>
 
         <v-col cols="auto">
-          <v-btn size="small" prepend-icon="mdi-pencil" variant="outlined">UPDATE</v-btn>
+          <v-btn size="small" prepend-icon="mdi-pencil" variant="outlined" @click="openDialog()">
+            UPDATE
+          </v-btn>
         </v-col>
       </v-row>
     </div>
   </v-expand-transition>
+
+  <UpdateBugDialog
+    :showDialog="dialog"
+    :formData="dialogFormData"
+    @update:showDialog="dialog = $event"
+    @submit="handleSubmit"
+  />
 </template>
 
 <style scoped>

@@ -1,24 +1,24 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 
-import type { BugCreate } from '@/types/Item'
+import { ItemType, ItemState, type FeatureUpdate } from '@/types/Item'
 import type { User } from '@/types/User'
 import { useDialog } from '@/components/dialog/BaseDialog'
 import UserSelect from '@/components/common/UserSelect.vue'
-import WorkloadSelect from '@/components/common/WorkloadSelect.vue'
+import StateSelect from '@/components/common/StateSelect.vue'
 import { type EmitDialog } from '@/components/common/events'
 
 const props = defineProps<{
   showDialog: boolean
-  formData: BugCreate
+  formData: FeatureUpdate
 }>()
 
 const handleUserSelected = (user: User) => {
   formData.value.rid_user = user.rid
 }
 
-const handleWorkloadSelect = (workload: number) => {
-  formData.value.workload = workload
+const handleStateSelected = (state: ItemState) => {
+  formData.value.state = state
 }
 
 const emit = defineEmits<EmitDialog>()
@@ -29,18 +29,24 @@ const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props,
   <v-dialog v-model="dialog" persistent class="panel-common">
     <v-card>
       <v-card-title>
-        <span class="text-h5">Add Bug</span>
+        <span class="text-h5">Update Feature</span>
       </v-card-title>
 
       <v-card-text>
         <v-form ref="formRef" v-model="valid" lazy-validation>
-          <UserSelect @itemSelected="handleUserSelected" />
+          <UserSelect v-model="formData.rid_user" @itemSelected="handleUserSelected" />
+
+          <StateSelect
+            :type="ItemType.EVENT"
+            :state="formData.state"
+            @itemSelected="handleStateSelected"
+          />
 
           <v-text-field v-model="formData.title" :rules="[rules.required]" label="Title" required />
 
           <v-textarea v-model="formData.detail" :rules="[rules.required]" label="Detail" required />
 
-          <WorkloadSelect :workload="null" @itemSelected="handleWorkloadSelect" />
+          <v-textarea v-model="formData.result" :rules="[rules.required]" label="Result" required />
         </v-form>
       </v-card-text>
 

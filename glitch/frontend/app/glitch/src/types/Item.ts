@@ -130,11 +130,33 @@ export interface FeatureCreate {
   detail: string
 }
 
+export interface FeatureUpdate {
+  rid: number
+  state: number
+  rid_user: number
+  rid_users_review: number | null
+  title: string
+  detail: string
+  result: string
+}
+
 export interface StoryCreate {
   rid_items: number
   rid_user: number
   title: string
   detail: string
+  datetime_start: string
+  datetime_end: string
+}
+
+export interface StoryUpdate {
+  rid: number
+  state: number
+  rid_user: number
+  rid_users_review: number | null
+  title: string
+  detail: string
+  result: string
   datetime_start: string
   datetime_end: string
 }
@@ -150,10 +172,35 @@ export interface TaskCreate {
   number_total: number
 }
 
+export interface TaskUpdate {
+  rid: number
+  state: number
+  rid_user: number
+  rid_users_review: number | null
+  title: string
+  detail: string
+  result: string
+  type: number
+  workload: number
+  number_completed: number
+  number_total: number
+}
+
 export interface BugCreate {
   rid_items: number
   rid_user: number
   title: string
   detail: string
+  workload: number
+}
+
+export interface BugUpdate {
+  rid: number
+  state: number
+  rid_user: number
+  rid_users_review: number | null
+  title: string
+  detail: string
+  result: string
   workload: number
 }
