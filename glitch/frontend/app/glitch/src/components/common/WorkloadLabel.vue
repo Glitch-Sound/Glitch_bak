@@ -12,7 +12,7 @@ const props = defineProps<{
 <template>
   <div class="d-flex flex-row align-baseline justify-center">
     <template v-if="props.workload == WorkloadType.WITHIN_AN_HOUR">
-      <v-icon icon="$vuetify">mdi-hexagon-outline</v-icon>
+      <v-icon size="x-small" icon="$vuetify">mdi-hexagon-outline</v-icon>
       <p>1 hour</p>
     </template>
 
@@ -37,7 +37,7 @@ const props = defineProps<{
     </template>
 
     <template v-if="props.workload == WorkloadType.WITHIN_A_WEEK">
-      <v-icon icon="$vuetify">mdi-view-gallery</v-icon>
+      <v-icon icon="$vuetify">mdi-pentagon</v-icon>
       <p>1 week</p>
     </template>
   </div>
