@@ -17,7 +17,7 @@ const props = defineProps<{
     <p class="icon">
       <v-icon icon="$vuetify">mdi-hexagon-outline</v-icon>
     </p>
-    <p class="workload">1 pt</p>
+    <p class="workload">1 hour</p>
   </div>
 
   <div
@@ -27,7 +27,7 @@ const props = defineProps<{
     <p class="icon">
       <v-icon icon="$vuetify">mdi-hexagon-multiple-outline</v-icon>
     </p>
-    <p class="workload">3 pt</p>
+    <p class="workload">Half day</p>
   </div>
 
   <div
@@ -37,7 +37,7 @@ const props = defineProps<{
     <p class="icon">
       <v-icon size="x-small" icon="$vuetify">mdi-card</v-icon>
     </p>
-    <p class="workload">7 pt</p>
+    <p class="workload">1 day</p>
   </div>
 
   <div
@@ -47,7 +47,7 @@ const props = defineProps<{
     <p class="icon">
       <v-icon size="small" icon="$vuetify">mdi-view-stream</v-icon>
     </p>
-    <p class="workload">14 pt</p>
+    <p class="workload">2 day</p>
   </div>
 
   <div
@@ -57,7 +57,7 @@ const props = defineProps<{
     <p class="icon">
       <v-icon icon="$vuetify">mdi-view-sequential</v-icon>
     </p>
-    <p class="workload">21 pt</p>
+    <p class="workload">3 day</p>
   </div>
 
   <div
@@ -67,18 +67,20 @@ const props = defineProps<{
     <p class="icon">
       <v-icon icon="$vuetify">mdi-view-gallery</v-icon>
     </p>
-    <p class="workload">35 pt</p>
+    <p class="workload">1 week</p>
   </div>
 </template>
 
 <style scoped>
 .icon {
-  width: 40px;
+  width: 50px;
+  margin-left: 15px;
   align-items: center;
 }
 
 .workload {
-  width: 50px;
-  text-align: right;
+  width: 70px;
+  margin-left: 5px;
+  text-align: left;
 }
 </style>
