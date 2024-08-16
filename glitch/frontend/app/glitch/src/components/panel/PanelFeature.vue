@@ -12,21 +12,6 @@ import UserLabel from '@/components/common/UserLabel.vue'
 import InformationFeature from '@/components/panel/InformationFeature.vue'
 import DetailFeature from '@/components/panel/DetailFeature.vue'
 
-const route = useRoute()
-const store_item = useItemStore()
-
-const expand = ref(false)
-const dialog = ref(false)
-
-const dialogFormData = ref<StoryCreate>({
-  rid_items: 0,
-  rid_user: 0,
-  title: '',
-  detail: '',
-  datetime_start: '',
-  datetime_end: ''
-})
-
 const props = defineProps<{
   rid: number
   type: ItemType
@@ -43,6 +28,21 @@ const props = defineProps<{
   rid_users_review: number | null
   name_review: string | null
 }>()
+
+const route = useRoute()
+const store_item = useItemStore()
+
+const expand = ref(false)
+const dialog = ref(false)
+
+const dialogFormData = ref<StoryCreate>({
+  rid_items: 0,
+  rid_user: 0,
+  title: '',
+  detail: '',
+  datetime_start: '',
+  datetime_end: ''
+})
 
 const openDialog = () => {
   const rid_items = props.rid

@@ -13,6 +13,25 @@ import UserLabel from '@/components/common/UserLabel.vue'
 import InformationStory from '@/components/panel/InformationStory.vue'
 import DetailStory from '@/components/panel/DetailStory.vue'
 
+const props = defineProps<{
+  rid: number
+  type: ItemType
+  state: ItemState
+  risk: number
+  risk_factors: number
+  title: string
+  detail: string
+  result: string
+  datetime_entry: string
+  datetime_update: string
+  rid_users: number
+  name: string
+  rid_users_review: number | null
+  name_review: string | null
+  story_datetime_start: string
+  story_datetime_end: string
+}>()
+
 const route = useRoute()
 const store_item = useItemStore()
 
@@ -38,25 +57,6 @@ const dialogFormDataBug = ref<BugCreate>({
   detail: '',
   workload: 0
 })
-
-const props = defineProps<{
-  rid: number
-  type: ItemType
-  state: ItemState
-  risk: number
-  risk_factors: number
-  title: string
-  detail: string
-  result: string
-  datetime_entry: string
-  datetime_update: string
-  rid_users: number
-  name: string
-  rid_users_review: number | null
-  name_review: string | null
-  story_datetime_start: string
-  story_datetime_end: string
-}>()
 
 const openTaskDialog = () => {
   const rid_items = props.rid

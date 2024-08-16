@@ -14,10 +14,6 @@ const link_project = ref('/')
 const link_disabled = ref(true)
 const dialog = ref(false)
 
-const toggleDialog = () => {
-  dialog.value = !dialog.value
-}
-
 onMounted(() => {
   store_project.fetchProjects()
 })
@@ -36,6 +32,10 @@ watch([() => store_project.selected_rid_project], () => {
   link_project.value = '/project/' + store_project.selected_rid_project
   link_disabled.value = false
 })
+
+const toggleDialog = () => {
+  dialog.value = !dialog.value
+}
 
 const handleSubmit = async () => {
   dialog.value = false

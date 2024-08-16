@@ -12,19 +12,6 @@ import UserLabel from '@/components/common/UserLabel.vue'
 import InformationEvent from '@/components/panel/InformationEvent.vue'
 import DetailEvent from '@/components/panel/DetailEvent.vue'
 
-const route = useRoute()
-const store_item = useItemStore()
-
-const expand = ref(false)
-const dialog = ref(false)
-
-const dialogFormData = ref<FeatureCreate>({
-  rid_items: 0,
-  rid_user: 0,
-  title: '',
-  detail: ''
-})
-
 const props = defineProps<{
   rid: number
   type: ItemType
@@ -42,6 +29,19 @@ const props = defineProps<{
   name_review: string | null
   event_datetime_end: string
 }>()
+
+const route = useRoute()
+const store_item = useItemStore()
+
+const expand = ref(false)
+const dialog = ref(false)
+
+const dialogFormData = ref<FeatureCreate>({
+  rid_items: 0,
+  rid_user: 0,
+  title: '',
+  detail: ''
+})
 
 const openDialog = () => {
   const rid_items = props.rid

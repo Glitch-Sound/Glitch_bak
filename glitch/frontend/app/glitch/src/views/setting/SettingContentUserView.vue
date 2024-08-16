@@ -6,6 +6,13 @@ import useUserStore from '@/stores/UserStore'
 import UserService from '@/services/UserService'
 import CreateUserDialog from '@/components/dialog/CreateUserDialog.vue'
 
+const headers = [
+  { title: 'RID', key: 'rid', width: '50px' },
+  { title: 'USER', key: 'user', width: '150px' },
+  { title: 'NAME', key: 'name', width: '150px' },
+  { title: 'ADMIN', key: 'is_admin', width: '100px' }
+]
+
 const store_user = useUserStore()
 
 const dialog = ref(false)
@@ -16,13 +23,6 @@ const dialogFormData = ref<UserCreate>({
   name: '',
   is_admin: false
 })
-
-const headers = [
-  { title: 'RID', key: 'rid', width: '50px' },
-  { title: 'USER', key: 'user', width: '150px' },
-  { title: 'NAME', key: 'name', width: '150px' },
-  { title: 'ADMIN', key: 'is_admin', width: '100px' }
-]
 
 onMounted(() => {
   store_user.fetchUsers()

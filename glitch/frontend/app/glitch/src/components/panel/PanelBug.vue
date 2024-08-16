@@ -9,9 +9,6 @@ import UserLabel from '@/components/common/UserLabel.vue'
 import InformationBug from '@/components/panel/InformationBug.vue'
 import DetailBug from '@/components/panel/DetailBug.vue'
 
-const expand = ref(false)
-const dialog = ref(false)
-
 const props = defineProps<{
   rid: number
   type: ItemType
@@ -30,6 +27,9 @@ const props = defineProps<{
   bug_priority: number
   bug_workload: number
 }>()
+
+const expand = ref(false)
+const dialog = ref(false)
 
 const openDialog = () => {
   dialog.value = true

@@ -7,6 +7,16 @@ import ItemService from '@/services/ItemService'
 import MarkedText from '@/components/common/MarkedText.vue'
 import CreateProjectDialog from '@/components/dialog/CreateProjectDialog.vue'
 
+const headers = [
+  { title: 'RID', key: 'rid', width: '50px' },
+  { title: 'STATE', key: 'state', width: '50px' },
+  { title: 'TITLE', key: 'title' },
+  { title: 'DETAIL', key: 'detail' },
+  { title: 'RESULT', key: 'result' },
+  { title: 'ENTRY', key: 'datetime_entry', width: '300px' },
+  { title: 'USER', key: 'name', width: '100px' }
+]
+
 const store_project = useProjectStore()
 
 const dialog = ref(false)
@@ -18,16 +28,6 @@ const dialogFormData = ref<ProjectCreate>({
   datetime_start: '',
   datetime_end: ''
 })
-
-const headers = [
-  { title: 'RID', key: 'rid', width: '50px' },
-  { title: 'STATE', key: 'state', width: '50px' },
-  { title: 'TITLE', key: 'title' },
-  { title: 'DETAIL', key: 'detail' },
-  { title: 'RESULT', key: 'result' },
-  { title: 'ENTRY', key: 'datetime_entry', width: '300px' },
-  { title: 'USER', key: 'name', width: '100px' }
-]
 
 onMounted(() => {
   store_project.fetchProjects()

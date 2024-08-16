@@ -9,9 +9,6 @@ import UserLabel from '@/components/common/UserLabel.vue'
 import InformationTask from '@/components/panel/InformationTask.vue'
 import DetailTask from '@/components/panel/DetailTask.vue'
 
-const expand = ref(false)
-const dialog = ref(false)
-
 const props = defineProps<{
   rid: number
   type: ItemType
@@ -33,6 +30,9 @@ const props = defineProps<{
   task_number_completed: number
   task_number_total: number
 }>()
+
+const expand = ref(false)
+const dialog = ref(false)
 
 const openDialog = () => {
   dialog.value = true
