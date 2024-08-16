@@ -25,12 +25,12 @@ export enum TaskType {
 
 export enum WorkloadType {
   NONE = 0,
-  WITHIN_AN_HOUR,
-  WITHIN_HALF_A_DAY,
-  WITHIN_A_DAY,
-  WITHIN_2_DAYS,
-  WITHIN_3_DAYS,
-  WITHIN_A_WEEK
+  WITHIN_AN_HOUR = 1,
+  WITHIN_HALF_A_DAY = 3,
+  WITHIN_A_DAY = 7,
+  WITHIN_2_DAYS = 14,
+  WITHIN_3_DAYS = 21,
+  WITHIN_A_WEEK = 35
 }
 
 export interface Item {

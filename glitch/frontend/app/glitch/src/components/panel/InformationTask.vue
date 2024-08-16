@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 
-import { TaskType } from '@/types/Item'
+import { TaskType, WorkloadType } from '@/types/Item'
+import WorkloadLabel from '@/components/common/WorkloadLabel.vue'
 
 const props = defineProps<{
   risk: number
   task_type: TaskType
-  task_workload: number
+  task_workload: WorkloadType
   task_number_completed: number
   task_number_total: number
 }>()
@@ -14,7 +15,7 @@ const props = defineProps<{
 
 <template>
   <div class="align-baseline" v-if="props.task_type == TaskType.WORKLOAD">
-    {{ props.task_workload }}
+    <WorkloadLabel :risk="props.risk" :workload="props.task_workload" />
   </div>
 
   <div class="align-baseline" v-if="props.task_type != TaskType.WORKLOAD">
@@ -22,6 +23,4 @@ const props = defineProps<{
   </div>
 </template>
 
-<style scoped>
-@import '@/components/panel/panel.css';
-</style>
+<style scoped></style>

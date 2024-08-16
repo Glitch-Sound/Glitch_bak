@@ -5,6 +5,7 @@ import type { BugCreate } from '@/types/Item'
 import type { User } from '@/types/User'
 import { useDialog, EVENT_TYPES } from '@/components/dialog/BaseDialog'
 import AccountSelect from '@/components/common/AccountSelect.vue'
+import WorkloadSelect from '@/components/common/WorkloadSelect.vue'
 
 const props = defineProps<{
   showDialog: boolean
@@ -15,12 +16,16 @@ const handleItemSelected = (item: User) => {
   formData.value.rid_user = item.rid
 }
 
+const handleValueSelected = (value: number) => {
+  formData.value.workload = value
+}
+
 const emits = defineEmits([EVENT_TYPES.UPDATE_SHOW_DIALOG, EVENT_TYPES.SUBMIT])
 const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props, emits)
 </script>
 
 <template>
-  <v-dialog v-model="dialog" persistent max-width="600px">
+  <v-dialog v-model="dialog" persistent max-width="1000px">
     <v-card>
       <v-card-title>
         <span class="text-h5">Add Bug</span>
@@ -44,11 +49,7 @@ const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props,
             required
           ></v-text-field>
 
-          <v-text-field
-            v-model="formData.workload"
-            :rules="[rules.required]"
-            label="Workload"
-          ></v-text-field>
+          <WorkloadSelect @valueSelected="handleValueSelected" />
         </v-form>
       </v-card-text>
 
