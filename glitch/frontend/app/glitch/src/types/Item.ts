@@ -75,7 +75,6 @@ export interface Project {
   rid: number
   state: number
   risk: number
-  risk_factors: number
   title: string
   detail: string
   result: string
@@ -110,6 +109,17 @@ export interface EventCreate {
   rid_user: number
   title: string
   detail: string
+  datetime_end: string
+}
+
+export interface EventUpdate {
+  rid: number
+  state: number
+  rid_user: number
+  rid_users_review: number | null
+  title: string
+  detail: string
+  result: string
   datetime_end: string
 }
 

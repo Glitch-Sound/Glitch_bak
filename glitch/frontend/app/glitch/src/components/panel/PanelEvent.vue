@@ -91,13 +91,7 @@ const handleSubmit = async (data: FeatureCreate) => {
       </v-col>
     </v-row>
 
-    <DetailEvent
-      :expand="expand"
-      :risk="props.risk"
-      :risk_factors="props.risk_factors"
-      :detail="props.detail"
-      :result="props.result"
-    />
+    <DetailEvent v-bind="{ ...props, expand }" />
   </div>
 
   <CreateFeatureDialog

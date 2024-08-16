@@ -28,7 +28,7 @@ const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props,
 
       <v-card-text>
         <v-form ref="formRef" v-model="valid" lazy-validation>
-          <AccountSelect @itemSelected="handleItemSelected"></AccountSelect>
+          <AccountSelect @itemSelected="handleItemSelected" />
 
           <v-text-field v-model="formData.title" :rules="[rules.required]" label="Title" required />
 
