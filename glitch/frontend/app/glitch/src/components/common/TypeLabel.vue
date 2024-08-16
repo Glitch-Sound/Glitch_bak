@@ -16,4 +16,8 @@ const props = defineProps<{
   <v-icon size="small" v-if="props.type == ItemType.BUG" icon="mdi-spider" />
 </template>
 
-<style scoped></style>
+<style scoped>
+.v-icon {
+  margin-left: 4px;
+}
+</style>

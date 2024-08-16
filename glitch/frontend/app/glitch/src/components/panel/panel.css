@@ -1,6 +1,11 @@
 .panel-common {
     display: flex;
     flex-direction: column;
+    border-left: solid 2px transparent;
+}
+
+.panel-common:hover {
+    border-left: solid 2px #52565f;
 }
 
 .panel-event {
@@ -60,7 +65,3 @@
 .detail-title {
     color: #efefef;
 }
-
-
-
-

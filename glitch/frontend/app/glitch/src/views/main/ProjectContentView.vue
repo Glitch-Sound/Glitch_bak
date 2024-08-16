@@ -20,7 +20,7 @@ onMounted(() => {
 
 <template>
   <v-main>
-    <v-sheet class="ma-1 pt-2 rounded-lg">
+    <v-sheet class="ma-1 py-2 rounded-lg">
       <template v-for="item in store_item.items" :key="item.rid">
         <PanelEvent
           v-if="item.type == ItemType.EVENT"

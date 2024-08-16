@@ -72,8 +72,8 @@ const handleSubmit = async (data: FeatureCreate) => {
         <StateLabel :state="props.state" />
       </v-col>
 
-      <v-col>
-        <span class="title" @click="expand = !expand">{{ props.title }}</span>
+      <v-col @click="expand = !expand">
+        <span class="title">{{ props.title }}</span>
       </v-col>
 
       <v-col cols="auto">
