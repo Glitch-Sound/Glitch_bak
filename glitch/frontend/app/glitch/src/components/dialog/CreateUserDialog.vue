@@ -23,12 +23,7 @@ const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props,
 
       <v-card-text>
         <v-form ref="formRef" v-model="valid" lazy-validation>
-          <v-text-field
-            v-model="formData.user"
-            :rules="[rules.required]"
-            label="User"
-            required
-          ></v-text-field>
+          <v-text-field v-model="formData.user" :rules="[rules.required]" label="User" required />
 
           <v-text-field
             v-model="formData.password"
@@ -36,14 +31,9 @@ const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props,
             label="Password"
             type="password"
             required
-          ></v-text-field>
+          />
 
-          <v-text-field
-            v-model="formData.name"
-            :rules="[rules.required]"
-            label="Name"
-            required
-          ></v-text-field>
+          <v-text-field v-model="formData.name" :rules="[rules.required]" label="Name" required />
         </v-form>
       </v-card-text>
 

@@ -32,7 +32,7 @@ const emitSelected = () => {
     item-value="rid"
     required
     @update:modelValue="emitSelected"
-  ></v-select>
+  />
 </template>
 
 <style scoped></style>

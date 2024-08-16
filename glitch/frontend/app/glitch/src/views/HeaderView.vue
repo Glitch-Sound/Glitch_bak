@@ -44,7 +44,6 @@ const handleSubmit = async () => {
 
 <template>
   <v-app-bar color="#272d38">
-    <!-- <v-app-bar-title @click="toggleDialog"> -->
     <v-app-bar-title @click="toggleDialog">
       {{ title }}
     </v-app-bar-title>

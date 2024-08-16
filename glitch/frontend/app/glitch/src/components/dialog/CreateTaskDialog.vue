@@ -45,19 +45,14 @@ watch(workloadOption, (newValue) => {
         <v-form ref="formRef" v-model="valid" lazy-validation>
           <AccountSelect @itemSelected="handleItemSelected" />
 
-          <v-text-field
-            v-model="formData.title"
-            :rules="[rules.required]"
-            label="Title"
-            required
-          ></v-text-field>
+          <v-text-field v-model="formData.title" :rules="[rules.required]" label="Title" required />
 
           <v-text-field
             v-model="formData.detail"
             :rules="[rules.required]"
             label="Detail"
             required
-          ></v-text-field>
+          />
 
           <div class="mb-4 text-center">
             <v-btn-toggle v-model="formData.type" mandatory>
@@ -76,14 +71,14 @@ watch(workloadOption, (newValue) => {
             v-model="formData.number_completed"
             :rules="[rules.required]"
             label="Number completed"
-          ></v-text-field>
+          />
 
           <v-text-field
             v-if="formData.type == TaskType.NUMBER"
             v-model="formData.number_total"
             :rules="[rules.required]"
             label="Number total"
-          ></v-text-field>
+          />
         </v-form>
       </v-card-text>
 
