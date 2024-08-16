@@ -8,7 +8,7 @@ import ItemService from '@/services/ItemService'
 import CreateStoryDialog from '@/components/dialog/CreateStoryDialog.vue'
 import TypeLabel from '@/components/common/TypeLabel.vue'
 import StateLabel from '@/components/common/StateLabel.vue'
-import AccountLabel from '@/components/common/AccountLabel.vue'
+import UserLabel from '@/components/common/UserLabel.vue'
 import InformationFeature from '@/components/panel/InformationFeature.vue'
 import DetailFeature from '@/components/panel/DetailFeature.vue'
 
@@ -78,7 +78,7 @@ const handleSubmit = async (data: StoryCreate) => {
       </v-col>
 
       <v-col cols="auto">
-        <AccountLabel :rid_users="props.rid_users" :name="props.name" />
+        <UserLabel :rid_users="props.rid_users" :name="props.name" />
       </v-col>
 
       <v-col cols="auto" class="information">

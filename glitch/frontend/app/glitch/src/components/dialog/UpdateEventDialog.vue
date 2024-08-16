@@ -3,25 +3,26 @@ import { defineProps } from 'vue'
 
 import { ItemType, ItemState, type EventUpdate } from '@/types/Item'
 import type { User } from '@/types/User'
-import { useDialog, EVENT_TYPES } from '@/components/dialog/BaseDialog'
-import AccountSelect from '@/components/common/AccountSelect.vue'
+import { useDialog } from '@/components/dialog/BaseDialog'
+import UserSelect from '@/components/common/UserSelect.vue'
 import StateSelect from '@/components/common/StateSelect.vue'
+import { type EmitDialog } from '@/components/common/events'
 
 const props = defineProps<{
   showDialog: boolean
   formData: EventUpdate
 }>()
 
-const handleItemSelected = (item: User) => {
-  formData.value.rid_user = item.rid
+const handleUserSelected = (user: User) => {
+  formData.value.rid_user = user.rid
 }
 
 const handleStateSelected = (state: ItemState) => {
   formData.value.state = state
 }
 
-const emits = defineEmits([EVENT_TYPES.UPDATE_SHOW_DIALOG, EVENT_TYPES.SUBMIT])
-const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props, emits)
+const emit = defineEmits<EmitDialog>()
+const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props, emit)
 </script>
 
 <template>
@@ -33,7 +34,7 @@ const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props,
 
       <v-card-text>
         <v-form ref="formRef" v-model="valid" lazy-validation>
-          <AccountSelect v-model="formData.rid_user" @itemSelected="handleItemSelected" />
+          <UserSelect v-model="formData.rid_user" @itemSelected="handleUserSelected" />
 
           <StateSelect
             :type="ItemType.EVENT"

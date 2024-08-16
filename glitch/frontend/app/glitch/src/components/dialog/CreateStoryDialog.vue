@@ -3,20 +3,21 @@ import { defineProps } from 'vue'
 
 import type { StoryCreate } from '@/types/Item'
 import type { User } from '@/types/User'
-import { useDialog, EVENT_TYPES } from '@/components/dialog/BaseDialog'
-import AccountSelect from '@/components/common/AccountSelect.vue'
+import { useDialog } from '@/components/dialog/BaseDialog'
+import UserSelect from '@/components/common/UserSelect.vue'
+import { type EmitDialog } from '@/components/common/events'
 
 const props = defineProps<{
   showDialog: boolean
   formData: StoryCreate
 }>()
 
-const handleItemSelected = (item: User) => {
-  formData.value.rid_user = item.rid
+const handleUserSelected = (user: User) => {
+  formData.value.rid_user = user.rid
 }
 
-const emits = defineEmits([EVENT_TYPES.UPDATE_SHOW_DIALOG, EVENT_TYPES.SUBMIT])
-const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props, emits)
+const emit = defineEmits<EmitDialog>()
+const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props, emit)
 </script>
 
 <template>
@@ -28,7 +29,7 @@ const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props,
 
       <v-card-text>
         <v-form ref="formRef" v-model="valid" lazy-validation>
-          <AccountSelect @itemSelected="handleItemSelected" />
+          <UserSelect @itemSelected="handleUserSelected" />
 
           <v-text-field v-model="formData.title" :rules="[rules.required]" label="Title" required />
 

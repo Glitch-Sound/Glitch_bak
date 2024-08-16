@@ -3,7 +3,7 @@ import { ref, defineProps, onMounted } from 'vue'
 
 import { ItemType, ItemState } from '@/types/Item'
 import StateLabelLarge from '@/components/common/StateLabelLarge.vue'
-import { type EmitEvents } from '@/components/common/events'
+import { type EmitItemSelected } from '@/components/common/events'
 
 const props = defineProps<{
   type: ItemType
@@ -17,7 +17,7 @@ onMounted(() => {
   selectedStateSrc.value = props.state
 })
 
-const emit = defineEmits<EmitEvents>()
+const emit = defineEmits<EmitItemSelected>()
 const emitSelected = () => {
   emit('itemSelected', selectedState.value)
 }

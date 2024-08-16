@@ -8,7 +8,7 @@ import ItemService from '@/services/ItemService'
 import CreateFeatureDialog from '@/components/dialog/CreateFeatureDialog.vue'
 import TypeLabel from '@/components/common/TypeLabel.vue'
 import StateLabel from '@/components/common/StateLabel.vue'
-import AccountLabel from '@/components/common/AccountLabel.vue'
+import UserLabel from '@/components/common/UserLabel.vue'
 import InformationEvent from '@/components/panel/InformationEvent.vue'
 import DetailEvent from '@/components/panel/DetailEvent.vue'
 
@@ -77,7 +77,7 @@ const handleSubmit = async (data: FeatureCreate) => {
       </v-col>
 
       <v-col cols="auto">
-        <AccountLabel :rid_users="props.rid_users" :name="props.name" />
+        <UserLabel :rid_users="props.rid_users" :name="props.name" />
       </v-col>
 
       <v-col cols="auto" class="information">

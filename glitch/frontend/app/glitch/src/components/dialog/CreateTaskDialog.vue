@@ -3,27 +3,17 @@ import { defineProps, ref, watch, onBeforeUpdate } from 'vue'
 
 import { TaskType, type TaskCreate } from '@/types/Item'
 import type { User } from '@/types/User'
-import { useDialog, EVENT_TYPES } from '@/components/dialog/BaseDialog'
-import AccountSelect from '@/components/common/AccountSelect.vue'
+import { useDialog } from '@/components/dialog/BaseDialog'
+import UserSelect from '@/components/common/UserSelect.vue'
 import WorkloadSelect from '@/components/common/WorkloadSelect.vue'
+import { type EmitDialog } from '@/components/common/events'
 
 const props = defineProps<{
   showDialog: boolean
   formData: TaskCreate
 }>()
 
-const emits = defineEmits([EVENT_TYPES.UPDATE_SHOW_DIALOG, EVENT_TYPES.SUBMIT])
-const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props, emits)
-
 const workloadOption = ref<TaskType>(TaskType.WORKLOAD)
-
-const handleItemSelected = (item: User) => {
-  formData.value.rid_user = item.rid
-}
-
-const handleValueSelected = (value: number) => {
-  formData.value.workload = value
-}
 
 onBeforeUpdate(() => {
   formData.value.type = TaskType.WORKLOAD
@@ -32,6 +22,17 @@ onBeforeUpdate(() => {
 watch(workloadOption, (newValue) => {
   formData.value.type = newValue
 })
+
+const handleUserSelected = (user: User) => {
+  formData.value.rid_user = user.rid
+}
+
+const handleWorkloadSelect = (workload: number) => {
+  formData.value.workload = workload
+}
+
+const emit = defineEmits<EmitDialog>()
+const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props, emit)
 </script>
 
 <template>
@@ -43,7 +44,7 @@ watch(workloadOption, (newValue) => {
 
       <v-card-text>
         <v-form ref="formRef" v-model="valid" lazy-validation>
-          <AccountSelect @itemSelected="handleItemSelected" />
+          <UserSelect @itemSelected="handleUserSelected" />
 
           <v-text-field v-model="formData.title" :rules="[rules.required]" label="Title" required />
 
@@ -58,7 +59,7 @@ watch(workloadOption, (newValue) => {
 
           <WorkloadSelect
             v-if="formData.type == TaskType.WORKLOAD"
-            @itemSelected="handleValueSelected"
+            @itemSelected="handleWorkloadSelect"
           />
 
           <v-text-field

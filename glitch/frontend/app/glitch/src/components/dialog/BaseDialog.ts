@@ -1,10 +1,5 @@
 import { ref, watch } from 'vue'
 
-export const EVENT_TYPES = {
-  UPDATE_SHOW_DIALOG: 'update:showDialog',
-  SUBMIT: 'submit'
-} as const
-
 export const useDialog = (props: any, emits: any) => {
   const dialog = ref(props.showDialog)
   const valid = ref(false)
@@ -17,7 +12,7 @@ export const useDialog = (props: any, emits: any) => {
 
   const submitData = () => {
     if (formRef.value?.validate()) {
-      emits(EVENT_TYPES.SUBMIT, formData.value)
+      emits('submit', formData.value)
       dialog.value = false
     }
   }
@@ -30,7 +25,7 @@ export const useDialog = (props: any, emits: any) => {
   )
 
   watch(dialog, (newValue) => {
-    emits(EVENT_TYPES.UPDATE_SHOW_DIALOG, newValue)
+    emits('update:showDialog', newValue)
   })
 
   watch(

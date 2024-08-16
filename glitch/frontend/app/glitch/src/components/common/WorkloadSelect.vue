@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 
-import { type EmitEvents } from '@/components/common/events'
+import { type EmitItemSelected } from '@/components/common/events'
 
 const tickLabels: { [value: number]: string } = {
   1: 'Within an hour',
@@ -15,7 +15,7 @@ const customSteps = Object.keys(tickLabels).map((key) => Number(key))
 
 const sliderValue = ref(1)
 
-const emit = defineEmits<EmitEvents>()
+const emit = defineEmits<EmitItemSelected>()
 onMounted(() => {
   emit('itemSelected', sliderValue.value)
 })

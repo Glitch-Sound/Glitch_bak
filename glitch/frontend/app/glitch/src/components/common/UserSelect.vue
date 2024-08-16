@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 
 import useUserStore from '@/stores/UserStore'
-import { type EmitEvents } from '@/components/common/events'
+import { type EmitItemSelected } from '@/components/common/events'
 
 const selectedOption = ref<number | null>(null)
 
@@ -12,7 +12,7 @@ onMounted(() => {
   store_user.fetchUsers()
 })
 
-const emit = defineEmits<EmitEvents>()
+const emit = defineEmits<EmitItemSelected>()
 const itemSelected = () => {
   const selectedItem = store_user.users.find((item) => item.rid === selectedOption.value)
   if (selectedItem) {

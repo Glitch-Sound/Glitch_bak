@@ -3,7 +3,7 @@ import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import useProjectStore from '@/stores/ProjectStore'
-import AccountDetail from '@/components/common/AccountDetail.vue'
+import UserDetail from '@/components/common/UserDetail.vue'
 import ProjectDialog from '@/components/dialog/ProjectDialog.vue'
 
 const route = useRoute()
@@ -71,7 +71,7 @@ const handleSubmit = async () => {
     <v-spacer />
 
     <div class="mx-1">
-      <AccountDetail :rid_users="0" :name="'Guest'"></AccountDetail>
+      <UserDetail :rid_users="0" :name="'Guest'" />
     </div>
 
     <v-btn icon disabled class="mx-1">

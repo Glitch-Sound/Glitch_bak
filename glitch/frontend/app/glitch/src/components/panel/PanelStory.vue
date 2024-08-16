@@ -9,7 +9,7 @@ import CreateTaskDialog from '@/components/dialog/CreateTaskDialog.vue'
 import CreateBugDialog from '@/components/dialog/CreateBugDialog.vue'
 import TypeLabel from '@/components/common/TypeLabel.vue'
 import StateLabel from '@/components/common/StateLabel.vue'
-import AccountLabel from '@/components/common/AccountLabel.vue'
+import UserLabel from '@/components/common/UserLabel.vue'
 import InformationStory from '@/components/panel/InformationStory.vue'
 import DetailStory from '@/components/panel/DetailStory.vue'
 
@@ -109,7 +109,7 @@ const handleBugSubmit = async (data: BugCreate) => {
       </v-col>
 
       <v-col cols="auto">
-        <AccountLabel :rid_users="props.rid_users" :name="props.name" />
+        <UserLabel :rid_users="props.rid_users" :name="props.name" />
       </v-col>
 
       <v-col cols="auto" class="information">

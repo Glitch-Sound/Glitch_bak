@@ -5,7 +5,7 @@ import { ItemType, ItemState, TaskType } from '@/types/Item'
 import ActivityDialog from '@/components/dialog/ActivityDialog.vue'
 import TypeLabel from '@/components/common/TypeLabel.vue'
 import StateLabel from '@/components/common/StateLabel.vue'
-import AccountLabel from '@/components/common/AccountLabel.vue'
+import UserLabel from '@/components/common/UserLabel.vue'
 import InformationTask from '@/components/panel/InformationTask.vue'
 import DetailTask from '@/components/panel/DetailTask.vue'
 
@@ -55,7 +55,7 @@ const openDialog = () => {
       </v-col>
 
       <v-col cols="auto">
-        <AccountLabel :rid_users="props.rid_users" :name="props.name" />
+        <UserLabel :rid_users="props.rid_users" :name="props.name" />
       </v-col>
 
       <v-col cols="auto" class="information">

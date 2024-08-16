@@ -2,15 +2,7 @@
 import { ref, defineProps, watch, onMounted } from 'vue'
 
 import useProjectStore from '@/stores/ProjectStore'
-
-const emits = defineEmits(['submit'])
-const props = defineProps<{
-  showDialog: boolean
-}>()
-
-const store_project = useProjectStore()
-
-const dialog = ref(props.showDialog)
+import { type EmitSubmit } from '@/components/common/events'
 
 const headers = [
   { title: 'RID', key: 'rid', width: '50px' },
@@ -21,6 +13,14 @@ const headers = [
   { title: 'ENTRY', key: 'datetime_entry', width: '300px' },
   { title: 'USER', key: 'name', width: '100px' }
 ]
+
+const props = defineProps<{
+  showDialog: boolean
+}>()
+
+const dialog = ref(props.showDialog)
+
+const store_project = useProjectStore()
 
 onMounted(() => {
   store_project.fetchProjects()
@@ -33,9 +33,10 @@ watch(
   }
 )
 
+const emit = defineEmits<EmitSubmit>()
 const handleSubmit = async () => {
   dialog.value = false
-  emits('submit')
+  emit('submit')
 }
 </script>
 

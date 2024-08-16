@@ -2,16 +2,16 @@
 import { defineProps } from 'vue'
 
 import type { UserCreate } from '@/types/User'
-import { useDialog, EVENT_TYPES } from '@/components/dialog/BaseDialog'
+import { useDialog } from '@/components/dialog/BaseDialog'
+import { type EmitDialog } from '@/components/common/events'
 
 const props = defineProps<{
   showDialog: boolean
   formData: UserCreate
 }>()
 
-const emits = defineEmits([EVENT_TYPES.UPDATE_SHOW_DIALOG, EVENT_TYPES.SUBMIT])
-
-const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props, emits)
+const emit = defineEmits<EmitDialog>()
+const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props, emit)
 </script>
 
 <template>
