@@ -92,13 +92,7 @@ const handleSubmit = async (data: StoryCreate) => {
       </v-col>
     </v-row>
 
-    <DetailFeature
-      :expand="expand"
-      :risk="props.risk"
-      :risk_factors="props.risk_factors"
-      :detail="props.detail"
-      :result="props.result"
-    />
+    <DetailFeature v-bind="{ ...props, expand }" />
   </div>
 
   <CreateStoryDialog

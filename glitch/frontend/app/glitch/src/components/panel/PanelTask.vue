@@ -75,13 +75,7 @@ const openDialog = () => {
       </v-col>
     </v-row>
 
-    <DetailTask
-      :expand="expand"
-      :risk="props.risk"
-      :risk_factors="props.risk_factors"
-      :detail="props.detail"
-      :result="props.result"
-    />
+    <DetailTask v-bind="{ ...props, expand }" />
   </div>
 
   <ActivityDialog :showDialog="dialog" />

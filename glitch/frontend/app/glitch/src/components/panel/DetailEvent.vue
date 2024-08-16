@@ -49,7 +49,6 @@ const openDialog = () => {
     result: props.result,
     datetime_end: props.event_datetime_end
   }
-
   dialog.value = true
 }
 

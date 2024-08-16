@@ -66,13 +66,7 @@ const openDialog = () => {
       </v-col>
     </v-row>
 
-    <DetailBug
-      :expand="expand"
-      :risk="props.risk"
-      :risk_factors="props.risk_factors"
-      :detail="props.detail"
-      :result="props.result"
-    />
+    <DetailBug v-bind="{ ...props, expand }" />
   </div>
 
   <ActivityDialog :showDialog="dialog" />

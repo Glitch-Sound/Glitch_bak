@@ -141,13 +141,7 @@ const handleBugSubmit = async (data: BugCreate) => {
       </v-col>
     </v-row>
 
-    <DetailStory
-      :expand="expand"
-      :risk="props.risk"
-      :risk_factors="props.risk_factors"
-      :detail="props.detail"
-      :result="props.result"
-    />
+    <DetailStory v-bind="{ ...props, expand }" />
   </div>
 
   <CreateTaskDialog

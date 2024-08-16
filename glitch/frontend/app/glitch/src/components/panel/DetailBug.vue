@@ -1,14 +1,28 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 
+import { ItemType, ItemState } from '@/types/Item'
+
 import MarkedText from '@/components/common/MarkedText.vue'
 
 const props = defineProps<{
   expand: boolean
+  rid: number
+  type: ItemType
+  state: ItemState
   risk: number
   risk_factors: number
+  title: string
   detail: string
   result: string
+  datetime_entry: string
+  datetime_update: string
+  rid_users: number
+  name: string
+  rid_users_review: number | null
+  name_review: string | null
+  bug_priority: number
+  bug_workload: number
 }>()
 </script>
 
