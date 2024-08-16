@@ -31,6 +31,7 @@ const props = defineProps<{
   type: ItemType
   state: ItemState
   risk: number
+  risk_factors: number
   title: string
   detail: string
   result: string

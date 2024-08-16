@@ -36,6 +36,15 @@ class ItemState(Enum):
     REVIEW   = 4
     COMPLETE = 5
 
+RISK_1 = 0b00000001
+RISK_2 = 0b00000010
+RISK_3 = 0b00000100
+RISK_4 = 0b00001000
+RISK_5 = 0b00010000
+RISK_6 = 0b00100000
+RISK_7 = 0b01000000
+RISK_8 = 0b10000000
+
 
 # TODO:共通化.
 def getCurrentDatetime():
@@ -58,6 +67,7 @@ def getItems(db: Session, rid_project: int):
             t0.type,
             t0.state,
             t0.risk,
+            t0.risk_factors,
             t0.title,
             t0.detail,
             t0.result,
@@ -80,6 +90,7 @@ def getItems(db: Session, rid_project: int):
                 n.type,
                 n.state,
                 n.risk,
+                n.risk_factors,
                 n.title,
                 n.detail,
                 n.result,
@@ -94,6 +105,7 @@ def getItems(db: Session, rid_project: int):
             query_recursive.c.type,
             query_recursive.c.state,
             query_recursive.c.risk,
+            query_recursive.c.risk_factors,
             query_recursive.c.title,
             query_recursive.c.detail,
             query_recursive.c.result,
@@ -140,6 +152,7 @@ def getProjects(db: Session):
             Item.rid,
             Item.state,
             Item.risk,
+            Item.risk_factors,
             Item.title,
             Item.detail,
             Item.result,

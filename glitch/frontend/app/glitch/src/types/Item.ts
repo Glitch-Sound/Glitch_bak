@@ -23,6 +23,15 @@ export enum TaskType {
   NUMBER
 }
 
+export const RISK_1 = 0b00000001
+export const RISK_2 = 0b00000010
+export const RISK_3 = 0b00000100
+export const RISK_4 = 0b00001000
+export const RISK_5 = 0b00010000
+export const RISK_6 = 0b00100000
+export const RISK_7 = 0b01000000
+export const RISK_8 = 0b10000000
+
 export enum WorkloadType {
   NONE = 0,
   WITHIN_AN_HOUR = 1,
@@ -38,6 +47,7 @@ export interface Item {
   type: ItemType
   state: ItemState
   risk: number
+  risk_factors: number
   title: string
   detail: string
   result: string
@@ -65,6 +75,7 @@ export interface Project {
   rid: number
   state: number
   risk: number
+  risk_factors: number
   title: string
   detail: string
   result: string

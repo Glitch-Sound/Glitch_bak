@@ -7,6 +7,7 @@ class Item(BaseModel):
     type: int
     state: int
     risk: int
+    risk_factors: int
     title: str
     detail: str
     result: str
@@ -37,6 +38,7 @@ class Project(BaseModel):
     rid: int
     state: int
     risk: int
+    risk_factors: int
     title: str
     detail: str
     result: str
