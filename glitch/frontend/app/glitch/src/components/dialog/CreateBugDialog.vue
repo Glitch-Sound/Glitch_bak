@@ -25,7 +25,7 @@ const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props,
 </script>
 
 <template>
-  <v-dialog v-model="dialog" persistent max-width="1000px">
+  <v-dialog v-model="dialog" persistent class="panel-common">
     <v-card>
       <v-card-title>
         <span class="text-h5">Add Bug</span>
@@ -37,12 +37,7 @@ const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props,
 
           <v-text-field v-model="formData.title" :rules="[rules.required]" label="Title" required />
 
-          <v-text-field
-            v-model="formData.detail"
-            :rules="[rules.required]"
-            label="Detail"
-            required
-          />
+          <v-textarea v-model="formData.detail" :rules="[rules.required]" label="Detail" required />
 
           <WorkloadSelect @valueSelected="handleValueSelected" />
         </v-form>
@@ -57,4 +52,6 @@ const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props,
   </v-dialog>
 </template>
 
-<style scoped></style>
+<style scoped>
+@import '@/components/dialog/dialog.css';
+</style>

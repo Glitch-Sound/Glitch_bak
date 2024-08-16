@@ -32,7 +32,7 @@ const color = () => {
       value = '#e8a44d'
       break
     case 35:
-      value = '#dc3545'
+      value = '#bd533f'
       break
   }
   return value
@@ -72,7 +72,9 @@ onMounted(() => {
         show-ticks="always"
       />
     </p>
-    <p class="value">{{ tickLabels[sliderValue] }}</p>
+    <p class="value" :style="{ color: color() }">
+      {{ tickLabels[sliderValue] }}
+    </p>
   </div>
 </template>
 
@@ -84,5 +86,6 @@ onMounted(() => {
 .value {
   width: 200px;
   margin: 0 0 0 20px;
+  font-weight: bold;
 }
 </style>

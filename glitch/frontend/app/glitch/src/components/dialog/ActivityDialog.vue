@@ -16,7 +16,7 @@ watch(
 </script>
 
 <template>
-  <v-dialog v-model="dialog" persistent max-width="600px">
+  <v-dialog v-model="dialog" persistent class="panel-common">
     <v-card
       max-width="400"
       prepend-icon="mdi-update"
@@ -30,4 +30,6 @@ watch(
   </v-dialog>
 </template>
 
-<style scoped></style>
+<style scoped>
+@import '@/components/dialog/dialog.css';
+</style>
