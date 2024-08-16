@@ -4,6 +4,7 @@ import { ref, onMounted } from 'vue'
 import type { ProjectCreate } from '@/types/Item'
 import useProjectStore from '@/stores/ProjectStore'
 import ItemService from '@/services/ItemService'
+import MarkedText from '@/components/common/MarkedText.vue'
 import CreateProjectDialog from '@/components/dialog/CreateProjectDialog.vue'
 
 const store_project = useProjectStore()
@@ -65,8 +66,8 @@ const handleSubmit = async (data: ProjectCreate) => {
               <td>{{ item.rid }}</td>
               <td>{{ item.state }}</td>
               <td>{{ item.title }}</td>
-              <td>{{ item.detail }}</td>
-              <td>{{ item.result }}</td>
+              <td><MarkedText :src="item.detail" /></td>
+              <td><MarkedText :src="item.result" /></td>
               <td>{{ item.datetime_entry }}</td>
               <td>{{ item.name }}</td>
             </tr>

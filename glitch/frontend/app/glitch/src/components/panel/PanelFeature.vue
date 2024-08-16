@@ -10,6 +10,7 @@ import TypeLabel from '@/components/common/TypeLabel.vue'
 import StateLabel from '@/components/common/StateLabel.vue'
 import AccountLabel from '@/components/common/AccountLabel.vue'
 import InformationFeature from '@/components/panel/InformationFeature.vue'
+import DetailFeature from '@/components/panel/DetailFeature.vue'
 
 const route = useRoute()
 const store_item = useItemStore()
@@ -91,31 +92,13 @@ const handleSubmit = async (data: StoryCreate) => {
       </v-col>
     </v-row>
 
-    <v-expand-transition class="panel-detail-expand">
-      <div v-show="expand">
-        <v-row class="panel-detail-expand-row">
-          <v-col cols="auto">
-            <span>Detail :</span>
-          </v-col>
-
-          <v-col>
-            <span>{{ props.detail }}</span>
-          </v-col>
-
-          <v-col cols="auto">
-            <span>Result :</span>
-          </v-col>
-
-          <v-col>
-            <span>{{ props.result }}</span>
-          </v-col>
-
-          <v-col cols="auto">
-            <v-btn size="small" prepend-icon="mdi-pencil" variant="outlined">UPDATE</v-btn>
-          </v-col>
-        </v-row>
-      </div>
-    </v-expand-transition>
+    <DetailFeature
+      :expand="expand"
+      :risk="props.risk"
+      :risk_factors="props.risk_factors"
+      :detail="props.detail"
+      :result="props.result"
+    />
   </div>
 
   <CreateStoryDialog

@@ -45,7 +45,7 @@
 }
 
 .panel-detail-expand {
-    margin: 15px 0;
+    margin: 20px 0;
     padding: 0 16px;
 }
 
@@ -53,11 +53,13 @@
     padding: 0 8px;
     display: flex;
     align-items: baseline;
-    background-color: #212121;
+    background-color: #161616;
     border-radius: 6px;
 }
 
-
+.detail-title {
+    color: #efefef;
+}
 
 
 
