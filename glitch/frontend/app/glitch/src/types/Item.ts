@@ -84,16 +84,6 @@ export interface Project {
   name: string
   project_datetime_start: string
   project_datetime_end: string
-  project_task_count_completed: number
-  project_task_count_total: number
-  project_task_workload_completed: number
-  project_task_workload_total: number
-  project_task_number_completed: number
-  project_task_number_total: number
-  project_bug_count_completed: number
-  project_bug_count_total: number
-  project_bug_workload_completed: number
-  project_bug_workload_total: number
 }
 
 export interface ProjectCreate {

@@ -46,7 +46,6 @@ RISK_7 = 0b01000000
 RISK_8 = 0b10000000
 
 
-# TODO:共通化.
 def getCurrentDatetime():
     current_utc_time = datetime.now(pytz.timezone('Asia/Tokyo'))
     current_datetime = current_utc_time.isoformat()
@@ -161,17 +160,7 @@ def getProjects(db: Session):
             UserAlias.rid.label('rid_users'),
             UserAlias.name.label('name'),
             Project.datetime_start.label('project_datetime_start'),
-            Project.datetime_end.label('project_datetime_end'),
-            Project.task_count_completed.label('project_task_count_completed'),
-            Project.task_count_total.label('project_task_count_total'),
-            Project.task_workload_completed.label('project_task_workload_completed'),
-            Project.task_workload_total.label('project_task_workload_total'),
-            Project.task_number_completed.label('project_task_number_completed'),
-            Project.task_number_total.label('project_task_number_total'),
-            Project.bug_count_completed.label('project_bug_count_completed'),
-            Project.bug_count_total.label('project_bug_count_total'),
-            Project.bug_workload_completed.label('project_bug_workload_completed'),
-            Project.bug_workload_total.label('project_bug_workload_total'))\
+            Project.datetime_end.label('project_datetime_end'))\
         .outerjoin(UserAlias,  UserAlias.rid == Item.rid_users)\
         .outerjoin(Project, Project.rid_items == Item.rid)\
         .filter(Item.type == ItemType.PROJECT.value)\
