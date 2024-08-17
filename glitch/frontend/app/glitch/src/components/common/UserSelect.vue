@@ -4,7 +4,7 @@ import { ref, onMounted } from 'vue'
 import useUserStore from '@/stores/UserStore'
 import { type EmitItemSelected } from '@/components/common/events'
 
-const selectedOption = ref<number | null>(null)
+const selected_option = ref<number | null>(null)
 
 const store_user = useUserStore()
 
@@ -14,7 +14,7 @@ onMounted(() => {
 
 const emit = defineEmits<EmitItemSelected>()
 const itemSelected = () => {
-  const selectedItem = store_user.users.find((item) => item.rid === selectedOption.value)
+  const selectedItem = store_user.users.find((item) => item.rid === selected_option.value)
   if (selectedItem) {
     emit('itemSelected', selectedItem)
   }
@@ -24,7 +24,7 @@ const itemSelected = () => {
 <template>
   <v-select
     :items="store_user.users"
-    v-model="selectedOption"
+    v-model="selected_option"
     label="User"
     item-title="name"
     item-value="rid"

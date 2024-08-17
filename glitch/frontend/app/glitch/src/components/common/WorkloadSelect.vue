@@ -11,29 +11,29 @@ const tickLabels: { [value: number]: string } = {
   21: 'Within 3 days',
   35: 'Within a week'
 }
-const customSteps = Object.keys(tickLabels).map((key) => Number(key))
+const custom_steps = Object.keys(tickLabels).map((key) => Number(key))
 
 const props = defineProps<{
   workload: number | null
 }>()
 
-const sliderValue = ref(1)
+const slider_value = ref(1)
 
 const emit = defineEmits<EmitItemSelected>()
 onMounted(() => {
   if (props.workload) {
-    sliderValue.value = props.workload
+    slider_value.value = props.workload
   }
-  emit('itemSelected', sliderValue.value)
+  emit('itemSelected', slider_value.value)
 })
 
 const emitSelected = () => {
-  emit('itemSelected', sliderValue.value)
+  emit('itemSelected', slider_value.value)
 }
 
 const color = () => {
   let value = ''
-  switch (sliderValue.value) {
+  switch (slider_value.value) {
     case 1:
       value = '#28a745'
       break
@@ -57,10 +57,10 @@ const color = () => {
 }
 
 const onSliderInput = (value: number) => {
-  const closestStep = customSteps.reduce((prev, curr) => {
+  const closestStep = custom_steps.reduce((prev, curr) => {
     return Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev
   })
-  sliderValue.value = closestStep
+  slider_value.value = closestStep
 }
 </script>
 
@@ -68,10 +68,10 @@ const onSliderInput = (value: number) => {
   <div class="d-flex flex-row justify-center mt-10">
     <p class="slider">
       <v-slider
-        v-model="sliderValue"
+        v-model="slider_value"
         :min="0"
         :max="36"
-        :ticks="customSteps"
+        :ticks="custom_steps"
         :color="color()"
         @update:modelValue="onSliderInput"
         @end="emitSelected"
@@ -79,7 +79,7 @@ const onSliderInput = (value: number) => {
       />
     </p>
     <p class="value" :style="{ color: color() }">
-      {{ tickLabels[sliderValue] }}
+      {{ tickLabels[slider_value] }}
     </p>
   </div>
 </template>

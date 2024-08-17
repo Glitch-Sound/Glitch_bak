@@ -19,7 +19,7 @@ const store_item = useItemStore()
 
 const dialog = ref(false)
 
-const dialogFormData = ref<FeatureUpdate>({
+const dialog_form_data = ref<FeatureUpdate>({
   rid: 0,
   state: 0,
   rid_users: 0,
@@ -30,7 +30,7 @@ const dialogFormData = ref<FeatureUpdate>({
 })
 
 const openDialog = () => {
-  dialogFormData.value = {
+  dialog_form_data.value = {
     rid: props.item.rid,
     state: props.item.state,
     rid_users: props.item.rid_users,
@@ -96,7 +96,7 @@ const handleDelete = async () => {
 
   <UpdateFeatureDialog
     :showDialog="dialog"
-    :formData="dialogFormData"
+    :formData="dialog_form_data"
     @update:showDialog="dialog = $event"
     @submit="handleSubmit"
     @delete="handleDelete"

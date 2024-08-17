@@ -10,24 +10,24 @@ const props = defineProps<{
   state: ItemState
 }>()
 
-const selectedState = ref(ItemState.NONE)
-const selectedStateSrc = ref(ItemState.NONE)
+const selected_state = ref(ItemState.NONE)
+const selected_state_src = ref(ItemState.NONE)
 
 onMounted(() => {
-  selectedStateSrc.value = props.state
+  selected_state_src.value = props.state
 })
 
 const emit = defineEmits<EmitItemSelected>()
 const emitSelected = () => {
-  emit('itemSelected', selectedState.value)
+  emit('itemSelected', selected_state.value)
 }
 </script>
 
 <template>
   <div class="d-flex justify-center">
     <v-chip-group
-      v-model="selectedState"
-      v-if="selectedStateSrc === ItemState.IDLE"
+      v-model="selected_state"
+      v-if="selected_state_src === ItemState.IDLE"
       @update:modelValue="emitSelected"
     >
       <StateLabelLarge :state="ItemState.IDLE" />
@@ -35,8 +35,8 @@ const emitSelected = () => {
     </v-chip-group>
 
     <v-chip-group
-      v-model="selectedState"
-      v-if="selectedStateSrc === ItemState.RUN"
+      v-model="selected_state"
+      v-if="selected_state_src === ItemState.RUN"
       @update:modelValue="emitSelected"
     >
       <StateLabelLarge :state="ItemState.RUN" />
@@ -46,8 +46,8 @@ const emitSelected = () => {
     </v-chip-group>
 
     <v-chip-group
-      v-model="selectedState"
-      v-if="selectedStateSrc === ItemState.ALERT"
+      v-model="selected_state"
+      v-if="selected_state_src === ItemState.ALERT"
       @update:modelValue="emitSelected"
     >
       <StateLabelLarge :state="ItemState.ALERT" />
@@ -56,8 +56,8 @@ const emitSelected = () => {
     </v-chip-group>
 
     <v-chip-group
-      v-model="selectedState"
-      v-if="selectedStateSrc === ItemState.REVIEW"
+      v-model="selected_state"
+      v-if="selected_state_src === ItemState.REVIEW"
       @update:modelValue="emitSelected"
     >
       <StateLabelLarge :state="ItemState.REVIEW" />
@@ -66,8 +66,8 @@ const emitSelected = () => {
     </v-chip-group>
 
     <v-chip-group
-      v-model="selectedState"
-      v-if="selectedStateSrc === ItemState.COMPLETE"
+      v-model="selected_state"
+      v-if="selected_state_src === ItemState.COMPLETE"
       @update:modelValue="emitSelected"
     >
       <StateLabelLarge :state="ItemState.COMPLETE" />

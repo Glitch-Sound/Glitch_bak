@@ -22,7 +22,7 @@ const store_item = useItemStore()
 const expand = ref(false)
 const dialog = ref(false)
 
-const dialogFormData = ref<FeatureCreate>({
+const dialog_form_data = ref<FeatureCreate>({
   rid_items: 0,
   rid_users: 0,
   title: '',
@@ -31,7 +31,7 @@ const dialogFormData = ref<FeatureCreate>({
 
 const openDialog = () => {
   const rid_items = props.item.rid
-  dialogFormData.value = { ...dialogFormData.value, rid_items }
+  dialog_form_data.value = { ...dialog_form_data.value, rid_items }
   dialog.value = true
 }
 
@@ -82,7 +82,7 @@ const handleSubmit = async (data: FeatureCreate) => {
 
   <CreateFeatureDialog
     :showDialog="dialog"
-    :formData="dialogFormData"
+    :formData="dialog_form_data"
     @update:showDialog="dialog = $event"
     @submit="handleSubmit"
   />

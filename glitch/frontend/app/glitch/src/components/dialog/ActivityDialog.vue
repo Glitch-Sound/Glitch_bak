@@ -9,8 +9,8 @@ const dialog = ref(props.showDialog)
 
 watch(
   () => props.showDialog,
-  (newValue) => {
-    dialog.value = newValue
+  (new_value) => {
+    dialog.value = new_value
   }
 )
 </script>

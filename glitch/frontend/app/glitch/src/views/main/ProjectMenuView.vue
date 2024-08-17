@@ -12,7 +12,7 @@ const store_item = useItemStore()
 
 const dialog = ref(false)
 
-const dialogFormData = ref<EventCreate>({
+const dialog_form_data = ref<EventCreate>({
   rid_items: 0,
   rid_users: 0,
   title: '',
@@ -22,7 +22,7 @@ const dialogFormData = ref<EventCreate>({
 
 const openDialog = () => {
   const rid_items = Number(route.params.rid)
-  dialogFormData.value = { ...dialogFormData.value, rid_items }
+  dialog_form_data.value = { ...dialog_form_data.value, rid_items }
   dialog.value = true
 }
 
@@ -64,7 +64,7 @@ const handleSubmit = async (data: EventCreate) => {
 
   <CreateEventDialog
     :showDialog="dialog"
-    :formData="dialogFormData"
+    :formData="dialog_form_data"
     @update:showDialog="dialog = $event"
     @submit="handleSubmit"
   />

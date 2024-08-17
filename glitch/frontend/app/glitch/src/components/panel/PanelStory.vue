@@ -24,7 +24,7 @@ const expand = ref(false)
 const dialogTask = ref(false)
 const dialogBug = ref(false)
 
-const dialogFormDataTask = ref<TaskCreate>({
+const dialog_form_data_task = ref<TaskCreate>({
   rid_items: 0,
   rid_users: 0,
   title: '',
@@ -35,7 +35,7 @@ const dialogFormDataTask = ref<TaskCreate>({
   number_total: 0
 })
 
-const dialogFormDataBug = ref<BugCreate>({
+const dialog_form_data_bug = ref<BugCreate>({
   rid_items: 0,
   rid_users: 0,
   title: '',
@@ -45,13 +45,13 @@ const dialogFormDataBug = ref<BugCreate>({
 
 const openTaskDialog = () => {
   const rid_items = props.item.rid
-  dialogFormDataTask.value = { ...dialogFormDataTask.value, rid_items }
+  dialog_form_data_task.value = { ...dialog_form_data_task.value, rid_items }
   dialogTask.value = true
 }
 
 const openBugDialog = () => {
   const rid_items = props.item.rid
-  dialogFormDataBug.value = { ...dialogFormDataBug.value, rid_items }
+  dialog_form_data_bug.value = { ...dialog_form_data_bug.value, rid_items }
   dialogBug.value = true
 }
 
@@ -126,14 +126,14 @@ const handleBugSubmit = async (data: BugCreate) => {
 
   <CreateTaskDialog
     :showDialog="dialogTask"
-    :formData="dialogFormDataTask"
+    :formData="dialog_form_data_task"
     @update:showDialog="dialogTask = $event"
     @submit="handleTaskSubmit"
   />
 
   <CreateBugDialog
     :showDialog="dialogBug"
-    :formData="dialogFormDataBug"
+    :formData="dialog_form_data_bug"
     @update:showDialog="dialogBug = $event"
     @submit="handleBugSubmit"
   />

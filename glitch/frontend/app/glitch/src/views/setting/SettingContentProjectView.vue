@@ -24,7 +24,7 @@ const store_project = useProjectStore()
 const dialog_entry = ref(false)
 const dialog_update = ref(false)
 
-const dialogFormData = ref<ProjectCreate>({
+const dialog_form_data = ref<ProjectCreate>({
   rid_users: 0,
   title: '',
   detail: '',
@@ -96,7 +96,7 @@ const handleSubmit = async (data: ProjectCreate) => {
 
   <CreateProjectDialog
     :showDialog="dialog_entry"
-    :formData="dialogFormData"
+    :formData="dialog_form_data"
     @update:showDialog="dialog_entry = $event"
     @submit="handleSubmit"
   />

@@ -24,7 +24,7 @@ WebFont.load({
   }
 })
 
-const myDarkTheme: ThemeDefinition = {
+const theme_dark: ThemeDefinition = {
   dark: true,
   colors: {
     background: '#000000',
@@ -41,9 +41,9 @@ const vuetify = createVuetify({
   components,
   directives,
   theme: {
-    defaultTheme: 'myDarkTheme',
+    defaultTheme: 'theme_dark',
     themes: {
-      myDarkTheme
+      theme_dark
     }
   },
   icons: {

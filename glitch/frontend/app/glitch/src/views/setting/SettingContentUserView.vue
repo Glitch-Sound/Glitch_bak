@@ -18,7 +18,7 @@ const store_user = useUserStore()
 const dialog_entry = ref(false)
 const dialog_update = ref(false)
 
-const dialogFormData = ref<UserCreate>({
+const dialog_form_data = ref<UserCreate>({
   user: '',
   password: '',
   name: '',
@@ -38,7 +38,7 @@ const users_member = computed(() => {
 })
 
 const openEntryDialog = (is_admin: boolean) => {
-  dialogFormData.value.is_admin = is_admin
+  dialog_form_data.value.is_admin = is_admin
   dialog_entry.value = true
 }
 
@@ -105,7 +105,7 @@ const handleSubmit = async (data: UserCreate) => {
 
   <CreateUserDialog
     :showDialog="dialog_entry"
-    :formData="dialogFormData"
+    :formData="dialog_form_data"
     @update:showDialog="dialog_entry = $event"
     @submit="handleSubmit"
   />
