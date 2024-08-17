@@ -12,7 +12,7 @@ const emitSelected = () => {
 </script>
 
 <template>
-  <v-row>
+  <v-row class="ma-1">
     <v-col cols="auto">
       <v-switch :hide-details="true" base-color="#3e3e3e" color="#930000" v-model="isSwitchOn" />
     </v-col>

@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { ref, defineProps, watch, onMounted } from 'vue'
 
-import useProjectStore from '@/stores/ProjectStore'
 import { type EmitSubmit } from '@/components/common/events'
+import useProjectStore from '@/stores/ProjectStore'
+import MarkedText from '@/components/common/MarkedText.vue'
 
 const headers = [
   { title: 'RID', key: 'rid', width: '50px' },
@@ -42,7 +43,7 @@ const handleSubmit = async () => {
 
 <template>
   <v-dialog v-model="dialog" persistent>
-    <v-card>
+    <v-card class="dialog-card">
       <v-card-title>
         <span class="text-h5">Project</span>
       </v-card-title>
@@ -57,8 +58,8 @@ const handleSubmit = async () => {
                 {{ item.title }}
               </router-link>
             </td>
-            <td>{{ item.detail }}</td>
-            <td>{{ item.result }}</td>
+            <td><MarkedText :src="item.detail" /></td>
+            <td><MarkedText :src="item.result" /></td>
             <td>{{ item.datetime_entry }}</td>
             <td>{{ item.name }}</td>
           </tr>
@@ -72,4 +73,8 @@ const handleSubmit = async () => {
   </v-dialog>
 </template>
 
-<style scoped></style>
+<style scoped>
+.dialog-card {
+  padding: 10px 20px;
+}
+</style>

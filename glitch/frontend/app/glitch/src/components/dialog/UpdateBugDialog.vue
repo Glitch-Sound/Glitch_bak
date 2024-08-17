@@ -3,12 +3,12 @@ import { defineProps } from 'vue'
 
 import { ItemType, ItemState, type BugUpdate } from '@/types/Item'
 import type { User } from '@/types/User'
+import type { EmitDialog } from '@/components/common/events'
 import { useDialog } from '@/components/dialog/BaseDialog'
 import UserSelect from '@/components/common/UserSelect.vue'
 import WorkloadSelect from '@/components/common/WorkloadSelect.vue'
 import StateSelect from '@/components/common/StateSelect.vue'
 import DeleteButton from '@/components/common/DeleteButton.vue'
-import { type EmitDialog } from '@/components/common/events'
 
 const props = defineProps<{
   showDialog: boolean

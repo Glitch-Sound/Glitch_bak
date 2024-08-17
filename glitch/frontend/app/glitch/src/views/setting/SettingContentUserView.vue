@@ -8,14 +8,15 @@ import CreateUserDialog from '@/components/dialog/CreateUserDialog.vue'
 
 const headers = [
   { title: 'RID', key: 'rid', width: '50px' },
-  { title: 'USER', key: 'user', width: '150px' },
-  { title: 'NAME', key: 'name', width: '150px' },
-  { title: 'ADMIN', key: 'is_admin', width: '100px' }
+  { title: 'USER', key: 'user', width: '200px' },
+  { title: 'NAME', key: 'name', width: '200px' },
+  { title: '', key: '', width: '140px' }
 ]
 
 const store_user = useUserStore()
 
-const dialog = ref(false)
+const dialog_entry = ref(false)
+const dialog_update = ref(false)
 
 const dialogFormData = ref<UserCreate>({
   user: '',
@@ -36,9 +37,13 @@ const users_member = computed(() => {
   return store_user.users.filter((user) => user.is_admin == false)
 })
 
-const openDialog = (is_admin: boolean) => {
+const openEntryDialog = (is_admin: boolean) => {
   dialogFormData.value.is_admin = is_admin
-  dialog.value = true
+  dialog_entry.value = true
+}
+
+const openUpdateDialog = () => {
+  dialog_update.value = true
 }
 
 const handleSubmit = async (data: UserCreate) => {
@@ -46,7 +51,7 @@ const handleSubmit = async (data: UserCreate) => {
     const service_user = new UserService()
     await service_user.createUser(data)
     store_user.fetchUsers()
-    dialog.value = false
+    dialog_entry.value = false
   } catch (err) {
     console.error('Error:', err)
   }
@@ -59,7 +64,7 @@ const handleSubmit = async (data: UserCreate) => {
       <v-container class="mb-5">
         <div class="text-h6">
           Manager
-          <v-btn icon size="x-small" @click="openDialog(true)">
+          <v-btn icon size="x-small" @click="openEntryDialog(true)">
             <v-icon>mdi-plus-thick</v-icon>
           </v-btn>
         </div>
@@ -70,7 +75,7 @@ const handleSubmit = async (data: UserCreate) => {
       <v-container class="mb-5">
         <div class="text-h6">
           Member
-          <v-btn icon size="x-small" @click="openDialog(false)">
+          <v-btn icon size="x-small" @click="openEntryDialog(false)">
             <v-icon>mdi-plus-thick</v-icon>
           </v-btn>
         </div>
@@ -81,7 +86,16 @@ const handleSubmit = async (data: UserCreate) => {
               <td>{{ item.rid }}</td>
               <td>{{ item.user }}</td>
               <td>{{ item.name }}</td>
-              <td>{{ item.is_admin }}</td>
+              <td>
+                <v-btn
+                  size="small"
+                  prepend-icon="mdi-pencil"
+                  variant="outlined"
+                  @click="openUpdateDialog()"
+                >
+                  UPDATE
+                </v-btn>
+              </td>
             </tr>
           </template>
         </v-data-table>
@@ -90,9 +104,9 @@ const handleSubmit = async (data: UserCreate) => {
   </v-main>
 
   <CreateUserDialog
-    :showDialog="dialog"
+    :showDialog="dialog_entry"
     :formData="dialogFormData"
-    @update:showDialog="dialog = $event"
+    @update:showDialog="dialog_entry = $event"
     @submit="handleSubmit"
   />
 </template>

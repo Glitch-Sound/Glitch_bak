@@ -14,12 +14,14 @@ const headers = [
   { title: 'DETAIL', key: 'detail' },
   { title: 'RESULT', key: 'result' },
   { title: 'ENTRY', key: 'datetime_entry', width: '300px' },
-  { title: 'USER', key: 'name', width: '100px' }
+  { title: 'USER', key: 'name', width: '100px' },
+  { title: '', key: '', width: '140px' }
 ]
 
 const store_project = useProjectStore()
 
-const dialog = ref(false)
+const dialog_entry = ref(false)
+const dialog_update = ref(false)
 
 const dialogFormData = ref<ProjectCreate>({
   rid_user: 0,
@@ -33,8 +35,12 @@ onMounted(() => {
   store_project.fetchProjects()
 })
 
-const openDialog = () => {
-  dialog.value = true
+const openEntryDialog = () => {
+  dialog_entry.value = true
+}
+
+const openUpdateDialog = () => {
+  dialog_update.value = true
 }
 
 const handleSubmit = async (data: ProjectCreate) => {
@@ -42,7 +48,7 @@ const handleSubmit = async (data: ProjectCreate) => {
     const service_item = new ItemService()
     await service_item.createProject(data)
     store_project.fetchProjects()
-    dialog.value = false
+    dialog_entry.value = false
   } catch (err) {
     console.error('Error:', err)
   }
@@ -55,7 +61,7 @@ const handleSubmit = async (data: ProjectCreate) => {
       <v-container class="mb-5">
         <div class="text-h6">
           Projects
-          <v-btn icon size="x-small" @click="openDialog()">
+          <v-btn icon size="x-small" @click="openEntryDialog()">
             <v-icon>mdi-plus-thick</v-icon>
           </v-btn>
         </div>
@@ -70,6 +76,16 @@ const handleSubmit = async (data: ProjectCreate) => {
               <td><MarkedText :src="item.result" /></td>
               <td>{{ item.datetime_entry }}</td>
               <td>{{ item.name }}</td>
+              <td>
+                <v-btn
+                  size="small"
+                  prepend-icon="mdi-pencil"
+                  variant="outlined"
+                  @click="openUpdateDialog()"
+                >
+                  UPDATE
+                </v-btn>
+              </td>
             </tr>
           </template>
         </v-data-table>
@@ -78,9 +94,9 @@ const handleSubmit = async (data: ProjectCreate) => {
   </v-main>
 
   <CreateProjectDialog
-    :showDialog="dialog"
+    :showDialog="dialog_entry"
     :formData="dialogFormData"
-    @update:showDialog="dialog = $event"
+    @update:showDialog="dialog_entry = $event"
     @submit="handleSubmit"
   />
 </template>
