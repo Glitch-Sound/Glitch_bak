@@ -70,6 +70,7 @@ const emitSelected = () => {
       v-if="selectedStateSrc === ItemState.COMPLETE"
       @update:modelValue="emitSelected"
     >
+      <StateLabelLarge :state="ItemState.COMPLETE" />
       <StateLabelLarge :state="ItemState.RUN" />
       <StateLabelLarge :state="ItemState.ALERT" />
     </v-chip-group>

@@ -87,16 +87,28 @@ export interface Project {
 }
 
 export interface ProjectCreate {
-  rid_user: number
+  rid_users: number
   title: string
   detail: string
   datetime_start: string
   datetime_end: string
 }
 
+export interface ProjectUpdate {
+  rid: number
+  state: number
+  rid_users: number
+  rid_users_review: number | null
+  title: string
+  detail: string
+  result: string
+  datetime_start: string
+  datetime_end: string
+}
+
 export interface EventCreate {
   rid_items: number
-  rid_user: number
+  rid_users: number
   title: string
   detail: string
   datetime_end: string
@@ -105,7 +117,7 @@ export interface EventCreate {
 export interface EventUpdate {
   rid: number
   state: number
-  rid_user: number
+  rid_users: number
   rid_users_review: number | null
   title: string
   detail: string
@@ -115,7 +127,7 @@ export interface EventUpdate {
 
 export interface FeatureCreate {
   rid_items: number
-  rid_user: number
+  rid_users: number
   title: string
   detail: string
 }
@@ -123,7 +135,7 @@ export interface FeatureCreate {
 export interface FeatureUpdate {
   rid: number
   state: number
-  rid_user: number
+  rid_users: number
   rid_users_review: number | null
   title: string
   detail: string
@@ -132,7 +144,7 @@ export interface FeatureUpdate {
 
 export interface StoryCreate {
   rid_items: number
-  rid_user: number
+  rid_users: number
   title: string
   detail: string
   datetime_start: string
@@ -142,7 +154,7 @@ export interface StoryCreate {
 export interface StoryUpdate {
   rid: number
   state: number
-  rid_user: number
+  rid_users: number
   rid_users_review: number | null
   title: string
   detail: string
@@ -153,7 +165,7 @@ export interface StoryUpdate {
 
 export interface TaskCreate {
   rid_items: number
-  rid_user: number
+  rid_users: number
   title: string
   detail: string
   type: number
@@ -165,7 +177,7 @@ export interface TaskCreate {
 export interface TaskUpdate {
   rid: number
   state: number
-  rid_user: number
+  rid_users: number
   rid_users_review: number | null
   title: string
   detail: string
@@ -178,7 +190,7 @@ export interface TaskUpdate {
 
 export interface BugCreate {
   rid_items: number
-  rid_user: number
+  rid_users: number
   title: string
   detail: string
   workload: number
@@ -187,7 +199,7 @@ export interface BugCreate {
 export interface BugUpdate {
   rid: number
   state: number
-  rid_user: number
+  rid_users: number
   rid_users_review: number | null
   title: string
   detail: string

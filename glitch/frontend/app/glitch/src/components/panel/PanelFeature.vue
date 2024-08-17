@@ -24,7 +24,7 @@ const dialog = ref(false)
 
 const dialogFormData = ref<StoryCreate>({
   rid_items: 0,
-  rid_user: 0,
+  rid_users: 0,
   title: '',
   detail: '',
   datetime_start: '',

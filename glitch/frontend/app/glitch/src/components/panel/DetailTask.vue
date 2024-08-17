@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { ref, defineProps } from 'vue'
+import { useRoute } from 'vue-router'
 
 import type { Item, TaskUpdate } from '@/types/Item'
+import useItemStore from '@/stores/ItemStore'
+import ItemService from '@/services/ItemService'
 import UpdateTaskDialog from '@/components/dialog/UpdateTaskDialog.vue'
 
 import MarkedText from '@/components/common/MarkedText.vue'
@@ -11,12 +14,15 @@ const props = defineProps<{
   item: Item
 }>()
 
+const route = useRoute()
+const store_item = useItemStore()
+
 const dialog = ref(false)
 
 const dialogFormData = ref<TaskUpdate>({
   rid: 0,
   state: 0,
-  rid_user: 0,
+  rid_users: 0,
   rid_users_review: null,
   title: '',
   detail: '',
@@ -31,7 +37,7 @@ const openDialog = () => {
   dialogFormData.value = {
     rid: props.item.rid,
     state: props.item.state,
-    rid_user: props.item.rid_users,
+    rid_users: props.item.rid_users,
     rid_users_review: props.item.rid_users_review,
     title: props.item.title,
     detail: props.item.detail,
@@ -46,16 +52,21 @@ const openDialog = () => {
 
 const handleSubmit = async (data: TaskUpdate) => {
   try {
-    console.log(data)
+    const service_item = new ItemService()
+    await service_item.updateTask(data)
+    store_item.fetchItems(Number(route.params.rid))
     dialog.value = false
   } catch (err) {
     console.error('Error:', err)
   }
 }
 
-const handleDelete = () => {
+const handleDelete = async () => {
   try {
-    console.log('delete')
+    const service_item = new ItemService()
+    await service_item.deleteTask(props.item.rid)
+    store_item.fetchItems(Number(route.params.rid))
+    dialog.value = false
   } catch (err) {
     console.error('Error:', err)
   }

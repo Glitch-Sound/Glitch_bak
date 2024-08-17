@@ -20,7 +20,7 @@ onBeforeUpdate(() => {
 })
 
 const handleUserSelected = (user: User) => {
-  formData.value.rid_user = user.rid
+  formData.value.rid_users = user.rid
 }
 
 const handleStateSelected = (state: ItemState) => {
@@ -44,7 +44,7 @@ const { dialog, valid, formData, formRef, rules, submitData, deleteData } = useD
 
       <v-card-text>
         <v-form ref="formRef" v-model="valid" lazy-validation>
-          <UserSelect v-model="formData.rid_user" @itemSelected="handleUserSelected" />
+          <UserSelect v-model="formData.rid_users" @itemSelected="handleUserSelected" />
 
           <StateSelect
             :type="ItemType.EVENT"

@@ -4,6 +4,7 @@ import { ref, onMounted } from 'vue'
 import type { ProjectCreate } from '@/types/Item'
 import useProjectStore from '@/stores/ProjectStore'
 import ItemService from '@/services/ItemService'
+import StateLabel from '@/components/common/StateLabel.vue'
 import MarkedText from '@/components/common/MarkedText.vue'
 import CreateProjectDialog from '@/components/dialog/CreateProjectDialog.vue'
 
@@ -24,7 +25,7 @@ const dialog_entry = ref(false)
 const dialog_update = ref(false)
 
 const dialogFormData = ref<ProjectCreate>({
-  rid_user: 0,
+  rid_users: 0,
   title: '',
   detail: '',
   datetime_start: '',
@@ -70,7 +71,7 @@ const handleSubmit = async (data: ProjectCreate) => {
           <template v-slot:item="{ item }">
             <tr>
               <td>{{ item.rid }}</td>
-              <td>{{ item.state }}</td>
+              <td><StateLabel :state="item.state" /></td>
               <td>{{ item.title }}</td>
               <td><MarkedText :src="item.detail" /></td>
               <td><MarkedText :src="item.result" /></td>

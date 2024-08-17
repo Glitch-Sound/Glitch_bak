@@ -4,6 +4,7 @@ import { ref, defineProps, watch, onMounted } from 'vue'
 import { type EmitSubmit } from '@/components/common/events'
 import useProjectStore from '@/stores/ProjectStore'
 import MarkedText from '@/components/common/MarkedText.vue'
+import StateLabel from '@/components/common/StateLabel.vue'
 
 const headers = [
   { title: 'RID', key: 'rid', width: '50px' },
@@ -52,7 +53,7 @@ const handleSubmit = async () => {
         <template v-slot:item="{ item }">
           <tr>
             <td>{{ item.rid }}</td>
-            <td>{{ item.state }}</td>
+            <td><StateLabel :state="item.state" /></td>
             <td>
               <router-link :to="`/project/${item.rid}`" @click="handleSubmit">
                 {{ item.title }}

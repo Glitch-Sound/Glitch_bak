@@ -18,7 +18,7 @@ onBeforeUpdate(() => {
 })
 
 const handleUserSelected = (user: User) => {
-  formData.value.rid_user = user.rid
+  formData.value.rid_users = user.rid
 }
 
 const handleWorkloadSelect = (workload: number) => {

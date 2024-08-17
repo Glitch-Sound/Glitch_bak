@@ -26,7 +26,7 @@ const dialogBug = ref(false)
 
 const dialogFormDataTask = ref<TaskCreate>({
   rid_items: 0,
-  rid_user: 0,
+  rid_users: 0,
   title: '',
   detail: '',
   type: 0,
@@ -37,7 +37,7 @@ const dialogFormDataTask = ref<TaskCreate>({
 
 const dialogFormDataBug = ref<BugCreate>({
   rid_items: 0,
-  rid_user: 0,
+  rid_users: 0,
   title: '',
   detail: '',
   workload: 0
