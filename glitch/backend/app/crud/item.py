@@ -1,4 +1,4 @@
-from sqlalchemy import Text                     # type: ignore
+from sqlalchemy import Text, case               # type: ignore
 from sqlalchemy.orm import Session, aliased     # type: ignore
 from sqlalchemy.sql import func                 # type: ignore
 from sqlalchemy.sql import select               # type: ignore
@@ -107,6 +107,15 @@ def getItems(db: Session, rid_project: int):
         UserAlias2 = aliased(User)
 
         t0 = aliased(Item, name='t0')
+        order_state_t0 = case(
+            (t0.state == 3, 1),
+            (t0.state == 4, 2),
+            (t0.state == 2, 3),
+            (t0.state == 1, 4),
+            (t0.state == 5, 5),
+            else_=0
+        )
+
         query_base = db.query(
             t0.rid,
             t0.rid_items,
@@ -121,13 +130,24 @@ def getItems(db: Session, rid_project: int):
             t0.result,
             t0.datetime_entry,
             t0.datetime_update,
-            func.cast(t0.rid, Text).label('path')
-        ).filter(t0.rid == rid_project)
+            (func.cast(order_state_t0, Text) + ':' + func.cast(t0.rid, Text)).label('path')
+        )\
+        .filter(t0.rid == rid_project)\
+        .filter(t0.is_deleted == 0)
 
         query_recursive = query_base.cte(name='targets', recursive=True)
 
         n = aliased(Item, name='n')
         t = aliased(query_recursive, name='t')
+
+        order_state_n = case(
+            (n.state == 3, 1),
+            (n.state == 4, 2),
+            (n.state == 2, 3),
+            (n.state == 1, 4),
+            (n.state == 5, 5),
+            else_=0
+        )
 
         query_recursive = query_recursive.union_all(
             db.query(
@@ -144,8 +164,10 @@ def getItems(db: Session, rid_project: int):
                 n.result,
                 n.datetime_entry,
                 n.datetime_update,
-                (t.c.path + '-' + func.cast(n.rid, Text)).label('path')
-            ).join(t, t.c.rid == n.rid_items)
+                (t.c.path + '-' + func.cast(order_state_n, Text) + ':' + func.cast(n.rid, Text)).label('path')
+            )\
+            .join(t, t.c.rid == n.rid_items)\
+            .filter(n.is_deleted == 0)\
         )
 
         query_final = db.query(
