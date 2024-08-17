@@ -47,3 +47,37 @@ def createUser(db: Session, target: schema_user.UserCreate):
     except Exception as e:
         db.rollback()
         raise e
+
+
+def updateUser(db: Session, target: schema_user.UserUpdate):
+    try:
+        db.begin()
+        user = db.query(User).filter(User.rid == target.rid)
+        user.update(
+            user=target.user,
+            password=target.password,
+            name=target.name
+        )
+        db.commit()
+        db.refresh(user)
+        return user
+
+    except Exception as e:
+        db.rollback()
+        raise e
+
+
+def deleteUser(db: Session, rid: int):
+    try:
+        db.begin()
+        user = db.query(User).filter(User.rid == rid)
+        user.update({
+            user.is_deleted: 1
+        })
+        db.commit()
+        db.refresh(user)
+        return user
+
+    except Exception as e:
+        db.rollback()
+        raise e

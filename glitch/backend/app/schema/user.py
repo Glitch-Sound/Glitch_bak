@@ -19,3 +19,13 @@ class UserCreate(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class UserUpdate(BaseModel):
+    rid: int
+    user: str
+    password: str
+    name: str
+
+    class Config:
+        orm_mode = True

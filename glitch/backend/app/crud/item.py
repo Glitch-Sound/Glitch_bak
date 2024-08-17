@@ -21,6 +21,16 @@ from model.bug import Bug
 from model.user import User
 
 
+RISK_1 = 0b00000001
+RISK_2 = 0b00000010
+RISK_3 = 0b00000100
+RISK_4 = 0b00001000
+RISK_5 = 0b00010000
+RISK_6 = 0b00100000
+RISK_7 = 0b01000000
+RISK_8 = 0b10000000
+
+
 class ItemType(Enum):
     PROJECT = 1
     EVENT   = 2
@@ -36,20 +46,59 @@ class ItemState(Enum):
     REVIEW   = 4
     COMPLETE = 5
 
-RISK_1 = 0b00000001
-RISK_2 = 0b00000010
-RISK_3 = 0b00000100
-RISK_4 = 0b00001000
-RISK_5 = 0b00010000
-RISK_6 = 0b00100000
-RISK_7 = 0b01000000
-RISK_8 = 0b10000000
+
+class ItemCommon():
+    def __init__(self, rid: int, state: int, rid_users: int, title: str, detail: str, result: str):
+        self.rid       = rid
+        self.state     = state
+        self.rid_users = rid_users
+        self.title     = title
+        self.detail    = detail
+        self.result    = result
 
 
-def getCurrentDatetime():
+def _getCurrentDatetime():
     current_utc_time = datetime.now(pytz.timezone('Asia/Tokyo'))
     current_datetime = current_utc_time.isoformat()
     return current_datetime
+
+
+def _updateItem(db: Session, target: ItemCommon):
+    try:
+        current_datetime = _getCurrentDatetime()
+
+        item = db.query(Item).filter(Item.rid == target.rid)
+        item.update({
+            Item.state: target.state,
+            Item.rid_users: target.rid_users,
+            Item.title: target.title,
+            Item.detail: target.detail,
+            Item.result: target.result,
+            Item.datetime_update: current_datetime
+        })
+
+        item_updated = item.first()
+        return item_updated
+
+    except Exception as e:
+        raise e
+
+
+def _deleteItem(db: Session, rid: int):
+    try:
+        current_datetime = _getCurrentDatetime()
+
+        item = db.query(Item).filter(Item.rid == rid)
+        db.begin()
+        item.update({
+            Item.is_deleted: 1,
+            Item.datetime_update: current_datetime
+        })
+        db.commit()
+
+    except Exception as e:
+        db.rollback()
+        raise e
 
 
 def getItems(db: Session, rid_project: int):
@@ -175,10 +224,10 @@ def getProjects(db: Session):
 
 def createProject(db: Session, target:schema_item.ProjectCreate):
     try:
-        current_datetime = getCurrentDatetime()
+        current_datetime = _getCurrentDatetime()
 
         item = Item(
-            rid_users=target.rid_user,
+            rid_users=target.rid_users,
             rid_users_review=None,
             type=ItemType.PROJECT.value,
             title=target.title,
@@ -203,15 +252,51 @@ def createProject(db: Session, target:schema_item.ProjectCreate):
     except Exception as e:
         db.rollback()
         raise e
-    
+
+
+def updateProject(db: Session, target:schema_item.ProjectUpdate):
+    try:
+        param_item = ItemCommon(
+            rid=target.rid,
+            state=target.state,
+            rid_users=target.rid_users,
+            title=target.title,
+            detail=target.detail,
+            result=target.result
+        )
+
+        db.begin()
+        item = _updateItem(db, param_item)
+
+        addition = db.query(Project).filter(Project.rid_items == target.rid)
+        addition.update({
+            Project.datetime_start: target.datetime_start,
+            Project.datetime_end: target.datetime_end
+        })
+        db.commit()
+        db.refresh(item)
+        return item
+
+    except Exception as e:
+        db.rollback()
+        raise e
+
+
+def deleteProject(db: Session, rid: int):
+    try:
+        _deleteItem(db, rid)
+
+    except Exception as e:
+        raise e
+
 
 def createEvent(db: Session, target:schema_item.EventCreate):
     try:
-        current_datetime = getCurrentDatetime()
+        current_datetime = _getCurrentDatetime()
 
         item = Item(
             rid_items=target.rid_items,
-            rid_users=target.rid_user,
+            rid_users=target.rid_users,
             rid_users_review=None,
             type=ItemType.EVENT.value,
             title=target.title,
@@ -237,13 +322,48 @@ def createEvent(db: Session, target:schema_item.EventCreate):
         raise e
 
 
+def updateEvent(db: Session, target:schema_item.EventUpdate):
+    try:
+        param_item = ItemCommon(
+            rid=target.rid,
+            state=target.state,
+            rid_users=target.rid_users,
+            title=target.title,
+            detail=target.detail,
+            result=target.result
+        )
+
+        db.begin()
+        item = _updateItem(db, param_item)
+
+        addition = db.query(Event).filter(Event.rid_items == target.rid)
+        addition.update({
+            Event.datetime_end: target.datetime_end
+        })
+        db.commit()
+        db.refresh(item)
+        return item
+
+    except Exception as e:
+        db.rollback()
+        raise e
+
+
+def deleteEvent(db: Session, rid: int):
+    try:
+        _deleteItem(db, rid)
+
+    except Exception as e:
+        raise e
+
+
 def createFeature(db: Session, target:schema_item.FeatureCreate):
     try:
-        current_datetime = getCurrentDatetime()
+        current_datetime = _getCurrentDatetime()
 
         item = Item(
             rid_items=target.rid_items,
-            rid_users=target.rid_user,
+            rid_users=target.rid_users,
             rid_users_review=None,
             type=ItemType.FEATURE.value,
             title=target.title,
@@ -268,13 +388,43 @@ def createFeature(db: Session, target:schema_item.FeatureCreate):
         raise e
 
 
+def updateFeature(db: Session, target:schema_item.FeatureUpdate):
+    try:
+        param_item = ItemCommon(
+            rid=target.rid,
+            state=target.state,
+            rid_users=target.rid_users,
+            title=target.title,
+            detail=target.detail,
+            result=target.result
+        )
+
+        db.begin()
+        item = _updateItem(db, param_item)
+        db.commit()
+        db.refresh(item)
+        return item
+
+    except Exception as e:
+        db.rollback()
+        raise e
+
+
+def deleteFeature(db: Session, rid: int):
+    try:
+        _deleteItem(db, rid)
+
+    except Exception as e:
+        raise e
+
+
 def createStory(db: Session, target:schema_item.StoryCreate):
     try:
-        current_datetime = getCurrentDatetime()
+        current_datetime = _getCurrentDatetime()
 
         item = Item(
             rid_items=target.rid_items,
-            rid_users=target.rid_user,
+            rid_users=target.rid_users,
             rid_users_review=None,
             type=ItemType.STORY.value,
             title=target.title,
@@ -301,13 +451,50 @@ def createStory(db: Session, target:schema_item.StoryCreate):
         raise e
 
 
+def updateStory(db: Session, target:schema_item.StoryUpdate):
+    try:
+        param_item = ItemCommon(
+            rid=target.rid,
+            state=target.state,
+            rid_users=target.rid_users,
+            title=target.title,
+            detail=target.detail,
+            result=target.result
+        )
+
+        db.begin()
+        item = _updateItem(db, param_item)
+
+        addition = db.query(Story).filter(Story.rid_items == target.rid)
+        addition.update({
+            Story.datetime_start: target.datetime_start,
+            Story.datetime_end: target.datetime_end
+
+        })
+        db.commit()
+        db.refresh(item)
+        return item
+
+    except Exception as e:
+        db.rollback()
+        raise e
+
+
+def deleteStory(db: Session, rid: int):
+    try:
+        _deleteItem(db, rid)
+
+    except Exception as e:
+        raise e
+
+
 def createTask(db: Session, target:schema_item.TaskCreate):
     try:
-        current_datetime = getCurrentDatetime()
+        current_datetime = _getCurrentDatetime()
 
         item = Item(
             rid_items=target.rid_items,
-            rid_users=target.rid_user,
+            rid_users=target.rid_users,
             rid_users_review=None,
             type=ItemType.TASK.value,
             title=target.title,
@@ -336,13 +523,51 @@ def createTask(db: Session, target:schema_item.TaskCreate):
         raise e
 
 
+def updateTask(db: Session, target:schema_item.TaskUpdate):
+    try:
+        param_item = ItemCommon(
+            rid=target.rid,
+            state=target.state,
+            rid_users=target.rid_users,
+            title=target.title,
+            detail=target.detail,
+            result=target.result
+        )
+
+        db.begin()
+        item = _updateItem(db, param_item)
+
+        addition = db.query(Task).filter(Task.rid_items == target.rid)
+        addition.update({
+            Task.type: target.type,
+            Task.workload: target.workload,
+            Task.number_completed: target.number_completed,
+            Task.number_total: target.number_total
+        })
+        db.commit()
+        db.refresh(item)
+        return item
+
+    except Exception as e:
+        db.rollback()
+        raise e
+
+
+def deleteTask(db: Session, rid: int):
+    try:
+        _deleteItem(db, rid)
+
+    except Exception as e:
+        raise e
+
+
 def createBug(db: Session, target:schema_item.BugCreate):
     try:
-        current_datetime = getCurrentDatetime()
+        current_datetime = _getCurrentDatetime()
 
         item = Item(
             rid_items=target.rid_items,
-            rid_users=target.rid_user,
+            rid_users=target.rid_users,
             rid_users_review=None,
             type=ItemType.BUG.value,
             title=target.title,
@@ -356,8 +581,7 @@ def createBug(db: Session, target:schema_item.BugCreate):
 
         addition = Bug(
             rid_items=item.rid,
-            priority=0,
-            workload=target.workload,
+            workload=target.workload
         )
         db.add(addition)
         db.commit()
@@ -366,4 +590,39 @@ def createBug(db: Session, target:schema_item.BugCreate):
 
     except Exception as e:
         db.rollback()
+        raise e
+
+
+def updateBug(db: Session, target:schema_item.BugUpdate):
+    try:
+        param_item = ItemCommon(
+            rid=target.rid,
+            state=target.state,
+            rid_users=target.rid_users,
+            title=target.title,
+            detail=target.detail,
+            result=target.result
+        )
+
+        db.begin()
+        item = _updateItem(db, param_item)
+
+        addition = db.query(Bug).filter(Bug.rid_items == target.rid)
+        addition.update({
+            Bug.workload: target.workload
+        })
+        db.commit()
+        db.refresh(item)
+        return item
+
+    except Exception as e:
+        db.rollback()
+        raise e
+
+
+def deleteBug(db: Session, rid: int):
+    try:
+        _deleteItem(db, rid)
+
+    except Exception as e:
         raise e

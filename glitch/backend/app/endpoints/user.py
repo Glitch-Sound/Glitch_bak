@@ -39,3 +39,23 @@ def create_user(target:schema_user.UserCreate, db: Session = Depends(get_db)):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f'error: {str(e)}')
+
+
+@router.put('/user/', response_model=schema_user.User)
+def update_user(target:schema_user.UserUpdate, db: Session = Depends(get_db)):
+    try:
+        result = crud_user.updateUser(db, target)
+        return result
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f'error: {str(e)}')
+
+
+@router.delete('/user/', response_model=schema_user.User)
+def delete_user(target: int, db: Session = Depends(get_db)):
+    try:
+        result = crud_user.deleteUser(db, target)
+        return result
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f'error: {str(e)}')
