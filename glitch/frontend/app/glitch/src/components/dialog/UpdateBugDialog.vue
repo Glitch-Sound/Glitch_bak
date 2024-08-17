@@ -7,6 +7,7 @@ import { useDialog } from '@/components/dialog/BaseDialog'
 import UserSelect from '@/components/common/UserSelect.vue'
 import WorkloadSelect from '@/components/common/WorkloadSelect.vue'
 import StateSelect from '@/components/common/StateSelect.vue'
+import DeleteButton from '@/components/common/DeleteButton.vue'
 import { type EmitDialog } from '@/components/common/events'
 
 const props = defineProps<{
@@ -27,7 +28,7 @@ const handleWorkloadSelect = (workload: number) => {
 }
 
 const emit = defineEmits<EmitDialog>()
-const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props, emit)
+const { dialog, valid, formData, formRef, rules, submitData, deleteData } = useDialog(props, emit)
 </script>
 
 <template>
@@ -58,6 +59,7 @@ const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props,
       </v-card-text>
 
       <v-card-actions>
+        <DeleteButton @delete="deleteData" />
         <v-spacer />
         <v-btn @click="dialog = false">Cancel</v-btn>
         <v-btn @click="submitData">Submit</v-btn>

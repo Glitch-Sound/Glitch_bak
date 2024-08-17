@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, defineProps } from 'vue'
 
-import { ItemType, ItemState, TaskType } from '@/types/Item'
+import type { Item } from '@/types/Item'
 import ActivityDialog from '@/components/dialog/ActivityDialog.vue'
 import TypeLabel from '@/components/common/TypeLabel.vue'
 import StateLabel from '@/components/common/StateLabel.vue'
@@ -10,25 +10,7 @@ import InformationTask from '@/components/panel/InformationTask.vue'
 import DetailTask from '@/components/panel/DetailTask.vue'
 
 const props = defineProps<{
-  rid: number
-  type: ItemType
-  state: ItemState
-  risk: number
-  risk_factors: number
-  title: string
-  detail: string
-  result: string
-  datetime_entry: string
-  datetime_update: string
-  rid_users: number
-  name: string
-  rid_users_review: number | null
-  name_review: string | null
-  task_priority: number
-  task_type: TaskType
-  task_workload: number
-  task_number_completed: number
-  task_number_total: number
+  item: Item
 }>()
 
 const expand = ref(false)
@@ -43,29 +25,23 @@ const openDialog = () => {
   <div class="panel-common panel-task">
     <v-row class="align-baseline">
       <v-col cols="auto" class="state">
-        <TypeLabel :type="props.type" />
+        <TypeLabel :type="props.item.type" />
       </v-col>
 
       <v-col cols="auto">
-        <StateLabel :state="props.state" />
+        <StateLabel :state="props.item.state" />
       </v-col>
 
       <v-col @click="expand = !expand">
-        <span class="title">{{ props.title }}</span>
+        <span class="title">{{ props.item.title }}</span>
       </v-col>
 
       <v-col cols="auto">
-        <UserLabel :rid_users="props.rid_users" :name="props.name" />
+        <UserLabel :rid_users="props.item.rid_users" :name="props.item.name" />
       </v-col>
 
       <v-col cols="auto" class="information">
-        <InformationTask
-          :risk="props.risk"
-          :task_type="props.task_type"
-          :task_workload="props.task_workload"
-          :task_number_completed="props.task_number_completed"
-          :task_number_total="props.task_number_total"
-        />
+        <InformationTask :item="props.item" />
       </v-col>
 
       <v-col cols="auto">

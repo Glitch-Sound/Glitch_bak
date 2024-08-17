@@ -1,24 +1,21 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 
-import { ItemState } from '@/types/Item'
+import { type Item, ItemState } from '@/types/Item'
 
 const props = defineProps<{
-  state: ItemState
-  risk: number
-  story_datetime_start: string
-  story_datetime_end: string
+  item: Item
 }>()
 </script>
 
 <template>
-  <div class="align-baseline" v-if="props.state == ItemState.IDLE">
+  <div class="align-baseline" v-if="props.item.state == ItemState.IDLE">
     <v-icon icon="$vuetify">mdi-menu-right</v-icon>
-    {{ props.story_datetime_start }}
+    {{ props.item.story_datetime_start }}
   </div>
 
-  <div class="align-baseline" v-if="props.state != ItemState.IDLE">
-    {{ props.story_datetime_end }}
+  <div class="align-baseline" v-if="props.item.state != ItemState.IDLE">
+    {{ props.item.story_datetime_end }}
     <v-icon icon="$vuetify">mdi-menu-left</v-icon>
   </div>
 </template>

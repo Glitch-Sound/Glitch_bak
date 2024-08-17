@@ -1,28 +1,14 @@
 <script setup lang="ts">
 import { ref, defineProps } from 'vue'
 
-import { ItemType, ItemState, type EventUpdate } from '@/types/Item'
+import type { Item, EventUpdate } from '@/types/Item'
 import UpdateEventDialog from '@/components/dialog/UpdateEventDialog.vue'
 
 import MarkedText from '@/components/common/MarkedText.vue'
 
 const props = defineProps<{
   expand: boolean
-  rid: number
-  type: ItemType
-  state: ItemState
-  risk: number
-  risk_factors: number
-  title: string
-  detail: string
-  result: string
-  datetime_entry: string
-  datetime_update: string
-  rid_users: number
-  name: string
-  rid_users_review: number | null
-  name_review: string | null
-  event_datetime_end: string
+  item: Item
 }>()
 
 const dialog = ref(false)
@@ -40,14 +26,14 @@ const dialogFormData = ref<EventUpdate>({
 
 const openDialog = () => {
   dialogFormData.value = {
-    rid: props.rid,
-    state: props.state,
-    rid_user: props.rid_users,
-    rid_users_review: props.rid_users_review,
-    title: props.title,
-    detail: props.detail,
-    result: props.result,
-    datetime_end: props.event_datetime_end
+    rid: props.item.rid,
+    state: props.item.state,
+    rid_user: props.item.rid_users,
+    rid_users_review: props.item.rid_users_review,
+    title: props.item.title,
+    detail: props.item.detail,
+    result: props.item.result,
+    datetime_end: props.item.event_datetime_end
   }
   dialog.value = true
 }
@@ -56,6 +42,14 @@ const handleSubmit = async (data: EventUpdate) => {
   try {
     console.log(data)
     dialog.value = false
+  } catch (err) {
+    console.error('Error:', err)
+  }
+}
+
+const handleDelete = () => {
+  try {
+    console.log('delete')
   } catch (err) {
     console.error('Error:', err)
   }
@@ -71,7 +65,7 @@ const handleSubmit = async (data: EventUpdate) => {
         </v-col>
 
         <v-col>
-          <MarkedText :src="props.detail" />
+          <MarkedText :src="props.item.detail" />
         </v-col>
 
         <v-col cols="auto">
@@ -79,7 +73,7 @@ const handleSubmit = async (data: EventUpdate) => {
         </v-col>
 
         <v-col>
-          <MarkedText :src="props.result" />
+          <MarkedText :src="props.item.result" />
         </v-col>
 
         <v-col cols="auto">
@@ -96,6 +90,7 @@ const handleSubmit = async (data: EventUpdate) => {
     :formData="dialogFormData"
     @update:showDialog="dialog = $event"
     @submit="handleSubmit"
+    @delete="handleDelete"
   />
 </template>
 

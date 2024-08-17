@@ -2,7 +2,7 @@
 import { ref, defineProps } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { ItemType, ItemState, type StoryCreate } from '@/types/Item'
+import type { Item, StoryCreate } from '@/types/Item'
 import useItemStore from '@/stores/ItemStore'
 import ItemService from '@/services/ItemService'
 import CreateStoryDialog from '@/components/dialog/CreateStoryDialog.vue'
@@ -13,20 +13,7 @@ import InformationFeature from '@/components/panel/InformationFeature.vue'
 import DetailFeature from '@/components/panel/DetailFeature.vue'
 
 const props = defineProps<{
-  rid: number
-  type: ItemType
-  state: ItemState
-  risk: number
-  risk_factors: number
-  title: string
-  detail: string
-  result: string
-  datetime_entry: string
-  datetime_update: string
-  rid_users: number
-  name: string
-  rid_users_review: number | null
-  name_review: string | null
+  item: Item
 }>()
 
 const route = useRoute()
@@ -45,7 +32,7 @@ const dialogFormData = ref<StoryCreate>({
 })
 
 const openDialog = () => {
-  const rid_items = props.rid
+  const rid_items = props.item.rid
   dialogFormData.value = { ...dialogFormData.value, rid_items }
   dialog.value = true
 }
@@ -66,19 +53,19 @@ const handleSubmit = async (data: StoryCreate) => {
   <div class="panel-common panel-feature">
     <v-row class="align-baseline">
       <v-col cols="auto" class="state">
-        <TypeLabel :type="props.type" />
+        <TypeLabel :type="props.item.type" />
       </v-col>
 
       <v-col cols="auto">
-        <StateLabel :state="props.state" />
+        <StateLabel :state="props.item.state" />
       </v-col>
 
       <v-col @click="expand = !expand">
-        <span class="title">{{ props.title }}</span>
+        <span class="title">{{ props.item.title }}</span>
       </v-col>
 
       <v-col cols="auto">
-        <UserLabel :rid_users="props.rid_users" :name="props.name" />
+        <UserLabel :rid_users="props.item.rid_users" :name="props.item.name" />
       </v-col>
 
       <v-col cols="auto" class="information">

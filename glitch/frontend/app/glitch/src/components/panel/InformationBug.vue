@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 
+import type { Item } from '@/types/Item'
 import WorkloadLabel from '@/components/common/WorkloadLabel.vue'
 
 const props = defineProps<{
-  risk: number
-  bug_workload: number
+  item: Item
 }>()
 </script>
 
 <template>
   <div class="align-baseline">
-    <WorkloadLabel :risk="props.risk" :workload="props.bug_workload" />
+    <WorkloadLabel :risk="props.item.risk" :workload="props.item.bug_workload" />
   </div>
 </template>
 

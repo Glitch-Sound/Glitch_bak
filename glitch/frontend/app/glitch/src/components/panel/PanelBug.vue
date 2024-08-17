@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, defineProps } from 'vue'
 
-import { ItemType, ItemState } from '@/types/Item'
+import type { Item } from '@/types/Item'
 import ActivityDialog from '@/components/dialog/ActivityDialog.vue'
 import TypeLabel from '@/components/common/TypeLabel.vue'
 import StateLabel from '@/components/common/StateLabel.vue'
@@ -10,22 +10,7 @@ import InformationBug from '@/components/panel/InformationBug.vue'
 import DetailBug from '@/components/panel/DetailBug.vue'
 
 const props = defineProps<{
-  rid: number
-  type: ItemType
-  state: ItemState
-  risk: number
-  risk_factors: number
-  title: string
-  detail: string
-  result: string
-  datetime_entry: string
-  datetime_update: string
-  rid_users: number
-  name: string
-  rid_users_review: number | null
-  name_review: string | null
-  bug_priority: number
-  bug_workload: number
+  item: Item
 }>()
 
 const expand = ref(false)
@@ -40,23 +25,23 @@ const openDialog = () => {
   <div class="panel-common panel-bug">
     <v-row class="align-baseline">
       <v-col cols="auto" class="state">
-        <TypeLabel :type="props.type" />
+        <TypeLabel :type="props.item.type" />
       </v-col>
 
       <v-col cols="auto">
-        <StateLabel :state="props.state" />
+        <StateLabel :state="props.item.state" />
       </v-col>
 
       <v-col @click="expand = !expand">
-        <span class="title">{{ props.title }}</span>
+        <span class="title">{{ props.item.title }}</span>
       </v-col>
 
       <v-col cols="auto">
-        <UserLabel :rid_users="props.rid_users" :name="props.name" />
+        <UserLabel :rid_users="props.item.rid_users" :name="props.item.name" />
       </v-col>
 
       <v-col cols="auto" class="information">
-        <InformationBug :risk="props.risk" :bug_workload="props.bug_workload" />
+        <InformationBug :item="props.item" />
       </v-col>
 
       <v-col cols="auto">

@@ -17,6 +17,11 @@ export const useDialog = (props: any, emits: any) => {
     }
   }
 
+  const deleteData = () => {
+    emits('delete')
+    dialog.value = false
+  }
+
   watch(
     () => props.showDialog,
     (newValue) => {
@@ -42,6 +47,7 @@ export const useDialog = (props: any, emits: any) => {
     formData,
     formRef,
     rules,
-    submitData
+    submitData,
+    deleteData
   }
 }

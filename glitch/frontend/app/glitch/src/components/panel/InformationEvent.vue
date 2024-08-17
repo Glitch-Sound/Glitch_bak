@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 
+import type { Item } from '@/types/Item'
+
 const props = defineProps<{
-  risk: number
-  event_datetime_end: string
+  item: Item
 }>()
 </script>
 
 <template>
   <div class="align-baseline">
-    {{ props.event_datetime_end }}
+    {{ props.item.event_datetime_end }}
     <v-icon icon="$vuetify">mdi-menu-left</v-icon>
   </div>
 </template>
