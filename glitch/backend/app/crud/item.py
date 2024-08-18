@@ -1,4 +1,4 @@
-from sqlalchemy import Text, case               # type: ignore
+from sqlalchemy import Text, case, and_         # type: ignore
 from sqlalchemy.orm import Session, aliased     # type: ignore
 from sqlalchemy.sql import func                 # type: ignore
 from sqlalchemy.sql import select               # type: ignore
@@ -59,7 +59,7 @@ class ItemCommon():
 
 def _getCurrentDatetime():
     current_utc_time = datetime.now(pytz.timezone('Asia/Tokyo'))
-    current_datetime = current_utc_time.isoformat()
+    current_datetime = current_utc_time.strftime('%Y-%m-%d %H:%M:%S')
     return current_datetime
 
 
@@ -108,6 +108,22 @@ def getItems(db: Session, rid_project: int):
 
         t0 = aliased(Item, name='t0')
 
+        order_state = case(
+            (t0.state == 3, 1),
+            (t0.state == 4, 2),
+            (t0.state == 2, 3),
+            (t0.state == 1, 4),
+            (t0.state == 5, 5)
+        )
+
+        order_priority = case(
+            (and_(t0.type == 5, t0.priority == 1), 1),
+            (and_(t0.type == 5, t0.priority == 0), 2),
+            (and_(t0.type == 6, t0.priority == 1), 3),
+            (and_(t0.type == 6, t0.priority == 0), 4),
+            else_=0
+        )
+
         query_base = db.query(
             t0.rid,
             t0.rid_items,
@@ -117,12 +133,13 @@ def getItems(db: Session, rid_project: int):
             t0.state,
             t0.risk,
             t0.risk_factors,
+            t0.priority,
             t0.title,
             t0.detail,
             t0.result,
             t0.datetime_entry,
             t0.datetime_update,
-            (func.cast(t0.type, Text)).label('path')
+            (func.cast(order_state, Text) + ':' + func.cast(order_priority, Text) + ':' + func.cast(t0.rid, Text)).label('path')
         )\
         .filter(t0.rid == rid_project)\
         .filter(t0.is_deleted == 0)
@@ -131,6 +148,22 @@ def getItems(db: Session, rid_project: int):
 
         n = aliased(Item, name='n')
         t = aliased(query_recursive, name='t')
+
+        order_state = case(
+            (n.state == 3, 1),
+            (n.state == 4, 2),
+            (n.state == 2, 3),
+            (n.state == 1, 4),
+            (n.state == 5, 5)
+        )
+
+        order_priority = case(
+            (and_(n.type == 5, n.priority == 1), 1),
+            (and_(n.type == 5, n.priority == 0), 2),
+            (and_(n.type == 6, n.priority == 1), 3),
+            (and_(n.type == 6, n.priority == 0), 4),
+            else_=0
+        )
 
         query_recursive = query_recursive.union_all(
             db.query(
@@ -142,38 +175,25 @@ def getItems(db: Session, rid_project: int):
                 n.state,
                 n.risk,
                 n.risk_factors,
+                n.priority,
                 n.title,
                 n.detail,
                 n.result,
                 n.datetime_entry,
                 n.datetime_update,
-                (t.c.path + '-' + func.cast(n.type, Text)).label('path')
+                (t.c.path + '-' + func.cast(order_state, Text) + ':' + func.cast(order_priority, Text) + ':' + func.cast(n.rid, Text)).label('path')
             )\
             .join(t, t.c.rid == n.rid_items)\
             .filter(n.is_deleted == 0)\
         )
-
-        custom_order_state = case(
-            (query_recursive.c.state == 3, 1),
-            (query_recursive.c.state == 4, 2),
-            (query_recursive.c.state == 2, 3),
-            (query_recursive.c.state == 1, 4),
-            (query_recursive.c.state == 5, 5)
-        )
-
-        custom_order_priority = case(
-            (Task.priority == 1, 1),
-            (Bug.priority  == 1, 2),
-            (Task.priority == 0, 3),
-            (Bug.priority  == 0, 4),
-        )
-
+ 
         query_final = db.query(
             query_recursive.c.rid,
             query_recursive.c.type,
             query_recursive.c.state,
             query_recursive.c.risk,
             query_recursive.c.risk_factors,
+            query_recursive.c.priority,
             query_recursive.c.title,
             query_recursive.c.detail,
             query_recursive.c.result,
@@ -188,12 +208,10 @@ def getItems(db: Session, rid_project: int):
             Event.datetime_end.label('event_datetime_end'),
             Story.datetime_start.label('story_datetime_start'),
             Story.datetime_end.label('story_datetime_end'),
-            Task.priority.label('task_priority'),
             Task.type.label('task_type'),
             Task.workload.label('task_workload'),
             Task.number_completed.label('task_number_completed'),
             Task.number_total.label('task_number_total'),
-            Bug.priority.label('bug_priority'),
             Bug.workload.label('bug_workload'))\
         .outerjoin(UserAlias1,  UserAlias1.rid == query_recursive.c.rid_users)\
         .outerjoin(UserAlias2,  UserAlias2.rid == query_recursive.c.rid_users_review)\
@@ -203,9 +221,7 @@ def getItems(db: Session, rid_project: int):
         .outerjoin(Story, Story.rid_items == query_recursive.c.rid)\
         .outerjoin(Task, Task.rid_items == query_recursive.c.rid)\
         .outerjoin(Bug, Bug.rid_items == query_recursive.c.rid)\
-        .order_by(query_recursive.c.path)\
-        .order_by(custom_order_priority)\
-        .order_by(custom_order_state)
+        .order_by(query_recursive.c.path)
 
         result = query_final.all()
         return result
@@ -586,13 +602,12 @@ def deleteTask(db: Session, rid: int):
 def updateTaskPriority(db: Session, target:schema_item.TaskPriorityUpdate):
     try:
         db.begin()
-        addition = db.query(Task).filter(Task.rid_items == target.rid)
-        addition.update({
-            Task.priority: target.priority
+        item = db.query(Item).filter(Item.rid == target.rid)
+        item.update({
+            Item.priority: target.priority
         })
         db.commit()
 
-        item = db.query(Item).filter(Item.rid == target.rid)
         item_updated = item.first()
         db.refresh(item_updated)
         return item_updated
@@ -672,13 +687,12 @@ def deleteBug(db: Session, rid: int):
 def updateBugPriority(db: Session, target:schema_item.BugPriorityUpdate):
     try:
         db.begin()
-        addition = db.query(Bug).filter(Bug.rid_items == target.rid)
-        addition.update({
-            Bug.priority: target.priority
+        item = db.query(Item).filter(Item.rid == target.rid)
+        item.update({
+            Item.priority: target.priority
         })
         db.commit()
 
-        item = db.query(Item).filter(Item.rid == target.rid)
         item_updated = item.first()
         db.refresh(item_updated)
         return item_updated

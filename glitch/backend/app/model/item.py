@@ -18,6 +18,7 @@ class Item(Base):
     state            = Column(Integer, index=True, default=1)
     risk             = Column(Integer, index=True, default=0)
     risk_factors     = Column(Integer, index=True, default=0)
+    priority         = Column(Integer, index=True, default=0)
     title            = Column(String, index=True, default='')
     detail           = Column(String, default='')
     result           = Column(String, default='')
