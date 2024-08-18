@@ -188,6 +188,11 @@ export interface TaskUpdate {
   number_total: number
 }
 
+export interface TaskPriorityUpdate {
+  rid: number
+  priority: number
+}
+
 export interface BugCreate {
   rid_items: number
   rid_users: number
@@ -205,4 +210,9 @@ export interface BugUpdate {
   detail: string
   result: string
   workload: number
+}
+
+export interface BugPriorityUpdate {
+  rid: number
+  priority: number
 }
