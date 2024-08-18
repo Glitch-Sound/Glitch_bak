@@ -1,6 +1,6 @@
 import traceback
-from fastapi import Depends, APIRouter, HTTPException   # type: ignore
-from sqlalchemy.orm import Session                      # type: ignore
+from fastapi import Depends, APIRouter, HTTPException, status   # type: ignore
+from sqlalchemy.orm import Session                              # type: ignore
 
 import sys
 sys.path.append('~/app')
@@ -20,7 +20,7 @@ def get_items(rid_project: int, db: Session = Depends(get_db)):
 
     except Exception as e:
         print(traceback.format_exc())
-        raise HTTPException(status_code=500, detail=f'error: {str(e)}')
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
 @router.get('/projects/', response_model=list[schema_item.Project])
@@ -31,7 +31,7 @@ def get_items(db: Session = Depends(get_db)):
 
     except Exception as e:
         print(traceback.format_exc())
-        raise HTTPException(status_code=500, detail=f'error: {str(e)}')
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
 @router.post('/project/', response_model=schema_item.Item)
@@ -42,7 +42,7 @@ def create_project(target:schema_item.ProjectCreate, db: Session = Depends(get_d
 
     except Exception as e:
         print(traceback.format_exc())
-        raise HTTPException(status_code=500, detail=f'error: {str(e)}')
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
 @router.put('/project/', response_model=schema_item.Item)
@@ -53,7 +53,7 @@ def update_project(target:schema_item.ProjectUpdate, db: Session = Depends(get_d
 
     except Exception as e:
         print(traceback.format_exc())
-        raise HTTPException(status_code=500, detail=f'error: {str(e)}')
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
 @router.delete('/project/{target}', response_model=dict)
@@ -64,7 +64,7 @@ def delete_project(target: int, db: Session = Depends(get_db)):
 
     except Exception as e:
         print(traceback.format_exc())
-        raise HTTPException(status_code=500, detail=f'error: {str(e)}')
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
 @router.post('/event/', response_model=schema_item.Item)
@@ -75,7 +75,7 @@ def create_event(target:schema_item.EventCreate, db: Session = Depends(get_db)):
 
     except Exception as e:
         print(traceback.format_exc())
-        raise HTTPException(status_code=500, detail=f'error: {str(e)}')
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
 @router.put('/event/', response_model=schema_item.Item)
@@ -86,7 +86,7 @@ def update_event(target:schema_item.EventUpdate, db: Session = Depends(get_db)):
 
     except Exception as e:
         print(traceback.format_exc())
-        raise HTTPException(status_code=500, detail=f'error: {str(e)}')
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
 @router.delete('/event/{target}', response_model=dict)
@@ -97,7 +97,7 @@ def delete_event(target: int, db: Session = Depends(get_db)):
 
     except Exception as e:
         print(traceback.format_exc())
-        raise HTTPException(status_code=500, detail=f'error: {str(e)}')
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
 @router.post('/feature/', response_model=schema_item.Item)
@@ -108,7 +108,7 @@ def create_feature(target:schema_item.FeatureCreate, db: Session = Depends(get_d
 
     except Exception as e:
         print(traceback.format_exc())
-        raise HTTPException(status_code=500, detail=f'error: {str(e)}')
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
 @router.put('/feature/', response_model=schema_item.Item)
@@ -119,7 +119,7 @@ def update_feature(target:schema_item.FeatureUpdate, db: Session = Depends(get_d
 
     except Exception as e:
         print(traceback.format_exc())
-        raise HTTPException(status_code=500, detail=f'error: {str(e)}')
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
 @router.delete('/feature/{target}', response_model=dict)
@@ -130,7 +130,7 @@ def delete_feature(target: int, db: Session = Depends(get_db)):
 
     except Exception as e:
         print(traceback.format_exc())
-        raise HTTPException(status_code=500, detail=f'error: {str(e)}')
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
 @router.post('/story/', response_model=schema_item.Item)
@@ -141,7 +141,7 @@ def create_story(target:schema_item.StoryCreate, db: Session = Depends(get_db)):
 
     except Exception as e:
         print(traceback.format_exc())
-        raise HTTPException(status_code=500, detail=f'error: {str(e)}')
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
 @router.put('/story/', response_model=schema_item.Item)
@@ -152,7 +152,7 @@ def update_story(target:schema_item.StoryUpdate, db: Session = Depends(get_db)):
 
     except Exception as e:
         print(traceback.format_exc())
-        raise HTTPException(status_code=500, detail=f'error: {str(e)}')
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
 @router.delete('/story/{target}', response_model=dict)
@@ -163,7 +163,7 @@ def delete_story(target: int, db: Session = Depends(get_db)):
 
     except Exception as e:
         print(traceback.format_exc())
-        raise HTTPException(status_code=500, detail=f'error: {str(e)}')
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
 @router.post('/task/', response_model=schema_item.Item)
@@ -174,7 +174,7 @@ def create_task(target:schema_item.TaskCreate, db: Session = Depends(get_db)):
 
     except Exception as e:
         print(traceback.format_exc())
-        raise HTTPException(status_code=500, detail=f'error: {str(e)}')
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
 @router.put('/task/', response_model=schema_item.Item)
@@ -185,7 +185,7 @@ def update_task(target:schema_item.TaskUpdate, db: Session = Depends(get_db)):
 
     except Exception as e:
         print(traceback.format_exc())
-        raise HTTPException(status_code=500, detail=f'error: {str(e)}')
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
 @router.delete('/task/{target}', response_model=dict)
@@ -196,7 +196,7 @@ def delete_task(target: int, db: Session = Depends(get_db)):
 
     except Exception as e:
         print(traceback.format_exc())
-        raise HTTPException(status_code=500, detail=f'error: {str(e)}')
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
 @router.put('/task/priority', response_model=schema_item.Item)
@@ -207,7 +207,7 @@ def update_task(target:schema_item.TaskPriorityUpdate, db: Session = Depends(get
 
     except Exception as e:
         print(traceback.format_exc())
-        raise HTTPException(status_code=500, detail=f'error: {str(e)}')
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
 @router.post('/bug/', response_model=schema_item.Item)
@@ -218,7 +218,7 @@ def create_bug(target:schema_item.BugCreate, db: Session = Depends(get_db)):
 
     except Exception as e:
         print(traceback.format_exc())
-        raise HTTPException(status_code=500, detail=f'error: {str(e)}')
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
 @router.put('/bug/', response_model=schema_item.Item)
@@ -229,7 +229,7 @@ def update_bug(target:schema_item.BugUpdate, db: Session = Depends(get_db)):
 
     except Exception as e:
         print(traceback.format_exc())
-        raise HTTPException(status_code=500, detail=f'error: {str(e)}')
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
 @router.delete('/bug/{target}', response_model=dict)
@@ -240,7 +240,7 @@ def delete_bug(target: int, db: Session = Depends(get_db)):
 
     except Exception as e:
         print(traceback.format_exc())
-        raise HTTPException(status_code=500, detail=f'error: {str(e)}')
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
 @router.put('/bug/priority', response_model=schema_item.Item)
@@ -251,4 +251,4 @@ def update_task(target:schema_item.BugPriorityUpdate, db: Session = Depends(get_
 
     except Exception as e:
         print(traceback.format_exc())
-        raise HTTPException(status_code=500, detail=f'error: {str(e)}')
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')

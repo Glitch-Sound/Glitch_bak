@@ -30,3 +30,11 @@ class UserUpdate(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class Login(BaseModel):
+    user: str
+    password: str
+
+    class Config:
+        orm_mode = True

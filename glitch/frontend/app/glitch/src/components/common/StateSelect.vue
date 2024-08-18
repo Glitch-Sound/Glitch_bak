@@ -40,6 +40,7 @@ const emitSelected = () => {
       @update:modelValue="emitSelected"
     >
       <StateLabelLarge :state="ItemState.RUN" />
+      <StateLabelLarge :state="ItemState.IDLE" />
       <StateLabelLarge :state="ItemState.ALERT" />
       <StateLabelLarge :state="ItemState.REVIEW" />
       <StateLabelLarge :state="ItemState.COMPLETE" />
@@ -51,6 +52,7 @@ const emitSelected = () => {
       @update:modelValue="emitSelected"
     >
       <StateLabelLarge :state="ItemState.ALERT" />
+      <StateLabelLarge :state="ItemState.IDLE" />
       <StateLabelLarge :state="ItemState.RUN" />
       <StateLabelLarge :state="ItemState.REVIEW" />
     </v-chip-group>
@@ -61,6 +63,7 @@ const emitSelected = () => {
       @update:modelValue="emitSelected"
     >
       <StateLabelLarge :state="ItemState.REVIEW" />
+      <StateLabelLarge :state="ItemState.IDLE" />
       <StateLabelLarge :state="ItemState.RUN" />
       <StateLabelLarge :state="ItemState.ALERT" />
     </v-chip-group>
@@ -71,6 +74,7 @@ const emitSelected = () => {
       @update:modelValue="emitSelected"
     >
       <StateLabelLarge :state="ItemState.COMPLETE" />
+      <StateLabelLarge :state="ItemState.IDLE" />
       <StateLabelLarge :state="ItemState.RUN" />
       <StateLabelLarge :state="ItemState.ALERT" />
     </v-chip-group>

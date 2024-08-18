@@ -1,3 +1,4 @@
+import bcrypt                       # type: ignore
 from sqlalchemy.orm import Session  # type: ignore
 
 from enum import Enum
@@ -12,6 +13,16 @@ from schema import user as schema_user
 class Authority(Enum):
     USER  = 0
     ADMIN = 1
+
+
+def _createHashPassword(password: str) -> str:
+    password_bytes = password.encode('utf-8')
+    hashed = bcrypt.hashpw(password_bytes, bcrypt.gensalt())
+    return hashed.decode('utf-8')
+
+
+def _verifyHashPassword(plain_password: str, hashed_password: str) -> bool:
+    return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
 
 
 def getUsers(db: Session):
@@ -34,7 +45,7 @@ def createUser(db: Session, target: schema_user.UserCreate):
     try:
         user = User(
              user=target.user,
-             password=target.password,
+             password=_createHashPassword(target.password),
              name=target.name,
              is_admin=target.is_admin
         )
@@ -55,7 +66,7 @@ def updateUser(db: Session, target: schema_user.UserUpdate):
         user = db.query(User).filter(User.rid == target.rid)
         user.update({
             User.user: target.user,
-            User.password: target.password,
+            User.password: _createHashPassword(target.password),
             User.name: target.name,
             User.is_admin: target.is_admin
         })
@@ -81,4 +92,19 @@ def deleteUser(db: Session, rid: int):
 
     except Exception as e:
         db.rollback()
+        raise e
+
+
+def login(db: Session, target: schema_user.Login):
+    try:
+        user = db.query(User).filter(User.user == target.user).first()
+        if user is None:
+            return None
+        
+        if not _verifyHashPassword(target.password, user.password):
+            return None
+
+        return user
+
+    except Exception as e:
         raise e

@@ -1,6 +1,6 @@
 import traceback
-from fastapi import Depends, APIRouter, HTTPException   # type: ignore
-from sqlalchemy.orm import Session                      # type: ignore
+from fastapi import Depends, APIRouter, HTTPException, status   # type: ignore
+from sqlalchemy.orm import Session                              # type: ignore
 
 import sys
 sys.path.append('~/app')
@@ -20,4 +20,4 @@ def get_users(rid_project: int, db: Session = Depends(get_db)):
 
     except Exception as e:
         print(traceback.format_exc())
-        raise HTTPException(status_code=500, detail=f'error: {str(e)}')
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
