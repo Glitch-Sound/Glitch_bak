@@ -82,7 +82,7 @@ const handleBugSubmit = async (data: BugCreate) => {
   <div class="panel-common panel-story">
     <v-row class="align-baseline">
       <v-col cols="auto" class="state">
-        <TypeLabel :type="props.item.type" />
+        <TypeLabel :item="props.item" />
       </v-col>
 
       <v-col cols="auto">
@@ -110,11 +110,11 @@ const handleBugSubmit = async (data: BugCreate) => {
           </template>
 
           <v-list>
-            <v-list-item-title
-              ><v-btn prepend-icon="mdi-label" @click="openTaskDialog()">Task</v-btn>
+            <v-list-item-title>
+              <v-btn prepend-icon="mdi-label" @click="openTaskDialog()">Task</v-btn>
             </v-list-item-title>
-            <v-list-item-title
-              ><v-btn prepend-icon="mdi-spider" @click="openBugDialog()">Bug</v-btn>
+            <v-list-item-title>
+              <v-btn prepend-icon="mdi-spider" @click="openBugDialog()">Bug</v-btn>
             </v-list-item-title>
           </v-list>
         </v-menu>

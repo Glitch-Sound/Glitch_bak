@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 
-import type { ProjectCreate } from '@/types/Item'
+import type { ProjectCreate, ProjectUpdate } from '@/types/Item'
 import useProjectStore from '@/stores/ProjectStore'
 import ItemService from '@/services/ItemService'
 import StateLabel from '@/components/common/StateLabel.vue'
 import MarkedText from '@/components/common/MarkedText.vue'
 import CreateProjectDialog from '@/components/dialog/CreateProjectDialog.vue'
+import UpdateProjectDialog from '@/components/dialog/UpdateProjectDialog.vue'
 
 const headers = [
   { title: 'RID', key: 'rid', width: '50px' },
@@ -23,11 +24,24 @@ const store_project = useProjectStore()
 
 const dialog_entry = ref(false)
 const dialog_update = ref(false)
+const target_delete = ref(0)
 
-const dialog_form_data = ref<ProjectCreate>({
+const dialog_form_data_entry = ref<ProjectCreate>({
   rid_users: 0,
   title: '',
   detail: '',
+  datetime_start: '',
+  datetime_end: ''
+})
+
+const dialog_form_data_update = ref<ProjectUpdate>({
+  rid: 0,
+  state: 0,
+  rid_users: 0,
+  rid_users_review: null,
+  title: '',
+  detail: '',
+  result: '',
   datetime_start: '',
   datetime_end: ''
 })
@@ -40,16 +54,55 @@ const openEntryDialog = () => {
   dialog_entry.value = true
 }
 
-const openUpdateDialog = () => {
+const openUpdateDialog = (rid: number) => {
+  const target = store_project.projects.find((item) => item.rid == rid)
+  if (!target) {
+    return
+  }
+
+  dialog_form_data_update.value = {
+    rid: target.rid,
+    state: target.state,
+    rid_users: target.rid_users,
+    rid_users_review: null,
+    title: target.title,
+    detail: target.detail,
+    result: target.result,
+    datetime_start: target.project_datetime_start,
+    datetime_end: target.project_datetime_end
+  }
+  target_delete.value = rid
   dialog_update.value = true
 }
 
-const handleSubmit = async (data: ProjectCreate) => {
+const handleEntry = async (data: ProjectCreate) => {
   try {
     const service_item = new ItemService()
     await service_item.createProject(data)
     store_project.fetchProjects()
     dialog_entry.value = false
+  } catch (err) {
+    console.error('Error:', err)
+  }
+}
+
+const handleUpdate = async (data: ProjectUpdate) => {
+  try {
+    const service_item = new ItemService()
+    await service_item.updateProject(data)
+    store_project.fetchProjects()
+    dialog_update.value = false
+  } catch (err) {
+    console.error('Error:', err)
+  }
+}
+
+const handleDelete = async () => {
+  try {
+    const service_item = new ItemService()
+    await service_item.deleteProject(target_delete.value)
+    store_project.fetchProjects()
+    dialog_update.value = false
   } catch (err) {
     console.error('Error:', err)
   }
@@ -82,7 +135,7 @@ const handleSubmit = async (data: ProjectCreate) => {
                   size="small"
                   prepend-icon="mdi-pencil"
                   variant="outlined"
-                  @click="openUpdateDialog()"
+                  @click="openUpdateDialog(item.rid)"
                 >
                   UPDATE
                 </v-btn>
@@ -96,9 +149,17 @@ const handleSubmit = async (data: ProjectCreate) => {
 
   <CreateProjectDialog
     :showDialog="dialog_entry"
-    :formData="dialog_form_data"
+    :formData="dialog_form_data_entry"
     @update:showDialog="dialog_entry = $event"
-    @submit="handleSubmit"
+    @submit="handleEntry"
+  />
+
+  <UpdateProjectDialog
+    :showDialog="dialog_update"
+    :formData="dialog_form_data_update"
+    @update:showDialog="dialog_update = $event"
+    @submit="handleUpdate"
+    @delete="handleDelete"
   />
 </template>
 

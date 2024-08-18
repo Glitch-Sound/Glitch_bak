@@ -54,10 +54,9 @@ class ItemService {
     }
   }
 
-  public async deleteProject(rid: number) {
+  public async deleteProject(rid: number): Promise<void> {
     try {
-      const response = await http.delete<Item>('/api/project', { data: { rid: rid } })
-      return response.data
+      await http.delete(`/api/project/${rid}`)
     } catch (error) {
       throw new Error('error: ${error}')
     }
@@ -107,10 +106,9 @@ class ItemService {
     }
   }
 
-  public async deleteFeature(rid: number): Promise<Item> {
+  public async deleteFeature(rid: number): Promise<void> {
     try {
-      const response = await http.delete<Item>('/api/feature', { data: { rid: rid } })
-      return response.data
+      await http.delete(`/api/feature/${rid}`)
     } catch (error) {
       throw new Error('error: ${error}')
     }
@@ -134,10 +132,9 @@ class ItemService {
     }
   }
 
-  public async deleteStory(rid: number): Promise<Item> {
+  public async deleteStory(rid: number): Promise<void> {
     try {
-      const response = await http.delete<Item>('/api/story', { data: { rid: rid } })
-      return response.data
+      await http.delete(`/api/story/${rid}`)
     } catch (error) {
       throw new Error('error: ${error}')
     }
@@ -161,10 +158,9 @@ class ItemService {
     }
   }
 
-  public async deleteTask(rid: number): Promise<Item> {
+  public async deleteTask(rid: number): Promise<void> {
     try {
-      const response = await http.delete<Item>('/api/task', { data: { rid: rid } })
-      return response.data
+      await http.delete(`/api/task/${rid}`)
     } catch (error) {
       throw new Error('error: ${error}')
     }
@@ -188,10 +184,9 @@ class ItemService {
     }
   }
 
-  public async deleteBug(rid: number): Promise<Item> {
+  public async deleteBug(rid: number): Promise<void> {
     try {
-      const response = await http.delete<Item>('/api/bug', { data: { rid: rid } })
-      return response.data
+      await http.delete(`/api/bug/${rid}`)
     } catch (error) {
       throw new Error('error: ${error}')
     }
