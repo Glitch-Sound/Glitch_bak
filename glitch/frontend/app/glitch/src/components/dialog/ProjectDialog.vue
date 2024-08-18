@@ -11,8 +11,7 @@ const headers = [
   { title: 'STATE', key: 'state', width: '50px' },
   { title: 'TITLE', key: 'title' },
   { title: 'DETAIL', key: 'detail' },
-  { title: 'RESULT', key: 'result' },
-  { title: 'ENTRY', key: 'datetime_entry', width: '300px' },
+  { title: 'ENTRY', key: 'datetime_entry', width: '180px' },
   { title: 'USER', key: 'name', width: '100px' }
 ]
 
@@ -60,7 +59,6 @@ const handleSubmit = async () => {
               </router-link>
             </td>
             <td><MarkedText :src="item.detail" /></td>
-            <td><MarkedText :src="item.result" /></td>
             <td>{{ item.datetime_entry }}</td>
             <td>{{ item.name }}</td>
           </tr>

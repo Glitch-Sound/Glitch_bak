@@ -48,6 +48,7 @@ export interface Item {
   state: ItemState
   risk: number
   risk_factors: number
+  priority: number
   title: string
   detail: string
   result: string
@@ -62,12 +63,10 @@ export interface Item {
   event_datetime_end: string
   story_datetime_start: string
   story_datetime_end: string
-  task_priority: number
   task_type: TaskType
   task_workload: number
   task_number_completed: number
   task_number_total: number
-  bug_priority: number
   bug_workload: number
 }
 

@@ -87,7 +87,7 @@ const setBugPriorityLow = async () => {
         v-if="props.item.type == ItemType.TASK"
         icon="mdi-label"
         v-bind="panelMenuProps"
-        :color="props.item.task_priority ? '#e94560' : ''"
+        :color="props.item.priority ? '#e94560' : ''"
       />
 
       <v-icon
@@ -95,7 +95,7 @@ const setBugPriorityLow = async () => {
         v-if="props.item.type == ItemType.BUG"
         icon="mdi-spider"
         v-bind="panelMenuProps"
-        :color="props.item.bug_priority ? '#e94560' : ''"
+        :color="props.item.priority ? '#e94560' : ''"
       />
     </template>
 
@@ -110,7 +110,7 @@ const setBugPriorityLow = async () => {
       </v-list-item-title>
 
       <template v-if="props.item.type == ItemType.TASK">
-        <v-list-item-title v-if="props.item.task_priority == 0">
+        <v-list-item-title v-if="props.item.priority == 0">
           <v-btn prepend-icon="mdi-priority-high" @click="setTaskPriorityHigh()">
             Priority high
           </v-btn>
@@ -121,7 +121,7 @@ const setBugPriorityLow = async () => {
       </template>
 
       <template v-if="props.item.type == ItemType.BUG">
-        <v-list-item-title v-if="props.item.bug_priority == 0">
+        <v-list-item-title v-if="props.item.priority == 0">
           <v-btn prepend-icon="mdi-priority-high" @click="setBugPriorityHigh()">
             Priority high
           </v-btn>

@@ -14,8 +14,7 @@ const headers = [
   { title: 'STATE', width: '50px' },
   { title: 'TITLE' },
   { title: 'DETAIL' },
-  { title: 'RESULT' },
-  { title: 'ENTRY', width: '300px' },
+  { title: 'ENTRY', width: '180px' },
   { title: 'USER', width: '100px' },
   { title: '', width: '140px' }
 ]
@@ -127,7 +126,6 @@ const handleDelete = async () => {
               <td><StateLabel :state="item.state" /></td>
               <td>{{ item.title }}</td>
               <td><MarkedText :src="item.detail" /></td>
-              <td><MarkedText :src="item.result" /></td>
               <td>{{ item.datetime_entry }}</td>
               <td>{{ item.name }}</td>
               <td>
