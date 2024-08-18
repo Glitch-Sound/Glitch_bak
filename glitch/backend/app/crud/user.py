@@ -16,7 +16,7 @@ class Authority(Enum):
 
 def getUsers(db: Session):
     try:
-        return db.query(User).all()
+        return db.query(User).filter(User.is_deleted == 0).all()
 
     except Exception as e:
         raise e
@@ -24,7 +24,7 @@ def getUsers(db: Session):
 
 def getUser(db: Session, rid_users: int):
     try:
-        return db.query(User).filter(rid_users == rid_users).one()
+        return db.query(User).filter(User.rid_users == rid_users).one()
 
     except Exception as e:
         raise e
@@ -53,14 +53,17 @@ def updateUser(db: Session, target: schema_user.UserUpdate):
     try:
         db.begin()
         user = db.query(User).filter(User.rid == target.rid)
-        user.update(
-            user=target.user,
-            password=target.password,
-            name=target.name
-        )
+        user.update({
+            User.user: target.user,
+            User.password: target.password,
+            User.name: target.name,
+            User.is_admin: target.is_admin
+        })
         db.commit()
-        db.refresh(user)
-        return user
+
+        user_updated = user.first()
+        db.refresh(user_updated)
+        return user_updated
 
     except Exception as e:
         db.rollback()
@@ -72,11 +75,9 @@ def deleteUser(db: Session, rid: int):
         db.begin()
         user = db.query(User).filter(User.rid == rid)
         user.update({
-            user.is_deleted: 1
+            User.is_deleted: 1
         })
         db.commit()
-        db.refresh(user)
-        return user
 
     except Exception as e:
         db.rollback()

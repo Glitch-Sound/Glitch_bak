@@ -88,8 +88,8 @@ def _deleteItem(db: Session, rid: int):
     try:
         current_datetime = _getCurrentDatetime()
 
-        item = db.query(Item).filter(Item.rid == rid)
         db.begin()
+        item = db.query(Item).filter(Item.rid == rid)
         item.update({
             Item.is_deleted: 1,
             Item.datetime_update: current_datetime

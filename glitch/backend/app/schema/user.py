@@ -26,6 +26,7 @@ class UserUpdate(BaseModel):
     user: str
     password: str
     name: str
+    is_admin: int
 
     class Config:
         orm_mode = True

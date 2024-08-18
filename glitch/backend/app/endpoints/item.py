@@ -56,7 +56,7 @@ def update_project(target:schema_item.ProjectUpdate, db: Session = Depends(get_d
         raise HTTPException(status_code=500, detail=f'error: {str(e)}')
 
 
-@router.delete('/project/', response_model=dict)
+@router.delete('/project/{target}', response_model=dict)
 def delete_project(target: int, db: Session = Depends(get_db)):
     try:
         crud_item.deleteProject(db, target)

@@ -1,3 +1,4 @@
+import traceback
 from fastapi import Depends, APIRouter, HTTPException   # type: ignore
 from sqlalchemy.orm import Session                      # type: ignore
 
@@ -18,4 +19,5 @@ def get_users(rid_project: int, db: Session = Depends(get_db)):
         return result
 
     except Exception as e:
+        print(traceback.format_exc())
         raise HTTPException(status_code=500, detail=f'error: {str(e)}')
