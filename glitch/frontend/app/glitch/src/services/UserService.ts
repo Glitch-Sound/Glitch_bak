@@ -1,6 +1,6 @@
 import http from '@/services/ApiClient'
 
-import type { User, UserCreate, UserUpdate } from '@/types/User'
+import type { User, UserCreate, UserUpdate, Login } from '@/types/User'
 
 class UserService {
   public async getUsers(): Promise<User[]> {
@@ -33,6 +33,15 @@ class UserService {
   public async deleteUser(rid: number): Promise<void> {
     try {
       await http.delete(`/api/user/${rid}`)
+    } catch (error) {
+      throw new Error('error: ${error}')
+    }
+  }
+
+  public async login(user: Login): Promise<User> {
+    try {
+      const response = await http.put<User>('/api/login', user)
+      return response.data
     } catch (error) {
       throw new Error('error: ${error}')
     }

@@ -10,14 +10,14 @@ import CreateProjectDialog from '@/components/dialog/CreateProjectDialog.vue'
 import UpdateProjectDialog from '@/components/dialog/UpdateProjectDialog.vue'
 
 const headers = [
-  { title: 'RID', key: 'rid', width: '50px' },
-  { title: 'STATE', key: 'state', width: '50px' },
-  { title: 'TITLE', key: 'title' },
-  { title: 'DETAIL', key: 'detail' },
-  { title: 'RESULT', key: 'result' },
-  { title: 'ENTRY', key: 'datetime_entry', width: '300px' },
-  { title: 'USER', key: 'name', width: '100px' },
-  { title: '', key: '', width: '140px' }
+  { title: 'RID', width: '50px' },
+  { title: 'STATE', width: '50px' },
+  { title: 'TITLE' },
+  { title: 'DETAIL' },
+  { title: 'RESULT' },
+  { title: 'ENTRY', width: '300px' },
+  { title: 'USER', width: '100px' },
+  { title: '', width: '140px' }
 ]
 
 const store_project = useProjectStore()

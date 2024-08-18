@@ -19,3 +19,8 @@ export interface UserUpdate {
   name: string
   is_admin: boolean
 }
+
+export interface Login {
+  user: string
+  password: string
+}

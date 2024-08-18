@@ -71,7 +71,7 @@ const handleSubmit = async () => {
     <v-spacer />
 
     <div class="mx-1">
-      <UserDetail :rid_users="0" :name="'Guest'" />
+      <UserDetail />
     </div>
 
     <v-btn icon disabled class="mx-1">

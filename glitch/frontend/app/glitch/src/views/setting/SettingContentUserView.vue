@@ -8,10 +8,10 @@ import CreateUserDialog from '@/components/dialog/CreateUserDialog.vue'
 import UpdateUserDialog from '@/components/dialog/UpdateUserDialog.vue'
 
 const headers = [
-  { title: 'RID', key: 'rid', width: '50px' },
-  { title: 'USER', key: 'user', width: '200px' },
-  { title: 'NAME', key: 'name', width: '200px' },
-  { title: '', key: '', width: '140px' }
+  { title: 'RID', width: '50px' },
+  { title: 'USER', width: '200px' },
+  { title: 'NAME', width: '200px' },
+  { title: '', width: '140px' }
 ]
 
 const store_user = useUserStore()
@@ -169,6 +169,7 @@ const handleDelete = async () => {
   <CreateUserDialog
     :showDialog="dialog_entry"
     :formData="dialog_form_data_entry"
+    :is_startup="false"
     @update:showDialog="dialog_entry = $event"
     @submit="handleEntry"
   />

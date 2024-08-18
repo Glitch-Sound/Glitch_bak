@@ -5,7 +5,8 @@ import UserService from '@/services/UserService'
 
 const useUserStore = defineStore('user', {
   state: () => ({
-    users: [] as Array<User>
+    users: [] as Array<User>,
+    login_user: null as User | null
   }),
   actions: {
     async fetchUsers() {
@@ -15,6 +16,9 @@ const useUserStore = defineStore('user', {
       } catch (error) {
         console.error('Error:', error)
       }
+    },
+    setLoginUser(user: User | null) {
+      this.login_user = user
     }
   }
 })

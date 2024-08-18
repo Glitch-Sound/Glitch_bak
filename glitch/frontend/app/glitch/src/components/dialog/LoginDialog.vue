@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 
-import type { UserCreate } from '@/types/User'
+import type { Login } from '@/types/User'
 import { useDialog } from '@/components/dialog/BaseDialog'
 import { type EmitDialog } from '@/components/common/events'
 
 const props = defineProps<{
   showDialog: boolean
-  formData: UserCreate
-  is_startup: boolean
+  formData: Login
 }>()
 
 const emit = defineEmits<EmitDialog>()
@@ -18,11 +17,8 @@ const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props,
 <template>
   <v-dialog v-model="dialog" persistent max-width="600px">
     <v-card>
-      <v-card-title v-if="props.is_startup == true">
-        <span class="text-h5">Add Administrator</span>
-      </v-card-title>
-      <v-card-title v-else>
-        <span class="text-h5">Add User</span>
+      <v-card-title>
+        <span class="text-h5">Login</span>
       </v-card-title>
 
       <v-card-text>
@@ -36,14 +32,12 @@ const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props,
             type="password"
             required
           />
-
-          <v-text-field v-model="formData.name" :rules="[rules.required]" label="Name" required />
         </v-form>
       </v-card-text>
 
       <v-card-actions>
         <v-spacer />
-        <v-btn @click="dialog = false" v-if="props.is_startup == false">Cancel</v-btn>
+        <v-btn @click="dialog = false">Cancel</v-btn>
         <v-btn @click="submitData">Submit</v-btn>
       </v-card-actions>
     </v-card>
