@@ -185,6 +185,14 @@ class TaskUpdate(BaseModel):
         orm_mode = True
 
 
+class TaskPriorityUpdate(BaseModel):
+    rid: int
+    priority: int
+
+    class Config:
+        orm_mode = True
+
+
 class BugCreate(BaseModel):
     rid_items: int
     rid_users: int
@@ -205,6 +213,14 @@ class BugUpdate(BaseModel):
     detail: str
     result: str
     workload: int
+
+    class Config:
+        orm_mode = True
+
+
+class BugPriorityUpdate(BaseModel):
+    rid: int
+    priority: int
 
     class Config:
         orm_mode = True

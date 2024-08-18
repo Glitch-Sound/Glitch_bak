@@ -107,14 +107,6 @@ def getItems(db: Session, rid_project: int):
         UserAlias2 = aliased(User)
 
         t0 = aliased(Item, name='t0')
-        order_state_t0 = case(
-            (t0.state == 3, 1),
-            (t0.state == 4, 2),
-            (t0.state == 2, 3),
-            (t0.state == 1, 4),
-            (t0.state == 5, 5),
-            else_=0
-        )
 
         query_base = db.query(
             t0.rid,
@@ -130,7 +122,7 @@ def getItems(db: Session, rid_project: int):
             t0.result,
             t0.datetime_entry,
             t0.datetime_update,
-            (func.cast(order_state_t0, Text) + ':' + func.cast(t0.rid, Text)).label('path')
+            (func.cast(t0.type, Text)).label('path')
         )\
         .filter(t0.rid == rid_project)\
         .filter(t0.is_deleted == 0)
@@ -139,15 +131,6 @@ def getItems(db: Session, rid_project: int):
 
         n = aliased(Item, name='n')
         t = aliased(query_recursive, name='t')
-
-        order_state_n = case(
-            (n.state == 3, 1),
-            (n.state == 4, 2),
-            (n.state == 2, 3),
-            (n.state == 1, 4),
-            (n.state == 5, 5),
-            else_=0
-        )
 
         query_recursive = query_recursive.union_all(
             db.query(
@@ -164,10 +147,25 @@ def getItems(db: Session, rid_project: int):
                 n.result,
                 n.datetime_entry,
                 n.datetime_update,
-                (t.c.path + '-' + func.cast(order_state_n, Text) + ':' + func.cast(n.rid, Text)).label('path')
+                (t.c.path + '-' + func.cast(n.type, Text)).label('path')
             )\
             .join(t, t.c.rid == n.rid_items)\
             .filter(n.is_deleted == 0)\
+        )
+
+        custom_order_state = case(
+            (query_recursive.c.state == 3, 1),
+            (query_recursive.c.state == 4, 2),
+            (query_recursive.c.state == 2, 3),
+            (query_recursive.c.state == 1, 4),
+            (query_recursive.c.state == 5, 5)
+        )
+
+        custom_order_priority = case(
+            (Task.priority == 1, 1),
+            (Bug.priority  == 1, 2),
+            (Task.priority == 0, 3),
+            (Bug.priority  == 0, 4),
         )
 
         query_final = db.query(
@@ -205,7 +203,9 @@ def getItems(db: Session, rid_project: int):
         .outerjoin(Story, Story.rid_items == query_recursive.c.rid)\
         .outerjoin(Task, Task.rid_items == query_recursive.c.rid)\
         .outerjoin(Bug, Bug.rid_items == query_recursive.c.rid)\
-        .order_by(query_recursive.c.path)
+        .order_by(query_recursive.c.path)\
+        .order_by(custom_order_priority)\
+        .order_by(custom_order_state)
 
         result = query_final.all()
         return result
@@ -583,6 +583,25 @@ def deleteTask(db: Session, rid: int):
         raise e
 
 
+def updateTaskPriority(db: Session, target:schema_item.TaskPriorityUpdate):
+    try:
+        db.begin()
+        addition = db.query(Task).filter(Task.rid_items == target.rid)
+        addition.update({
+            Task.priority: target.priority
+        })
+        db.commit()
+
+        item = db.query(Item).filter(Item.rid == target.rid)
+        item_updated = item.first()
+        db.refresh(item_updated)
+        return item_updated
+
+    except Exception as e:
+        db.rollback()
+        raise e
+
+
 def createBug(db: Session, target:schema_item.BugCreate):
     try:
         current_datetime = _getCurrentDatetime()
@@ -647,4 +666,23 @@ def deleteBug(db: Session, rid: int):
         _deleteItem(db, rid)
 
     except Exception as e:
+        raise e
+
+
+def updateBugPriority(db: Session, target:schema_item.BugPriorityUpdate):
+    try:
+        db.begin()
+        addition = db.query(Bug).filter(Bug.rid_items == target.rid)
+        addition.update({
+            Bug.priority: target.priority
+        })
+        db.commit()
+
+        item = db.query(Item).filter(Item.rid == target.rid)
+        item_updated = item.first()
+        db.refresh(item_updated)
+        return item_updated
+
+    except Exception as e:
+        db.rollback()
         raise e
