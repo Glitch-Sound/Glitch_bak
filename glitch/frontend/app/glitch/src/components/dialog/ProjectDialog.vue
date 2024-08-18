@@ -54,7 +54,7 @@ const handleSubmit = async () => {
           <tr>
             <td>{{ item.rid }}</td>
             <td><StateLabel :state="item.state" /></td>
-            <td>
+            <td class="title">
               <router-link :to="`/project/${item.rid}`" @click="handleSubmit">
                 {{ item.title }}
               </router-link>
@@ -77,5 +77,10 @@ const handleSubmit = async () => {
 <style scoped>
 .dialog-card {
   padding: 10px 20px;
+}
+
+.title {
+  color: #ffffff;
+  font-weight: bold;
 }
 </style>

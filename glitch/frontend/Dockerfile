@@ -1,13 +1,11 @@
 FROM node:lts-buster-slim
 
-WORKDIR /app
+WORKDIR /app/glitch
 
 COPY ./app/glitch/package*.json ./
 
-RUN apt update && \
-    npm install -g npm && \
-    npm install
-
-WORKDIR /app/glitch
+RUN apt update
+RUN npm install -g npm
+RUN npm install
 
 CMD ["npm", "run", "dev"]
