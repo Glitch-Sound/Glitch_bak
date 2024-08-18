@@ -2,11 +2,13 @@
 import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
+import useUserStore from '@/stores/UserStore'
 import useProjectStore from '@/stores/ProjectStore'
 import UserDetail from '@/components/common/UserDetail.vue'
 import ProjectDialog from '@/components/dialog/ProjectDialog.vue'
 
 const route = useRoute()
+const store_user = useUserStore()
 const store_project = useProjectStore()
 
 const title = ref('Glitch')
@@ -48,17 +50,17 @@ const handleSubmit = async () => {
       {{ title }}
     </v-app-bar-title>
 
-    <router-link to="/">
-      <v-btn icon color="iconColor">
+    <v-btn icon color="iconColor">
+      <router-link to="/">
         <v-icon>mdi-home</v-icon>
-      </v-btn>
-    </router-link>
+      </router-link>
+    </v-btn>
 
-    <router-link :to="link_project">
-      <v-btn icon color="iconColor" :disabled="link_disabled">
+    <v-btn icon color="iconColor" :disabled="link_disabled">
+      <router-link :to="link_project">
         <v-icon>mdi-view-list</v-icon>
-      </v-btn>
-    </router-link>
+      </router-link>
+    </v-btn>
 
     <v-btn icon disabled>
       <v-icon>mdi-account-tag</v-icon>
@@ -78,11 +80,11 @@ const handleSubmit = async () => {
       <v-icon>mdi-magnify</v-icon>
     </v-btn>
 
-    <router-link to="/setting/main">
-      <v-btn icon color="iconColor" class="mx-1">
+    <v-btn :disabled="store_user.login_user == null" icon color="iconColor" class="mx-1">
+      <router-link to="/setting/main">
         <v-icon>mdi-cog</v-icon>
-      </v-btn>
-    </router-link>
+      </router-link>
+    </v-btn>
   </v-app-bar>
 
   <ProjectDialog :showDialog="dialog" @submit="handleSubmit" />

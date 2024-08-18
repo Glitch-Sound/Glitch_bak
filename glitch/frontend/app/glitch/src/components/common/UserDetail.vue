@@ -59,7 +59,7 @@ const handleLogin = async (data: Login) => {
         {{ store_user.login_user.name }}
       </span>
 
-      <v-btn icon size="small">
+      <v-btn icon size="small" @click="openDialog()">
         <img :src="identiconDataUri" width="22" height="22" />
       </v-btn>
     </div>
