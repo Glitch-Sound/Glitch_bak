@@ -12,7 +12,7 @@ const props = defineProps<{
   <div class="d-flex justify-center" style="width: 100px">
     <v-chip
       size="small"
-      class="mx-2"
+      class="mx-1"
       :value="ItemState.IDLE"
       v-if="props.state == ItemState.IDLE"
       prepend-icon="mdi-circle-outline"
@@ -23,7 +23,7 @@ const props = defineProps<{
 
     <v-chip
       size="small"
-      class="mx-2"
+      class="mx-1"
       :value="ItemState.RUN"
       v-if="props.state == ItemState.RUN"
       prepend-icon="mdi-circle"
@@ -34,7 +34,7 @@ const props = defineProps<{
 
     <v-chip
       size="small"
-      class="mx-2"
+      class="mx-1"
       :value="ItemState.ALERT"
       v-if="props.state == ItemState.ALERT"
       prepend-icon="mdi-alert-box"
@@ -45,7 +45,7 @@ const props = defineProps<{
 
     <v-chip
       size="small"
-      class="mx-2"
+      class="mx-1"
       :value="ItemState.REVIEW"
       v-if="props.state == ItemState.REVIEW"
       prepend-icon="mdi-circle-multiple"
@@ -56,7 +56,7 @@ const props = defineProps<{
 
     <v-chip
       size="small"
-      class="mx-2"
+      class="mx-1"
       :value="ItemState.COMPLETE"
       v-if="props.state == ItemState.COMPLETE"
       prepend-icon="mdi-circle-slice-8"
