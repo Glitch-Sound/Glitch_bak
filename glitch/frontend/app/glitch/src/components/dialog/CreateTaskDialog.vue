@@ -13,6 +13,9 @@ const props = defineProps<{
   formData: TaskCreate
 }>()
 
+const emit = defineEmits<EmitDialog>()
+const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props, emit)
+
 onBeforeUpdate(() => {
   formData.value.type = TaskType.WORKLOAD
 })
@@ -24,9 +27,6 @@ const handleUserSelected = (user: User) => {
 const handleWorkloadSelect = (workload: number) => {
   formData.value.workload = workload
 }
-
-const emit = defineEmits<EmitDialog>()
-const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props, emit)
 </script>
 
 <template>

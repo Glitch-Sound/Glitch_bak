@@ -14,6 +14,9 @@ const props = defineProps<{
   formData: ProjectUpdate
 }>()
 
+const emit = defineEmits<EmitDialog>()
+const { dialog, valid, formData, formRef, rules, submitData, deleteData } = useDialog(props, emit)
+
 const handleUserSelected = (user: User) => {
   formData.value.rid_users = user.rid
 }
@@ -21,8 +24,6 @@ const handleUserSelected = (user: User) => {
 const handleStateSelected = (state: ItemState) => {
   formData.value.state = state
 }
-const emit = defineEmits<EmitDialog>()
-const { dialog, valid, formData, formRef, rules, submitData, deleteData } = useDialog(props, emit)
 </script>
 
 <template>

@@ -5,28 +5,44 @@
     padding: 4px 10px;
 }
 
-.panel-common:hover {
-    border-left: solid 2px #DBD8E3;
-}
-
 .panel-event {
     border-left: solid 2px #a0a0a0;
+}
+
+.panel-event:hover {
+    border-left: solid 2px #d0d0d0;
 }
 
 .panel-feature {
     border-left: solid 2px #7c7c7c;
 }
 
+.panel-feature:hover {
+    border-left: solid 2px #acacac;
+}
+
 .panel-story {
     border-left: solid 2px #535353;
+}
+
+.panel-story:hover {
+    border-left: solid 2px #939393;
 }
 
 .panel-task {
     border-left: solid 2px #2c2c2c;
 }
 
+.panel-task:hover {
+    border-left: solid 2px #8c8c8c;
+}
+
 .panel-bug {
     border-left: solid 2px #492920;
+}
+
+.panel-bug:hover {
+    border-left: solid 2px #794940;
 }
 
 .state {

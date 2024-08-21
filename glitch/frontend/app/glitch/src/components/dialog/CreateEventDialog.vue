@@ -12,12 +12,12 @@ const props = defineProps<{
   formData: EventCreate
 }>()
 
+const emit = defineEmits<EmitDialog>()
+const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props, emit)
+
 const handleUserSelected = (user: User) => {
   formData.value.rid_users = user.rid
 }
-
-const emit = defineEmits<EmitDialog>()
-const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props, emit)
 </script>
 
 <template>

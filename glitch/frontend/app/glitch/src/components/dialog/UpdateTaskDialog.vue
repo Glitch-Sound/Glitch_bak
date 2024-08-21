@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { defineProps, onBeforeUpdate } from 'vue'
+import { ref, defineProps, onBeforeUpdate, watch } from 'vue'
 
 import { TaskType, ItemType, ItemState, type TaskUpdate } from '@/types/Item'
 import type { User } from '@/types/User'
 import { useDialog } from '@/components/dialog/BaseDialog'
 import UserSelect from '@/components/common/UserSelect.vue'
+import UserReviewSelect from '@/components/common/UserReviewSelect.vue'
 import WorkloadSelect from '@/components/common/WorkloadSelect.vue'
 import StateSelect from '@/components/common/StateSelect.vue'
 import DeleteButton from '@/components/common/DeleteButton.vue'
@@ -15,12 +16,32 @@ const props = defineProps<{
   formData: TaskUpdate
 }>()
 
+const is_review = ref(false)
+
+const emit = defineEmits<EmitDialog>()
+const { dialog, valid, formData, formRef, rules, submitData, deleteData } = useDialog(props, emit)
+
+watch(
+  () => formData.value.state,
+  (state_new) => {
+    if (state_new == ItemState.REVIEW) {
+      is_review.value = true
+    } else {
+      is_review.value = false
+    }
+  }
+)
+
 onBeforeUpdate(() => {
   formData.value.type = TaskType.WORKLOAD
 })
 
 const handleUserSelected = (user: User) => {
   formData.value.rid_users = user.rid
+}
+
+const handleUserReviewSelected = (user: User) => {
+  formData.value.rid_users_review = user.rid
 }
 
 const handleStateSelected = (state: ItemState) => {
@@ -30,9 +51,6 @@ const handleStateSelected = (state: ItemState) => {
 const handleWorkloadSelect = (workload: number) => {
   formData.value.workload = workload
 }
-
-const emit = defineEmits<EmitDialog>()
-const { dialog, valid, formData, formRef, rules, submitData, deleteData } = useDialog(props, emit)
 </script>
 
 <template>
@@ -45,6 +63,12 @@ const { dialog, valid, formData, formRef, rules, submitData, deleteData } = useD
       <v-card-text>
         <v-form ref="formRef" v-model="valid" lazy-validation>
           <UserSelect v-model="formData.rid_users" @itemSelected="handleUserSelected" />
+
+          <UserReviewSelect
+            v-if="is_review"
+            v-model="formData.rid_users_review"
+            @itemSelected="handleUserReviewSelected"
+          />
 
           <StateSelect
             :type="ItemType.EVENT"
