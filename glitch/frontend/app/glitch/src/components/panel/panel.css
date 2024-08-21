@@ -1,36 +1,32 @@
 .panel-common {
     display: flex;
     flex-direction: column;
-    border-left: solid 2px transparent;
+    margin: 8px 5px 10px 7px;
+    padding: 4px 10px;
 }
 
 .panel-common:hover {
-    border-left: solid 2px #52565f;
+    border-left: solid 2px #DBD8E3;
 }
 
 .panel-event {
-    margin: 0 0 0 8px;
-    padding: 10px 0 10px 10px;
+    border-left: solid 2px #a0a0a0;
 }
 
 .panel-feature {
-    margin: 0 0 0 32px;
-    padding: 10px 0 10px 10px;
+    border-left: solid 2px #7c7c7c;
 }
 
 .panel-story {
-    margin: 0 0 0 56px;
-    padding: 10px 0 10px 10px;
+    border-left: solid 2px #535353;
 }
 
 .panel-task {
-    margin: 0 0 0 80px;
-    padding: 10px 0 10px 10px;
+    border-left: solid 2px #2c2c2c;
 }
 
 .panel-bug {
-    margin: 0 0 0 80px;
-    padding: 10px 0 10px 10px;
+    border-left: solid 2px #492920;
 }
 
 .state {

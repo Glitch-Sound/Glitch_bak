@@ -104,7 +104,7 @@ const handleBugSubmit = async (data: BugCreate) => {
       <v-col cols="auto">
         <v-menu>
           <template v-slot:activator="{ props }">
-            <v-btn icon size="x-small" v-bind="props">
+            <v-btn icon variant="text" size="x-small" v-bind="props">
               <v-icon>mdi-plus-thick</v-icon>
             </v-btn>
           </template>

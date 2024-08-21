@@ -71,7 +71,7 @@ const handleSubmit = async (data: FeatureCreate) => {
       </v-col>
 
       <v-col cols="auto">
-        <v-btn icon size="x-small" @click="openDialog()">
+        <v-btn icon variant="text" size="x-small" @click="openDialog()">
           <v-icon>mdi-plus-thick</v-icon>
         </v-btn>
       </v-col>

@@ -136,6 +136,6 @@ const setBugPriorityLow = async () => {
 
 <style scoped>
 .v-icon {
-  margin-left: 4px;
+  margin-left: 10px;
 }
 </style>

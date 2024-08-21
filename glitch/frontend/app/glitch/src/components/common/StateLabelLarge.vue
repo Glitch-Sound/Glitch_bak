@@ -11,18 +11,18 @@ const props = defineProps<{
 <template>
   <v-chip
     size="normal"
-    class="mx-1"
+    class="mx-2"
     :value="ItemState.IDLE"
     v-if="props.state == ItemState.IDLE"
     prepend-icon="mdi-circle-outline"
-    color="#b8e1dd"
+    color="#b0e0e6"
   >
     IDLE
   </v-chip>
 
   <v-chip
     size="normal"
-    class="mx-1"
+    class="mx-2"
     :value="ItemState.RUN"
     v-if="props.state == ItemState.RUN"
     prepend-icon="mdi-circle"
@@ -33,7 +33,7 @@ const props = defineProps<{
 
   <v-chip
     size="normal"
-    class="mx-1"
+    class="mx-2"
     :value="ItemState.ALERT"
     v-if="props.state == ItemState.ALERT"
     prepend-icon="mdi-alert-box"
@@ -44,7 +44,7 @@ const props = defineProps<{
 
   <v-chip
     size="normal"
-    class="mx-1"
+    class="mx-2"
     :value="ItemState.REVIEW"
     v-if="props.state == ItemState.REVIEW"
     prepend-icon="mdi-circle-multiple"
@@ -55,7 +55,7 @@ const props = defineProps<{
 
   <v-chip
     size="normal"
-    class="mx-1"
+    class="mx-2"
     :value="ItemState.COMPLETE"
     v-if="props.state == ItemState.COMPLETE"
     prepend-icon="mdi-circle-slice-8"

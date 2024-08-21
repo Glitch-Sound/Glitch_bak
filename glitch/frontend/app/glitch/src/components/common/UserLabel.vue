@@ -23,7 +23,7 @@ const identiconDataUri = computed(() => {
 </script>
 
 <template>
-  <span class="mr-1">
+  <span class="mr-2">
     {{ props.name }}
   </span>
 
