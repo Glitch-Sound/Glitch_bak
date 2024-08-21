@@ -52,23 +52,23 @@ const handleSubmit = async (data: StoryCreate) => {
 <template>
   <div class="panel-common panel-feature">
     <v-row class="align-baseline">
-      <v-col cols="auto" class="state">
+      <v-col class="type" cols="auto">
         <TypeLabel :item="props.item" />
       </v-col>
 
-      <v-col cols="auto">
+      <v-col class="state" cols="auto">
         <StateLabel :state="props.item.state" />
       </v-col>
 
-      <v-col @click="expand = !expand">
-        <span class="title">{{ props.item.title }}</span>
+      <v-col class="title" @click="expand = !expand">
+        {{ props.item.title }}
       </v-col>
 
       <v-col cols="auto">
         <UserLabel :rid_users="props.item.rid_users" :name="props.item.name" />
       </v-col>
 
-      <v-col cols="auto" class="information">
+      <v-col class="information" cols="auto">
         <InformationFeature />
       </v-col>
 

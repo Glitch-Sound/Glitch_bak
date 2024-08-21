@@ -29,7 +29,7 @@ const theme_dark: ThemeDefinition = {
   colors: {
     background: '#000000',
     surface: '#0a0a0a',
-    'on-surface': '#cdcdcd',
+    'on-surface': '#c0c0c0',
     iconColor: '#ededed'
   },
   variables: {
