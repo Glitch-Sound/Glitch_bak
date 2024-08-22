@@ -10,11 +10,11 @@ import CreateProjectDialog from '@/components/dialog/CreateProjectDialog.vue'
 import UpdateProjectDialog from '@/components/dialog/UpdateProjectDialog.vue'
 
 const headers = [
-  { title: 'RID', width: '50px' },
+  { title: 'ID', width: '50px' },
   { title: 'STATE', width: '50px' },
   { title: 'TITLE' },
   { title: 'DETAIL' },
-  { title: 'ENTRY', width: '180px' },
+  { title: 'END', width: '120px' },
   { title: 'USER', width: '100px' },
   { title: '', width: '140px' }
 ]
@@ -122,11 +122,11 @@ const handleDelete = async () => {
         <v-data-table class="ml-5 data-table" :items="store_project.projects" :headers="headers">
           <template v-slot:item="{ item }">
             <tr>
-              <td>{{ item.rid }}</td>
+              <td>{{ item.id_project }}</td>
               <td><StateLabel :state="item.state" /></td>
               <td>{{ item.title }}</td>
               <td><MarkedText :src="item.detail" /></td>
-              <td>{{ item.datetime_entry }}</td>
+              <td>{{ item.project_datetime_end }}</td>
               <td>{{ item.name }}</td>
               <td>
                 <v-btn

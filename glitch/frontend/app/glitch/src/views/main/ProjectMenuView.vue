@@ -13,7 +13,8 @@ const store_item = useItemStore()
 const dialog = ref(false)
 
 const dialog_form_data = ref<EventCreate>({
-  rid_items: 0,
+  id_project: Number(route.params.id_project),
+  rid_items: Number(route.params.id_project),
   rid_users: 0,
   title: '',
   detail: '',
@@ -21,8 +22,6 @@ const dialog_form_data = ref<EventCreate>({
 })
 
 const openDialog = () => {
-  const rid_items = Number(route.params.rid)
-  dialog_form_data.value = { ...dialog_form_data.value, rid_items }
   dialog.value = true
 }
 
@@ -34,7 +33,7 @@ const handleSubmit = async (data: EventCreate) => {
   try {
     const service_item = new ItemService()
     await service_item.createEvent(data)
-    store_item.fetchItems(Number(route.params.rid))
+    store_item.fetchItems()
     dialog.value = false
   } catch (err) {
     console.error('Error:', err)

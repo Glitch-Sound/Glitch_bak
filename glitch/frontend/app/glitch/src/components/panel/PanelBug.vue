@@ -32,7 +32,7 @@ const openDialog = () => {
         <StateLabel :state="props.item.state" />
       </v-col>
 
-      <v-col class="title" @click="expand = !expand">
+      <v-col class="title-bug" @click="expand = !expand">
         {{ props.item.title }}
       </v-col>
 

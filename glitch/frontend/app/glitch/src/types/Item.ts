@@ -42,8 +42,18 @@ export enum WorkloadType {
   WITHIN_A_WEEK = 35
 }
 
+export enum ExtractType {
+  NONE = 0,
+  ALL,
+  INCOMPLETE,
+  HIGH_RISK,
+  ALERT,
+  ASSIGNMENT
+}
+
 export interface Item {
   rid: number
+  id_project: number
   type: ItemType
   state: ItemState
   risk: number
@@ -72,6 +82,7 @@ export interface Item {
 
 export interface Project {
   rid: number
+  id_project: number
   state: number
   risk: number
   title: string
@@ -106,6 +117,7 @@ export interface ProjectUpdate {
 }
 
 export interface EventCreate {
+  id_project: number
   rid_items: number
   rid_users: number
   title: string
@@ -125,6 +137,7 @@ export interface EventUpdate {
 }
 
 export interface FeatureCreate {
+  id_project: number
   rid_items: number
   rid_users: number
   title: string
@@ -142,6 +155,7 @@ export interface FeatureUpdate {
 }
 
 export interface StoryCreate {
+  id_project: number
   rid_items: number
   rid_users: number
   title: string
@@ -163,6 +177,7 @@ export interface StoryUpdate {
 }
 
 export interface TaskCreate {
+  id_project: number
   rid_items: number
   rid_users: number
   title: string
@@ -193,6 +208,7 @@ export interface TaskPriorityUpdate {
 }
 
 export interface BugCreate {
+  id_project: number
   rid_items: number
   rid_users: number
   title: string

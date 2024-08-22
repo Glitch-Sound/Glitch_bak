@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, defineProps } from 'vue'
-import { useRoute } from 'vue-router'
 
 import type { Item, StoryUpdate } from '@/types/Item'
 import useItemStore from '@/stores/ItemStore'
@@ -14,7 +13,6 @@ const props = defineProps<{
   item: Item
 }>()
 
-const route = useRoute()
 const store_item = useItemStore()
 
 const dialog = ref(false)
@@ -50,7 +48,7 @@ const handleSubmit = async (data: StoryUpdate) => {
   try {
     const service_item = new ItemService()
     await service_item.updateStory(data)
-    store_item.fetchItems(Number(route.params.rid))
+    store_item.fetchItems()
     dialog.value = false
   } catch (err) {
     console.error('Error:', err)
@@ -61,7 +59,7 @@ const handleDelete = async () => {
   try {
     const service_item = new ItemService()
     await service_item.deleteStory(props.item.rid)
-    store_item.fetchItems(Number(route.params.rid))
+    store_item.fetchItems()
     dialog.value = false
   } catch (err) {
     console.error('Error:', err)

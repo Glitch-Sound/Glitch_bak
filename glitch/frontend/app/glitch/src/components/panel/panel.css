@@ -56,8 +56,25 @@
     text-align: center;
 }
 
-.title {
+.title-event {
     color: #ffffff;
+    font-weight: bold;
+}
+
+.title-feature {
+    color: #ffffff;
+}
+
+.title-story {
+    color: #e0e0e0;
+}
+
+.title-task {
+    color: #d0d0d0;
+}
+
+.title-bug {
+    color: #f0d0d0;
 }
 
 .information {

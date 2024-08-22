@@ -1,5 +1,6 @@
 import http from '@/services/ApiClient'
 
+import { ExtractType } from '@/types/Item'
 import type {
   Item,
   Project,
@@ -20,9 +21,30 @@ import type {
 } from '@/types/Item'
 
 class ItemService {
-  public async getItems(rid_items: number): Promise<Item[]> {
+  public async getItems(id_project: number | null, type_extract: ExtractType): Promise<Item[]> {
     try {
-      const response = await http.get<Item[]>('/api/items/' + String(rid_items))
+      const response = await http.get<Item[]>(`/api/items/${id_project}`, {
+        params: {
+          type_extract: type_extract
+        }
+      })
+      return response.data
+    } catch (error) {
+      throw new Error('error: ${error}')
+    }
+  }
+
+  public async getItemsByUser(
+    id_project: number | null,
+    rid_users: number | undefined
+  ): Promise<Item[]> {
+    try {
+      const response = await http.get<Item[]>(`/api/items/${id_project}`, {
+        params: {
+          type_extract: ExtractType.ASSIGNMENT,
+          rid_users: rid_users
+        }
+      })
       return response.data
     } catch (error) {
       throw new Error('error: ${error}')

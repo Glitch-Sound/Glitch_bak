@@ -7,11 +7,11 @@ import MarkedText from '@/components/common/MarkedText.vue'
 import StateLabel from '@/components/common/StateLabel.vue'
 
 const headers = [
-  { title: 'RID', key: 'rid', width: '50px' },
+  { title: 'ID', key: 'rid', width: '50px' },
   { title: 'STATE', key: 'state', width: '50px' },
   { title: 'TITLE', key: 'title' },
   { title: 'DETAIL', key: 'detail' },
-  { title: 'ENTRY', key: 'datetime_entry', width: '180px' },
+  { title: 'END', key: 'datetime_entry', width: '120px' },
   { title: 'USER', key: 'name', width: '100px' }
 ]
 
@@ -51,15 +51,15 @@ const handleSubmit = async () => {
       <v-data-table class="ml-5 data-table" :items="store_project.projects" :headers="headers">
         <template v-slot:item="{ item }">
           <tr>
-            <td>{{ item.rid }}</td>
+            <td>{{ item.id_project }}</td>
             <td><StateLabel :state="item.state" /></td>
             <td class="title">
-              <router-link :to="`/project/${item.rid}`" @click="handleSubmit">
+              <router-link :to="`/project/${item.id_project}`" @click="handleSubmit">
                 {{ item.title }}
               </router-link>
             </td>
             <td><MarkedText :src="item.detail" /></td>
-            <td>{{ item.datetime_entry }}</td>
+            <td>{{ item.project_datetime_end }}</td>
             <td>{{ item.name }}</td>
           </tr>
         </template>

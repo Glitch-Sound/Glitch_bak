@@ -25,7 +25,8 @@ const dialogTask = ref(false)
 const dialogBug = ref(false)
 
 const dialog_form_data_task = ref<TaskCreate>({
-  rid_items: 0,
+  id_project: Number(route.params.id_project),
+  rid_items: props.item.rid,
   rid_users: 0,
   title: '',
   detail: '',
@@ -36,7 +37,8 @@ const dialog_form_data_task = ref<TaskCreate>({
 })
 
 const dialog_form_data_bug = ref<BugCreate>({
-  rid_items: 0,
+  id_project: Number(route.params.id_project),
+  rid_items: props.item.rid,
   rid_users: 0,
   title: '',
   detail: '',
@@ -44,14 +46,10 @@ const dialog_form_data_bug = ref<BugCreate>({
 })
 
 const openTaskDialog = () => {
-  const rid_items = props.item.rid
-  dialog_form_data_task.value = { ...dialog_form_data_task.value, rid_items }
   dialogTask.value = true
 }
 
 const openBugDialog = () => {
-  const rid_items = props.item.rid
-  dialog_form_data_bug.value = { ...dialog_form_data_bug.value, rid_items }
   dialogBug.value = true
 }
 
@@ -59,7 +57,7 @@ const handleTaskSubmit = async (data: TaskCreate) => {
   try {
     const service_item = new ItemService()
     await service_item.createTask(data)
-    store_item.fetchItems(Number(route.params.rid))
+    store_item.fetchItems()
     dialogTask.value = false
   } catch (err) {
     console.error('Error:', err)
@@ -70,7 +68,7 @@ const handleBugSubmit = async (data: BugCreate) => {
   try {
     const service_item = new ItemService()
     await service_item.createBug(data)
-    store_item.fetchItems(Number(route.params.rid))
+    store_item.fetchItems()
     dialogBug.value = false
   } catch (err) {
     console.error('Error:', err)
@@ -89,7 +87,7 @@ const handleBugSubmit = async (data: BugCreate) => {
         <StateLabel :state="props.item.state" />
       </v-col>
 
-      <v-col class="title" @click="expand = !expand">
+      <v-col class="title-story" @click="expand = !expand">
         {{ props.item.title }}
       </v-col>
 

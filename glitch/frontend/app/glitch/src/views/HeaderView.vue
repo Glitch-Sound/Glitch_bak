@@ -4,12 +4,14 @@ import { useRoute } from 'vue-router'
 
 import useUserStore from '@/stores/UserStore'
 import useProjectStore from '@/stores/ProjectStore'
+import useItemStore from '@/stores/ItemStore'
 import UserDetail from '@/components/common/UserDetail.vue'
 import ProjectDialog from '@/components/dialog/ProjectDialog.vue'
 
 const route = useRoute()
 const store_user = useUserStore()
 const store_project = useProjectStore()
+const store_item = useItemStore()
 
 const title = ref('Glitch')
 const link_project = ref('/')
@@ -20,18 +22,19 @@ onMounted(() => {
   store_project.fetchProjects()
 })
 
-watch([() => route.params.rid, () => store_project.projects.length], () => {
+watch([() => route.params.id_project, () => store_project.projects.length], () => {
   title.value =
-    store_project.projects.find((project) => project.rid == Number(route.params.rid))?.title ||
-    'Glitch'
+    store_project.projects.find((project) => project.rid == Number(route.params.id_project))
+      ?.title || 'Glitch'
 
-  if (route.params.rid) {
-    store_project.setSelectedProjectRID(Number(route.params.rid))
+  if (route.params.id_project) {
+    store_project.setSelectedProjectID(Number(route.params.id_project))
+    store_item.fetchItems()
   }
 })
 
-watch([() => store_project.selected_rid_project], () => {
-  link_project.value = '/project/' + store_project.selected_rid_project
+watch([() => store_project.selected_id_project], () => {
+  link_project.value = '/project/' + store_project.selected_id_project
   link_disabled.value = false
 })
 

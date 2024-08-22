@@ -15,7 +15,7 @@ const router = createRouter({
       component: MainView
     },
     {
-      path: '/project/:rid',
+      path: '/project/:id_project',
       component: ProjectView
     },
     {

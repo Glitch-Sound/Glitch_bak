@@ -6,7 +6,7 @@ import ItemService from '@/services/ItemService'
 const useProjectStore = defineStore('project', {
   state: () => ({
     projects: [] as Array<Project>,
-    selected_rid_project: null as number | null
+    selected_id_project: null as number | null
   }),
   actions: {
     async fetchProjects() {
@@ -17,8 +17,8 @@ const useProjectStore = defineStore('project', {
         console.error('Error:', error)
       }
     },
-    setSelectedProjectRID(rid_project: number | null) {
-      this.selected_rid_project = rid_project
+    setSelectedProjectID(id_project: number | null) {
+      this.selected_id_project = id_project
     }
   }
 })

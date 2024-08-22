@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
-import { useRoute } from 'vue-router'
 
 import { ItemType, type Item, type TaskPriorityUpdate, type BugPriorityUpdate } from '@/types/Item'
 import useItemStore from '@/stores/ItemStore'
@@ -10,7 +9,6 @@ const props = defineProps<{
   item: Item
 }>()
 
-const route = useRoute()
 const store_item = useItemStore()
 
 const copyLink = () => {}
@@ -24,7 +22,7 @@ const setTaskPriorityHigh = async () => {
   }
   const service_item = new ItemService()
   await service_item.updatePriorityTask(data)
-  store_item.fetchItems(Number(route.params.rid))
+  store_item.fetchItems()
 }
 
 const setTaskPriorityLow = async () => {
@@ -34,7 +32,7 @@ const setTaskPriorityLow = async () => {
   }
   const service_item = new ItemService()
   await service_item.updatePriorityTask(data)
-  store_item.fetchItems(Number(route.params.rid))
+  store_item.fetchItems()
 }
 
 const setBugPriorityHigh = async () => {
@@ -44,7 +42,7 @@ const setBugPriorityHigh = async () => {
   }
   const service_item = new ItemService()
   await service_item.updatePriorityBug(data)
-  store_item.fetchItems(Number(route.params.rid))
+  store_item.fetchItems()
 }
 
 const setBugPriorityLow = async () => {
@@ -54,7 +52,7 @@ const setBugPriorityLow = async () => {
   }
   const service_item = new ItemService()
   await service_item.updatePriorityBug(data)
-  store_item.fetchItems(Number(route.params.rid))
+  store_item.fetchItems()
 }
 </script>
 

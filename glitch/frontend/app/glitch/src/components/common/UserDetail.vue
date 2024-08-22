@@ -55,7 +55,7 @@ const handleLogin = async (data: Login) => {
   </div>
   <div v-else>
     <div class="align-baseline">
-      <span class="mr-2 username">
+      <span class="mr-1 username">
         {{ store_user.login_user.name }}
       </span>
 

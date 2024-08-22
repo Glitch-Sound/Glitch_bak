@@ -8,7 +8,7 @@ import CreateUserDialog from '@/components/dialog/CreateUserDialog.vue'
 import UpdateUserDialog from '@/components/dialog/UpdateUserDialog.vue'
 
 const headers = [
-  { title: 'RID', width: '50px' },
+  { title: 'ID', width: '50px' },
   { title: 'USER', width: '200px' },
   { title: 'NAME', width: '200px' },
   { title: '', width: '140px' }
