@@ -1,11 +1,12 @@
 import { defineStore } from 'pinia'
 
-import type { Item } from '@/types/Item'
+import { ItemType, type Item } from '@/types/Item'
 import ItemService from '@/services/ItemService'
 
 const userItemStore = defineStore('item', {
   state: () => ({
-    items: [] as Array<Item>
+    items: [] as Array<Item>,
+    type_enabled: ItemType.BUG as ItemType
   }),
   actions: {
     async fetchItems(rid_items: number) {
@@ -15,6 +16,9 @@ const userItemStore = defineStore('item', {
       } catch (error) {
         console.error('Error:', error)
       }
+    },
+    setEnabledType(type: ItemType) {
+      this.type_enabled = type
     }
   }
 })

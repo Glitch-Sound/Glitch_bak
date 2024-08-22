@@ -22,11 +22,26 @@ onMounted(() => {
   <v-main>
     <v-sheet class="ma-1 py-1 rounded-lg">
       <template v-for="item in store_item.items" :key="item.rid">
-        <PanelEvent v-if="item.type == ItemType.EVENT" :item="item" />
-        <PanelFeature v-if="item.type == ItemType.FEATURE" :item="item" />
-        <PanelStory v-if="item.type == ItemType.STORY" :item="item" />
-        <PanelTask v-if="item.type == ItemType.TASK" :item="item" />
-        <PanelBug v-if="item.type == ItemType.BUG" :item="item" />
+        <PanelEvent
+          v-if="item.type <= store_item.type_enabled && item.type == ItemType.EVENT"
+          :item="item"
+        />
+        <PanelFeature
+          v-if="item.type <= store_item.type_enabled && item.type == ItemType.FEATURE"
+          :item="item"
+        />
+        <PanelStory
+          v-if="item.type <= store_item.type_enabled && item.type == ItemType.STORY"
+          :item="item"
+        />
+        <PanelTask
+          v-if="item.type <= store_item.type_enabled && item.type == ItemType.TASK"
+          :item="item"
+        />
+        <PanelBug
+          v-if="item.type <= store_item.type_enabled && item.type == ItemType.BUG"
+          :item="item"
+        />
       </template>
     </v-sheet>
   </v-main>

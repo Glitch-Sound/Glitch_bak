@@ -1,52 +1,52 @@
 .panel-common {
     display: flex;
     flex-direction: column;
-    margin: 8px 5px 10px 7px;
-    padding: 4px 10px;
+    margin: 6px 5px 6px 7px;
+    padding: 3px 10px;
 }
 
 .panel-event {
-    border-left: solid 2px #a0a0a0;
+    border-left: solid 2px #b0b0b0;
 }
 
 .panel-event:hover {
-    border-left: solid 2px #d0d0d0;
+    border-left: solid 2px #e0e0e0;
 }
 
 .panel-feature {
-    border-left: solid 2px #7c7c7c;
+    border-left: solid 2px #898989;
 }
 
 .panel-feature:hover {
-    border-left: solid 2px #acacac;
+    border-left: solid 2px #a9a9a9;
 }
 
 .panel-story {
-    border-left: solid 2px #535353;
+    border-left: solid 2px #606060;
 }
 
 .panel-story:hover {
-    border-left: solid 2px #939393;
+    border-left: solid 2px #909090;
 }
 
 .panel-task {
-    border-left: solid 2px #2c2c2c;
+    border-left: solid 2px #292929;
 }
 
 .panel-task:hover {
-    border-left: solid 2px #8c8c8c;
+    border-left: solid 2px #696969;
 }
 
 .panel-bug {
-    border-left: solid 2px #492920;
+    border-left: solid 2px #5a2920;
 }
 
 .panel-bug:hover {
-    border-left: solid 2px #794940;
+    border-left: solid 2px #7a3930;
 }
 
 .type {
-    width: 60px;
+    width: 55px;
     margin: 0 0 0 10px;
     text-align: center;
 }
@@ -67,7 +67,7 @@
 }
 
 .panel-detail-expand {
-    margin: 20px 0;
+    margin: 16px 0 20px;
     padding: 0 16px;
 }
 

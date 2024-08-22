@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 
-import type { EventCreate } from '@/types/Item'
+import { ItemType, type EventCreate } from '@/types/Item'
 import useItemStore from '@/stores/ItemStore'
 import ItemService from '@/services/ItemService'
 import CreateEventDialog from '@/components/dialog/CreateEventDialog.vue'
@@ -26,6 +26,10 @@ const openDialog = () => {
   dialog.value = true
 }
 
+const setEnabledType = (type: ItemType) => {
+  store_item.setEnabledType(type)
+}
+
 const handleSubmit = async (data: EventCreate) => {
   try {
     const service_item = new ItemService()
@@ -42,9 +46,9 @@ const handleSubmit = async (data: EventCreate) => {
   <v-navigation-drawer color="background" class="no-border">
     <v-sheet color="#1d1d1d" class="rounded-lg mt-1 ml-1 py-3">
       <v-list-item>
-        <v-btn width="250px" color="#9D0B28" prepend-icon="mdi-plus-circle" @click="openDialog()"
-          >Event</v-btn
-        >
+        <v-btn width="250px" color="#9D0B28" prepend-icon="mdi-plus-circle" @click="openDialog()">
+          Event
+        </v-btn>
       </v-list-item>
       <v-list-item><v-icon icon="mdi-moon-full" />All</v-list-item>
       <v-list-item><v-icon icon="mdi-moon-waning-crescent" />Incomplete</v-list-item>
@@ -54,11 +58,41 @@ const handleSubmit = async (data: EventCreate) => {
     </v-sheet>
 
     <v-sheet color="#1d1d1d" class="rounded-lg mt-1 ml-1 py-3">
-      <v-list-item><v-icon icon="mdi-calendar-arrow-left" />Event</v-list-item>
-      <v-list-item><v-icon icon="mdi-apps" />Feature</v-list-item>
-      <v-list-item><v-icon icon="mdi-arrow-expand-horizontal" />Story</v-list-item>
-      <v-list-item><v-icon icon="mdi-label" />Task</v-list-item>
-      <v-list-item><v-icon icon="mdi-spider" />Bug</v-list-item>
+      <v-list-item
+        @click="setEnabledType(ItemType.EVENT)"
+        :variant="ItemType.EVENT <= store_item.type_enabled ? 'text' : 'plain'"
+      >
+        <v-icon icon="mdi-calendar-arrow-left" />
+        Event
+      </v-list-item>
+      <v-list-item
+        @click="setEnabledType(ItemType.FEATURE)"
+        :variant="ItemType.FEATURE <= store_item.type_enabled ? 'text' : 'plain'"
+      >
+        <v-icon icon="mdi-apps" />
+        Feature
+      </v-list-item>
+      <v-list-item
+        @click="setEnabledType(ItemType.STORY)"
+        :variant="ItemType.STORY <= store_item.type_enabled ? 'text' : 'plain'"
+      >
+        <v-icon icon="mdi-arrow-expand-horizontal" />
+        Story
+      </v-list-item>
+      <v-list-item
+        @click="setEnabledType(ItemType.TASK)"
+        :variant="ItemType.TASK <= store_item.type_enabled ? 'text' : 'plain'"
+      >
+        <v-icon icon="mdi-label" />
+        Task
+      </v-list-item>
+      <v-list-item
+        @click="setEnabledType(ItemType.BUG)"
+        :variant="ItemType.BUG <= store_item.type_enabled ? 'text' : 'plain'"
+      >
+        <v-icon icon="mdi-spider" />
+        Bug
+      </v-list-item>
     </v-sheet>
   </v-navigation-drawer>
 
