@@ -30,11 +30,11 @@
 }
 
 .panel-task {
-    border-left: solid 2px #191929;
+    border-left: solid 2px #393959;
 }
 
 .panel-task:hover {
-    border-left: solid 2px #393949;
+    border-left: solid 2px #595979;
 }
 
 .panel-bug {
