@@ -14,15 +14,15 @@
 }
 
 .panel-feature {
-    border-left: solid 2px #898989;
+    border-left: solid 2px #797979;
 }
 
 .panel-feature:hover {
-    border-left: solid 2px #a9a9a9;
+    border-left: solid 2px #999999;
 }
 
 .panel-story {
-    border-left: solid 2px #606060;
+    border-left: solid 2px #505050;
 }
 
 .panel-story:hover {
@@ -30,11 +30,11 @@
 }
 
 .panel-task {
-    border-left: solid 2px #292929;
+    border-left: solid 2px #191919;
 }
 
 .panel-task:hover {
-    border-left: solid 2px #696969;
+    border-left: solid 2px #393939;
 }
 
 .panel-bug {
