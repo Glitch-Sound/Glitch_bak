@@ -4,6 +4,7 @@ from typing import Optional
 
 class Item(BaseModel):
     rid: int
+    id_project: int
     type: int
     state: int
     risk: int
@@ -35,6 +36,7 @@ class Item(BaseModel):
 
 class Project(BaseModel):
     rid: int
+    id_project: int
     state: int
     risk: int
     risk_factors: int
@@ -79,6 +81,7 @@ class ProjectUpdate(BaseModel):
 
 
 class EventCreate(BaseModel):
+    id_project: int
     rid_items: int
     rid_users: int
     title: str
@@ -104,6 +107,7 @@ class EventUpdate(BaseModel):
 
 
 class FeatureCreate(BaseModel):
+    id_project: int
     rid_items: int
     rid_users: int
     title: str
@@ -127,6 +131,7 @@ class FeatureUpdate(BaseModel):
 
 
 class StoryCreate(BaseModel):
+    id_project: int
     rid_items: int
     rid_users: int
     title: str
@@ -154,6 +159,7 @@ class StoryUpdate(BaseModel):
 
 
 class TaskCreate(BaseModel):
+    id_project: int
     rid_items: int
     rid_users: int
     title: str
@@ -193,6 +199,7 @@ class TaskPriorityUpdate(BaseModel):
 
 
 class BugCreate(BaseModel):
+    id_project: int
     rid_items: int
     rid_users: int
     title: str

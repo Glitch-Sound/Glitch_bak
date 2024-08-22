@@ -12,9 +12,9 @@ class User(Base):
 
     rid        = Column(Integer, primary_key=True)
     user       = Column(String, index=True, unique=True)
-    password   = Column(String)
-    name       = Column(String, index=True)
-    is_admin   = Column(Integer, index=True)
+    password   = Column(String, default='' )
+    name       = Column(String, default='')
+    is_admin   = Column(Integer, index=True, default=0)
     is_deleted = Column(Integer, index=True, default=0)
 
     items        = relationship('Item', foreign_keys='Item.rid_users', back_populates='user')

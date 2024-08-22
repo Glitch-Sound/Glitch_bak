@@ -12,10 +12,10 @@ from crud import log as crud_log
 
 router = APIRouter()
 
-@router.get('/log/{rid_project}', response_model=schema_log.Log)
-def get_users(rid_project: int, db: Session = Depends(get_db)):
+@router.get('/log/{id_project}', response_model=schema_log.Log)
+def get_users(id_project: int, db: Session = Depends(get_db)):
     try:
-        result = crud_log.getLogs(db, rid_project)
+        result = crud_log.getLogs(db, id_project)
         return result
 
     except Exception as e:

@@ -7,9 +7,9 @@ sys.path.append('~/app')
 from model.log import Log
 
 
-def getLogs(db: Session, rid_project: int):
+def getLogs(db: Session, id_project: int):
     try:
-        return db.query(Log).filter(rid_project == rid_project).all()
+        return db.query(Log).filter(id_project == id_project).all()
 
     except Exception as e:
         raise e

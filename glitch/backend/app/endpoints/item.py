@@ -1,6 +1,6 @@
 import traceback
-from fastapi import Depends, APIRouter, HTTPException, status   # type: ignore
-from sqlalchemy.orm import Session                              # type: ignore
+from fastapi import Query, Depends, APIRouter, HTTPException, status    # type: ignore
+from sqlalchemy.orm import Session                                      # type: ignore
 
 import sys
 sys.path.append('~/app')
@@ -8,14 +8,16 @@ sys.path.append('~/app')
 from database import get_db
 from schema import item as schema_item
 from crud import item as crud_item
+from crud.item import ItemParam
 
 
 router = APIRouter()
 
-@router.get('/items/{rid_project}', response_model=list[schema_item.Item])
-def get_items(rid_project: int, db: Session = Depends(get_db)):
+@router.get('/items/{id_project}', response_model=list[schema_item.Item])
+def get_items(id_project: int, type_extract: int = Query(None), rid_users: int = Query(None), db: Session = Depends(get_db)):
     try:
-        result = crud_item.getItems(db, rid_project=rid_project)
+        params = ItemParam(id_project=id_project, type_extract=type_extract, rid_users=rid_users)
+        result = crud_item.getItems(db, params)
         return result
 
     except Exception as e:

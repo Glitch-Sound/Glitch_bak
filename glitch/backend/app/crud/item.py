@@ -46,8 +46,20 @@ class ItemState(Enum):
     REVIEW   = 4
     COMPLETE = 5
 
+class ExtractType(Enum):
+    ALL        = 1
+    INCOMPLETE = 2
+    HIGH_RISK  = 3
+    ALERT      = 4
+    ASSIGNMENT = 5
 
-class ItemCommon():
+class ItemParam():
+    def __init__(self, id_project: int, type_extract: ExtractType, rid_users: int):
+        self.id_project = id_project
+        self.type_extract = type_extract
+        self.rid_users = rid_users
+
+class ItemUpdateCommon():
     def __init__(self, rid: int, state: int, rid_users: int, title: str, detail: str, result: str):
         self.rid       = rid
         self.state     = state
@@ -63,7 +75,7 @@ def _getCurrentDatetime():
     return current_datetime
 
 
-def _updateItem(db: Session, target: ItemCommon):
+def _updateItem(db: Session, target: ItemUpdateCommon):
     try:
         current_datetime = _getCurrentDatetime()
 
@@ -101,11 +113,8 @@ def _deleteItem(db: Session, rid: int):
         raise e
 
 
-def getItems(db: Session, rid_project: int):
+def _getBaseQuery(db: Session, params: ItemParam):
     try:
-        UserAlias1 = aliased(User)
-        UserAlias2 = aliased(User)
-
         t0 = aliased(Item, name='t0')
 
         order_state = case(
@@ -124,26 +133,92 @@ def getItems(db: Session, rid_project: int):
             else_=0
         )
 
-        query_base = db.query(
-            t0.rid,
-            t0.rid_items,
-            t0.rid_users,
-            t0.rid_users_review,
-            t0.type,
-            t0.state,
-            t0.risk,
-            t0.risk_factors,
-            t0.priority,
-            t0.title,
-            t0.detail,
-            t0.result,
-            t0.datetime_entry,
-            t0.datetime_update,
-            (func.cast(order_state, Text) + ':' + func.cast(order_priority, Text) + ':' + func.cast(t0.rid, Text)).label('path')
-        )\
-        .filter(t0.rid == rid_project)\
-        .filter(t0.is_deleted == 0)
+        query_base = None
+        match params.type_extract:
+            case ExtractType.ALL.value:
+                query_base = db.query(
+                    t0.rid,
+                    t0.rid_items,
+                    t0.rid_users,
+                    t0.rid_users_review,
+                    t0.id_project,
+                    t0.type,
+                    t0.state,
+                    t0.risk,
+                    t0.risk_factors,
+                    t0.priority,
+                    t0.title,
+                    t0.detail,
+                    t0.result,
+                    t0.datetime_entry,
+                    t0.datetime_update,
+                    (func.cast(order_state, Text) + ':' + func.cast(order_priority, Text) + ':' + func.cast(t0.rid, Text)).label('path')
+                )\
+                .filter(t0.id_project == params.id_project)\
+                .filter(t0.type == ItemType.PROJECT.value)\
+                .filter(t0.is_deleted == 0)
 
+            case ExtractType.INCOMPLETE.value:
+                query_base = db.query(
+                    t0.rid,
+                    t0.rid_items,
+                    t0.rid_users,
+                    t0.rid_users_review,
+                    t0.id_project,
+                    t0.type,
+                    t0.state,
+                    t0.risk,
+                    t0.risk_factors,
+                    t0.priority,
+                    t0.title,
+                    t0.detail,
+                    t0.result,
+                    t0.datetime_entry,
+                    t0.datetime_update,
+                    (func.cast(order_state, Text) + ':' + func.cast(order_priority, Text) + ':' + func.cast(t0.rid, Text)).label('path')
+                )\
+                .filter(t0.id_project == params.id_project)\
+                .filter(t0.type == ItemType.PROJECT.value)\
+                .filter(t0.is_deleted == 0)\
+                .filter(t0.state != ItemState.COMPLETE.value)
+
+            case ExtractType.HIGH_RISK.value:
+                pass
+
+            case ExtractType.ALERT.value:
+                query_base = db.query(
+                    t0.rid,
+                    t0.rid_items,
+                    t0.rid_users,
+                    t0.rid_users_review,
+                    t0.id_project,
+                    t0.type,
+                    t0.state,
+                    t0.risk,
+                    t0.risk_factors,
+                    t0.priority,
+                    t0.title,
+                    t0.detail,
+                    t0.result,
+                    t0.datetime_entry,
+                    t0.datetime_update,
+                    (func.cast(order_state, Text) + ':' + func.cast(order_priority, Text) + ':' + func.cast(t0.rid, Text)).label('path')
+                )\
+                .filter(t0.rid == params.id_project)\
+                .filter(t0.is_deleted == 0)\
+                .filter(t0.state == ItemState.ALERT.value)
+                pass
+
+            case ExtractType.ASSIGNMENT.value:
+                pass
+
+        return query_base
+
+    except Exception as e:
+        raise e
+
+def _getRecursiveQuery(db: Session, query_base: any, params: ItemParam):
+    try:
         query_recursive = query_base.cte(name='targets', recursive=True)
 
         n = aliased(Item, name='n')
@@ -165,30 +240,106 @@ def getItems(db: Session, rid_project: int):
             else_=0
         )
 
-        query_recursive = query_recursive.union_all(
-            db.query(
-                n.rid,
-                n.rid_items,
-                n.rid_users,
-                n.rid_users_review,
-                n.type,
-                n.state,
-                n.risk,
-                n.risk_factors,
-                n.priority,
-                n.title,
-                n.detail,
-                n.result,
-                n.datetime_entry,
-                n.datetime_update,
-                (t.c.path + '-' + func.cast(order_state, Text) + ':' + func.cast(order_priority, Text) + ':' + func.cast(n.rid, Text)).label('path')
-            )\
-            .join(t, t.c.rid == n.rid_items)\
-            .filter(n.is_deleted == 0)\
-        )
+        match params.type_extract:
+            case ExtractType.ALL.value:
+                query_recursive = query_recursive.union_all(
+                    db.query(
+                        n.rid,
+                        n.rid_items,
+                        n.rid_users,
+                        n.rid_users_review,
+                        n.id_project,
+                        n.type,
+                        n.state,
+                        n.risk,
+                        n.risk_factors,
+                        n.priority,
+                        n.title,
+                        n.detail,
+                        n.result,
+                        n.datetime_entry,
+                        n.datetime_update,
+                        (t.c.path + '-' + func.cast(order_state, Text) + ':' + func.cast(order_priority, Text) + ':' + func.cast(n.rid, Text)).label('path')
+                    )\
+                    .join(t, t.c.rid == n.rid_items)\
+                    .filter(n.is_deleted == 0)
+                )
+
+            case ExtractType.INCOMPLETE.value:
+                query_recursive = query_recursive.union_all(
+                    db.query(
+                        n.rid,
+                        n.rid_items,
+                        n.rid_users,
+                        n.rid_users_review,
+                        n.id_project,
+                        n.type,
+                        n.state,
+                        n.risk,
+                        n.risk_factors,
+                        n.priority,
+                        n.title,
+                        n.detail,
+                        n.result,
+                        n.datetime_entry,
+                        n.datetime_update,
+                        (t.c.path + '-' + func.cast(order_state, Text) + ':' + func.cast(order_priority, Text) + ':' + func.cast(n.rid, Text)).label('path')
+                    )\
+                    .join(t, t.c.rid == n.rid_items)\
+                    .filter(n.is_deleted == 0)\
+                    .filter(n.state != ItemState.COMPLETE.value)
+                )
+                pass
+
+            case ExtractType.HIGH_RISK.value:
+                pass
+
+            case ExtractType.ALERT.value:
+                query_recursive = query_recursive.union_all(
+                    db.query(
+                        n.rid,
+                        n.rid_items,
+                        n.rid_users,
+                        n.rid_users_review,
+                        n.id_project,
+                        n.type,
+                        n.state,
+                        n.risk,
+                        n.risk_factors,
+                        n.priority,
+                        n.title,
+                        n.detail,
+                        n.result,
+                        n.datetime_entry,
+                        n.datetime_update,
+                        (t.c.path + '-' + func.cast(order_state, Text) + ':' + func.cast(order_priority, Text) + ':' + func.cast(n.rid, Text)).label('path')
+                    )\
+                    .join(t, t.c.rid == n.rid_items)\
+                    .filter(n.is_deleted == 0)\
+                    .filter(n.state != ItemState.ALERT.value)
+                )
+                pass
+
+            case ExtractType.ASSIGNMENT.value:
+                pass
+
+        return query_recursive
+
+    except Exception as e:
+        raise e
+
+
+def getItems(db: Session, params: ItemParam):
+    try:
+        UserAlias1 = aliased(User)
+        UserAlias2 = aliased(User)
+
+        query_base      = _getBaseQuery(db, params)
+        query_recursive = _getRecursiveQuery(db, query_base, params)
  
         query_final = db.query(
             query_recursive.c.rid,
+            query_recursive.c.id_project,
             query_recursive.c.type,
             query_recursive.c.state,
             query_recursive.c.risk,
@@ -236,6 +387,7 @@ def getProjects(db: Session):
 
         query = db.query(
             Item.rid,
+            Item.id_project,
             Item.state,
             Item.risk,
             Item.risk_factors,
@@ -264,16 +416,21 @@ def createProject(db: Session, target:schema_item.ProjectCreate):
     try:
         current_datetime = _getCurrentDatetime()
 
+        db.begin()
+        max_id_project = db.query(func.max(Item.id_project)).scalar()
+        if max_id_project is None:
+            max_id_project = 0
+
         item = Item(
             rid_users=target.rid_users,
             rid_users_review=None,
+            id_project=max_id_project + 1,
             type=ItemType.PROJECT.value,
             title=target.title,
             detail=target.detail,
             datetime_entry=current_datetime,
             datetime_update=current_datetime
         )
-        db.begin()
         db.add(item)
         db.flush()
 
@@ -294,7 +451,7 @@ def createProject(db: Session, target:schema_item.ProjectCreate):
 
 def updateProject(db: Session, target:schema_item.ProjectUpdate):
     try:
-        param_item = ItemCommon(
+        param_item = ItemUpdateCommon(
             rid=target.rid,
             state=target.state,
             rid_users=target.rid_users,
@@ -332,7 +489,9 @@ def createEvent(db: Session, target:schema_item.EventCreate):
     try:
         current_datetime = _getCurrentDatetime()
 
+        db.begin()
         item = Item(
+            id_project=target.id_project,
             rid_items=target.rid_items,
             rid_users=target.rid_users,
             rid_users_review=None,
@@ -342,7 +501,6 @@ def createEvent(db: Session, target:schema_item.EventCreate):
             datetime_entry=current_datetime,
             datetime_update=current_datetime
         )
-        db.begin()
         db.add(item)
         db.flush()
 
@@ -362,7 +520,7 @@ def createEvent(db: Session, target:schema_item.EventCreate):
 
 def updateEvent(db: Session, target:schema_item.EventUpdate):
     try:
-        param_item = ItemCommon(
+        param_item = ItemUpdateCommon(
             rid=target.rid,
             state=target.state,
             rid_users=target.rid_users,
@@ -400,6 +558,7 @@ def createFeature(db: Session, target:schema_item.FeatureCreate):
         current_datetime = _getCurrentDatetime()
 
         item = Item(
+            id_project=target.id_project,
             rid_items=target.rid_items,
             rid_users=target.rid_users,
             rid_users_review=None,
@@ -428,7 +587,7 @@ def createFeature(db: Session, target:schema_item.FeatureCreate):
 
 def updateFeature(db: Session, target:schema_item.FeatureUpdate):
     try:
-        param_item = ItemCommon(
+        param_item = ItemUpdateCommon(
             rid=target.rid,
             state=target.state,
             rid_users=target.rid_users,
@@ -461,6 +620,7 @@ def createStory(db: Session, target:schema_item.StoryCreate):
         current_datetime = _getCurrentDatetime()
 
         item = Item(
+            id_project=target.id_project,
             rid_items=target.rid_items,
             rid_users=target.rid_users,
             rid_users_review=None,
@@ -491,7 +651,7 @@ def createStory(db: Session, target:schema_item.StoryCreate):
 
 def updateStory(db: Session, target:schema_item.StoryUpdate):
     try:
-        param_item = ItemCommon(
+        param_item = ItemUpdateCommon(
             rid=target.rid,
             state=target.state,
             rid_users=target.rid_users,
@@ -531,6 +691,7 @@ def createTask(db: Session, target:schema_item.TaskCreate):
         current_datetime = _getCurrentDatetime()
 
         item = Item(
+            id_project=target.id_project,
             rid_items=target.rid_items,
             rid_users=target.rid_users,
             rid_users_review=None,
@@ -563,7 +724,7 @@ def createTask(db: Session, target:schema_item.TaskCreate):
 
 def updateTask(db: Session, target:schema_item.TaskUpdate):
     try:
-        param_item = ItemCommon(
+        param_item = ItemUpdateCommon(
             rid=target.rid,
             state=target.state,
             rid_users=target.rid_users,
@@ -622,6 +783,7 @@ def createBug(db: Session, target:schema_item.BugCreate):
         current_datetime = _getCurrentDatetime()
 
         item = Item(
+            id_project=target.id_project,
             rid_items=target.rid_items,
             rid_users=target.rid_users,
             rid_users_review=None,
@@ -651,7 +813,7 @@ def createBug(db: Session, target:schema_item.BugCreate):
 
 def updateBug(db: Session, target:schema_item.BugUpdate):
     try:
-        param_item = ItemCommon(
+        param_item = ItemUpdateCommon(
             rid=target.rid,
             state=target.state,
             rid_users=target.rid_users,

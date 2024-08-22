@@ -10,7 +10,7 @@ class Log(Base):
     __tablename__ = 'logs'
 
     rid                     = Column(Integer, primary_key=True)
-    rid_project             = Column(Integer, default=0)
+    id_project              = Column(Integer, default=0)
     task_workload_completed = Column(Integer, default=0)
     task_workload_total     = Column(Integer, default=0)
     task_number_completed   = Column(Integer, default=0)
