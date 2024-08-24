@@ -13,6 +13,7 @@ class Item(Base):
     rid              = Column(Integer, primary_key=True)
     rid_users        = Column(Integer, ForeignKey('users.rid'))
     rid_users_review = Column(Integer, ForeignKey('users.rid'), nullable=True)
+    path_sort        = Column(Integer, index=True, default=0)
     id_project       = Column(Integer, index=True, default=0)
     type             = Column(Integer, index=True, default=0)
     state            = Column(Integer, index=True, default=1)

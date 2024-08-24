@@ -75,22 +75,36 @@ def _getCurrentDatetime():
     return current_datetime
 
 
-def _createTreeSortPathRoot(id_project: int):
-    return id_project * 10000000000000
-
-
-def _createTree(db: Session, type: ItemType, rid_parent: int, rid: int):
+def _createTree(db: Session, rid_parent: int, rid: int):
     try:
-        trees = db.query(Tree.rid_ancestor, Tree.path_sort).filter(Tree.rid_descendant == rid_parent).all()
+        trees = db.query(Tree.rid_ancestor).filter(Tree.rid_descendant == rid_parent).all()
         if not trees:
             raise
 
         list_rid_ancestor = [r[0] for r in trees]
         list_rid_ancestor.append(rid)
 
+        for rid_ancestor in list_rid_ancestor:
+            tree = Tree(
+                rid_ancestor=rid_ancestor,
+                rid_descendant=rid
+            )
+            db.add(tree)
+
+    except Exception as e:
+        raise e
+
+
+def _createSortPathRoot(id_project: int):
+    return id_project * 10000000000000
+
+
+def _createSortPath(db: Session, type: ItemType, rid_parent: int):
+    try:
+        path_sort_parent      = db.query(Item.path_sort).filter(Item.rid == rid_parent).scalar()
         count_rid_descendants = db.query(Tree.rid_descendant).filter(Tree.rid_ancestor == rid_parent).count()
 
-        path_sort = trees[0][1]
+        path_sort = path_sort_parent
         match type:
             case ItemType.EVENT:
                 path_sort += (count_rid_descendants * 1000000000)
@@ -104,13 +118,7 @@ def _createTree(db: Session, type: ItemType, rid_parent: int, rid: int):
             case ItemType.TASK | ItemType.BUG:
                 path_sort += (type.value)
 
-        for rid_ancestor in list_rid_ancestor:
-            tree = Tree(
-                rid_ancestor=rid_ancestor,
-                rid_descendant=rid,
-                path_sort=path_sort
-            )
-            db.add(tree)
+        return path_sort
 
     except Exception as e:
         raise e
@@ -162,8 +170,7 @@ def _extructItem(db: Session, params: ItemParam):
                 cte_extruct = db.query(
                     Tree.rid_descendant.label('rid')
                 )\
-                .filter(Tree.rid_ancestor == params.id_project)\
-                .order_by(Tree.path_sort)
+                .filter(Tree.rid_ancestor == params.id_project)
 
             case ExtractType.INCOMPLETE.value:
                 subquery_target = (
@@ -174,8 +181,7 @@ def _extructItem(db: Session, params: ItemParam):
                 cte_extruct = db.query(
                     distinct(Tree.rid_descendant).label('rid')
                 )\
-                .where(Tree.rid_descendant.in_(subquery_target))\
-                .order_by(Tree.path_sort)
+                .where(Tree.rid_descendant.in_(subquery_target))
 
             case ExtractType.HIGH_RISK.value:
                 pass
@@ -188,9 +194,9 @@ def _extructItem(db: Session, params: ItemParam):
 
                 cte_extruct = db.query(
                     distinct(Tree.rid_ancestor).label('rid')
+
                 )\
-                .where(Tree.rid_descendant.in_(subquery_target))\
-                .order_by(Tree.path_sort)
+                .where(Tree.rid_descendant.in_(subquery_target))
 
             case ExtractType.ASSIGNMENT.value:
                 subquery_target = (
@@ -201,8 +207,7 @@ def _extructItem(db: Session, params: ItemParam):
                 cte_extruct = db.query(
                     distinct(Tree.rid_ancestor).label('rid')
                 )\
-                .where(Tree.rid_descendant.in_(subquery_target))\
-                .order_by(Tree.path_sort)
+                .where(Tree.rid_descendant.in_(subquery_target))
 
         return cte_extruct.cte(name='targets')
 
@@ -217,7 +222,7 @@ def getItems(db: Session, params: ItemParam):
 
         cte_extruct = _extructItem(db, params)
 
-        query_final = db.query(
+        query = db.query(
             Item.rid,
             Item.id_project,
             Item.type,
@@ -253,9 +258,10 @@ def getItems(db: Session, params: ItemParam):
         .outerjoin(Feature, Feature.rid_items == Item.rid)\
         .outerjoin(Story, Story.rid_items == Item.rid)\
         .outerjoin(Task, Task.rid_items == Item.rid)\
-        .outerjoin(Bug, Bug.rid_items == Item.rid)
+        .outerjoin(Bug, Bug.rid_items == Item.rid)\
+        .order_by(Item.path_sort)
 
-        result = query_final.all()
+        result = query.all()
         return result
 
     except Exception as e:
@@ -304,6 +310,7 @@ def createProject(db: Session, target: schema_item.ProjectCreate):
         max_id_project += 1
 
         item = Item(
+            path_sort=_createSortPathRoot(max_id_project),
             rid_users=target.rid_users,
             rid_users_review=None,
             id_project=max_id_project,
@@ -325,8 +332,7 @@ def createProject(db: Session, target: schema_item.ProjectCreate):
 
         tree = Tree(
             rid_ancestor=max_id_project,
-            rid_descendant=max_id_project,
-            path_sort=_createTreeSortPathRoot(max_id_project)
+            rid_descendant=max_id_project
         )
         db.add(tree)
 
@@ -379,7 +385,9 @@ def createEvent(db: Session, target:schema_item.EventCreate):
     try:
         current_datetime = _getCurrentDatetime()
 
+        db.begin()
         item = Item(
+            path_sort=_createSortPath(db, ItemType.EVENT, target.rid_items),
             id_project=target.id_project,
             rid_users=target.rid_users,
             rid_users_review=None,
@@ -390,7 +398,6 @@ def createEvent(db: Session, target:schema_item.EventCreate):
             datetime_update=current_datetime
         )
 
-        db.begin()
         db.add(item)
         db.flush()
 
@@ -400,7 +407,7 @@ def createEvent(db: Session, target:schema_item.EventCreate):
         )
         db.add(addition)
 
-        _createTree(db, ItemType.EVENT, target.rid_items, item.rid)
+        _createTree(db, target.rid_items, item.rid)
 
         db.commit()
         db.refresh(item)
@@ -450,7 +457,9 @@ def createFeature(db: Session, target:schema_item.FeatureCreate):
     try:
         current_datetime = _getCurrentDatetime()
 
+        db.begin()
         item = Item(
+            path_sort=_createSortPath(db, ItemType.FEATURE, target.rid_items),
             id_project=target.id_project,
             rid_users=target.rid_users,
             rid_users_review=None,
@@ -461,7 +470,6 @@ def createFeature(db: Session, target:schema_item.FeatureCreate):
             datetime_update=current_datetime
         )
 
-        db.begin()
         db.add(item)
         db.flush()
 
@@ -470,7 +478,7 @@ def createFeature(db: Session, target:schema_item.FeatureCreate):
         )
         db.add(addition)
 
-        _createTree(db, ItemType.FEATURE, target.rid_items, item.rid)
+        _createTree(db, target.rid_items, item.rid)
 
         db.commit()
         db.refresh(item)
@@ -515,7 +523,9 @@ def createStory(db: Session, target:schema_item.StoryCreate):
     try:
         current_datetime = _getCurrentDatetime()
 
+        db.begin()
         item = Item(
+            path_sort=_createSortPath(db, ItemType.STORY, target.rid_items),
             id_project=target.id_project,
             rid_users=target.rid_users,
             rid_users_review=None,
@@ -526,7 +536,6 @@ def createStory(db: Session, target:schema_item.StoryCreate):
             datetime_update=current_datetime
         )
 
-        db.begin()
         db.add(item)
         db.flush()
 
@@ -537,7 +546,7 @@ def createStory(db: Session, target:schema_item.StoryCreate):
         )
         db.add(addition)
 
-        _createTree(db, ItemType.STORY, target.rid_items, item.rid)
+        _createTree(db, target.rid_items, item.rid)
 
         db.commit()
         db.refresh(item)
@@ -589,7 +598,9 @@ def createTask(db: Session, target:schema_item.TaskCreate):
     try:
         current_datetime = _getCurrentDatetime()
 
+        db.begin()
         item = Item(
+            path_sort=_createSortPath(db, ItemType.TASK, target.rid_items),
             id_project=target.id_project,
             rid_users=target.rid_users,
             rid_users_review=None,
@@ -600,7 +611,6 @@ def createTask(db: Session, target:schema_item.TaskCreate):
             datetime_update=current_datetime
         )
 
-        db.begin()
         db.add(item)
         db.flush()
 
@@ -613,7 +623,7 @@ def createTask(db: Session, target:schema_item.TaskCreate):
         )
         db.add(addition)
 
-        _createTree(db, ItemType.TASK, target.rid_items, item.rid)
+        _createTree(db, target.rid_items, item.rid)
 
         db.commit()
         db.refresh(item)
@@ -684,7 +694,9 @@ def createBug(db: Session, target:schema_item.BugCreate):
     try:
         current_datetime = _getCurrentDatetime()
 
+        db.begin()
         item = Item(
+            path_sort=_createSortPath(db, ItemType.BUG, target.rid_items),
             id_project=target.id_project,
             rid_users=target.rid_users,
             rid_users_review=None,
@@ -695,7 +707,6 @@ def createBug(db: Session, target:schema_item.BugCreate):
             datetime_update=current_datetime
         )
 
-        db.begin()
         db.add(item)
         db.flush()
 
@@ -705,7 +716,7 @@ def createBug(db: Session, target:schema_item.BugCreate):
         )
         db.add(addition)
 
-        _createTree(db, ItemType.BUG, target.rid_items, item.rid)
+        _createTree(db, target.rid_items, item.rid)
 
         db.commit()
         db.refresh(item)
