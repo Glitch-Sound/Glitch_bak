@@ -1,9 +1,8 @@
-from sqlalchemy import Text, case, and_         # type: ignore
-from sqlalchemy.orm import Session, aliased     # type: ignore
-from sqlalchemy.sql import func                 # type: ignore
-from sqlalchemy.sql import select               # type: ignore
+from sqlalchemy import select, distinct, union_all, Text, case, and_, or_   # type: ignore
+from sqlalchemy.orm import Session, aliased                                 # type: ignore
+from sqlalchemy.sql import func                                             # type: ignore
 
-import pytz                                     # type: ignore
+import pytz                                                                 # type: ignore
 from datetime import datetime
 from enum import Enum
 
@@ -12,6 +11,7 @@ sys.path.append('~/app')
 
 from schema import item as schema_item
 from model.item import Item
+from model.tree import Tree
 from model.project import Project
 from model.event import Event
 from model.feature import Feature
@@ -75,6 +75,47 @@ def _getCurrentDatetime():
     return current_datetime
 
 
+def _createTreeSortPathRoot(id_project: int):
+    return id_project * 10000000000000
+
+
+def _createTree(db: Session, type: ItemType, rid_parent: int, rid: int):
+    try:
+        trees = db.query(Tree.rid_ancestor, Tree.path_sort).filter(Tree.rid_descendant == rid_parent).all()
+        if not trees:
+            raise
+
+        list_rid_ancestor = [r[0] for r in trees]
+        list_rid_ancestor.append(rid)
+
+        count_rid_descendants = db.query(Tree.rid_descendant).filter(Tree.rid_ancestor == rid_parent).count()
+
+        path_sort = trees[0][1]
+        match type:
+            case ItemType.EVENT:
+                path_sort += (count_rid_descendants * 1000000000)
+
+            case ItemType.FEATURE:
+                path_sort += (count_rid_descendants * 100000)
+
+            case ItemType.STORY:
+                path_sort += (count_rid_descendants * 10)
+
+            case ItemType.TASK | ItemType.BUG:
+                path_sort += (type.value)
+
+        for rid_ancestor in list_rid_ancestor:
+            tree = Tree(
+                rid_ancestor=rid_ancestor,
+                rid_descendant=rid,
+                path_sort=path_sort
+            )
+            db.add(tree)
+
+    except Exception as e:
+        raise e
+
+
 def _updateItem(db: Session, target: ItemUpdateCommon):
     try:
         current_datetime = _getCurrentDatetime()
@@ -113,217 +154,57 @@ def _deleteItem(db: Session, rid: int):
         raise e
 
 
-def _getBaseQuery(db: Session, params: ItemParam):
+def _extructItem(db: Session, params: ItemParam):
     try:
-        t0 = aliased(Item, name='t0')
-
-        order_state = case(
-            (t0.state == 3, 1),
-            (t0.state == 4, 2),
-            (t0.state == 2, 3),
-            (t0.state == 1, 4),
-            (t0.state == 5, 5)
-        )
-
-        order_priority = case(
-            (and_(t0.type == 5, t0.priority == 1), 1),
-            (and_(t0.type == 5, t0.priority == 0), 2),
-            (and_(t0.type == 6, t0.priority == 1), 3),
-            (and_(t0.type == 6, t0.priority == 0), 4),
-            else_=0
-        )
-
-        query_base = None
+        cte_extruct = None
         match params.type_extract:
             case ExtractType.ALL.value:
-                query_base = db.query(
-                    t0.rid,
-                    t0.rid_items,
-                    t0.rid_users,
-                    t0.rid_users_review,
-                    t0.id_project,
-                    t0.type,
-                    t0.state,
-                    t0.risk,
-                    t0.risk_factors,
-                    t0.priority,
-                    t0.title,
-                    t0.detail,
-                    t0.result,
-                    t0.datetime_entry,
-                    t0.datetime_update,
-                    (func.cast(order_state, Text) + ':' + func.cast(order_priority, Text) + ':' + func.cast(t0.rid, Text)).label('path')
+                cte_extruct = db.query(
+                    Tree.rid_descendant.label('rid')
                 )\
-                .filter(t0.id_project == params.id_project)\
-                .filter(t0.type == ItemType.PROJECT.value)\
-                .filter(t0.is_deleted == 0)
+                .filter(Tree.rid_ancestor == params.id_project)\
+                .order_by(Tree.path_sort)
 
             case ExtractType.INCOMPLETE.value:
-                query_base = db.query(
-                    t0.rid,
-                    t0.rid_items,
-                    t0.rid_users,
-                    t0.rid_users_review,
-                    t0.id_project,
-                    t0.type,
-                    t0.state,
-                    t0.risk,
-                    t0.risk_factors,
-                    t0.priority,
-                    t0.title,
-                    t0.detail,
-                    t0.result,
-                    t0.datetime_entry,
-                    t0.datetime_update,
-                    (func.cast(order_state, Text) + ':' + func.cast(order_priority, Text) + ':' + func.cast(t0.rid, Text)).label('path')
+                subquery_target = (
+                    select(Item.rid)
+                    .where(Item.state != ItemState.COMPLETE.value)
+                ).subquery()
+
+                cte_extruct = db.query(
+                    distinct(Tree.rid_descendant).label('rid')
                 )\
-                .filter(t0.id_project == params.id_project)\
-                .filter(t0.type == ItemType.PROJECT.value)\
-                .filter(t0.is_deleted == 0)\
-                .filter(t0.state != ItemState.COMPLETE.value)
+                .where(Tree.rid_descendant.in_(subquery_target))\
+                .order_by(Tree.path_sort)
 
             case ExtractType.HIGH_RISK.value:
                 pass
 
             case ExtractType.ALERT.value:
-                query_base = db.query(
-                    t0.rid,
-                    t0.rid_items,
-                    t0.rid_users,
-                    t0.rid_users_review,
-                    t0.id_project,
-                    t0.type,
-                    t0.state,
-                    t0.risk,
-                    t0.risk_factors,
-                    t0.priority,
-                    t0.title,
-                    t0.detail,
-                    t0.result,
-                    t0.datetime_entry,
-                    t0.datetime_update,
-                    (func.cast(order_state, Text) + ':' + func.cast(order_priority, Text) + ':' + func.cast(t0.rid, Text)).label('path')
+                subquery_target = (
+                    select(Item.rid)
+                    .where(Item.state == ItemState.ALERT.value)
+                ).subquery()
+
+                cte_extruct = db.query(
+                    distinct(Tree.rid_ancestor).label('rid')
                 )\
-                .filter(t0.rid == params.id_project)\
-                .filter(t0.is_deleted == 0)\
-                .filter(t0.state == ItemState.ALERT.value)
-                pass
+                .where(Tree.rid_descendant.in_(subquery_target))\
+                .order_by(Tree.path_sort)
 
             case ExtractType.ASSIGNMENT.value:
-                pass
+                subquery_target = (
+                    select(Item.rid)
+                    .where(Item.rid_users == params.rid_users)
+                ).subquery()
 
-        return query_base
+                cte_extruct = db.query(
+                    distinct(Tree.rid_ancestor).label('rid')
+                )\
+                .where(Tree.rid_descendant.in_(subquery_target))\
+                .order_by(Tree.path_sort)
 
-    except Exception as e:
-        raise e
-
-def _getRecursiveQuery(db: Session, query_base: any, params: ItemParam):
-    try:
-        query_recursive = query_base.cte(name='targets', recursive=True)
-
-        n = aliased(Item, name='n')
-        t = aliased(query_recursive, name='t')
-
-        order_state = case(
-            (n.state == 3, 1),
-            (n.state == 4, 2),
-            (n.state == 2, 3),
-            (n.state == 1, 4),
-            (n.state == 5, 5)
-        )
-
-        order_priority = case(
-            (and_(n.type == 5, n.priority == 1), 1),
-            (and_(n.type == 5, n.priority == 0), 2),
-            (and_(n.type == 6, n.priority == 1), 3),
-            (and_(n.type == 6, n.priority == 0), 4),
-            else_=0
-        )
-
-        match params.type_extract:
-            case ExtractType.ALL.value:
-                query_recursive = query_recursive.union_all(
-                    db.query(
-                        n.rid,
-                        n.rid_items,
-                        n.rid_users,
-                        n.rid_users_review,
-                        n.id_project,
-                        n.type,
-                        n.state,
-                        n.risk,
-                        n.risk_factors,
-                        n.priority,
-                        n.title,
-                        n.detail,
-                        n.result,
-                        n.datetime_entry,
-                        n.datetime_update,
-                        (t.c.path + '-' + func.cast(order_state, Text) + ':' + func.cast(order_priority, Text) + ':' + func.cast(n.rid, Text)).label('path')
-                    )\
-                    .join(t, t.c.rid == n.rid_items)\
-                    .filter(n.is_deleted == 0)
-                )
-
-            case ExtractType.INCOMPLETE.value:
-                query_recursive = query_recursive.union_all(
-                    db.query(
-                        n.rid,
-                        n.rid_items,
-                        n.rid_users,
-                        n.rid_users_review,
-                        n.id_project,
-                        n.type,
-                        n.state,
-                        n.risk,
-                        n.risk_factors,
-                        n.priority,
-                        n.title,
-                        n.detail,
-                        n.result,
-                        n.datetime_entry,
-                        n.datetime_update,
-                        (t.c.path + '-' + func.cast(order_state, Text) + ':' + func.cast(order_priority, Text) + ':' + func.cast(n.rid, Text)).label('path')
-                    )\
-                    .join(t, t.c.rid == n.rid_items)\
-                    .filter(n.is_deleted == 0)\
-                    .filter(n.state != ItemState.COMPLETE.value)
-                )
-                pass
-
-            case ExtractType.HIGH_RISK.value:
-                pass
-
-            case ExtractType.ALERT.value:
-                query_recursive = query_recursive.union_all(
-                    db.query(
-                        n.rid,
-                        n.rid_items,
-                        n.rid_users,
-                        n.rid_users_review,
-                        n.id_project,
-                        n.type,
-                        n.state,
-                        n.risk,
-                        n.risk_factors,
-                        n.priority,
-                        n.title,
-                        n.detail,
-                        n.result,
-                        n.datetime_entry,
-                        n.datetime_update,
-                        (t.c.path + '-' + func.cast(order_state, Text) + ':' + func.cast(order_priority, Text) + ':' + func.cast(n.rid, Text)).label('path')
-                    )\
-                    .join(t, t.c.rid == n.rid_items)\
-                    .filter(n.is_deleted == 0)\
-                    .filter(n.state != ItemState.ALERT.value)
-                )
-                pass
-
-            case ExtractType.ASSIGNMENT.value:
-                pass
-
-        return query_recursive
+        return cte_extruct.cte(name='targets')
 
     except Exception as e:
         raise e
@@ -334,22 +215,21 @@ def getItems(db: Session, params: ItemParam):
         UserAlias1 = aliased(User)
         UserAlias2 = aliased(User)
 
-        query_base      = _getBaseQuery(db, params)
-        query_recursive = _getRecursiveQuery(db, query_base, params)
- 
+        cte_extruct = _extructItem(db, params)
+
         query_final = db.query(
-            query_recursive.c.rid,
-            query_recursive.c.id_project,
-            query_recursive.c.type,
-            query_recursive.c.state,
-            query_recursive.c.risk,
-            query_recursive.c.risk_factors,
-            query_recursive.c.priority,
-            query_recursive.c.title,
-            query_recursive.c.detail,
-            query_recursive.c.result,
-            query_recursive.c.datetime_entry,
-            query_recursive.c.datetime_update,
+            Item.rid,
+            Item.id_project,
+            Item.type,
+            Item.state,
+            Item.risk,
+            Item.risk_factors,
+            Item.priority,
+            Item.title,
+            Item.detail,
+            Item.result,
+            Item.datetime_entry,
+            Item.datetime_update,
             UserAlias1.rid.label('rid_users'),
             UserAlias1.name.label('name'),
             UserAlias2.rid.label('rid_users_review'),
@@ -364,15 +244,16 @@ def getItems(db: Session, params: ItemParam):
             Task.number_completed.label('task_number_completed'),
             Task.number_total.label('task_number_total'),
             Bug.workload.label('bug_workload'))\
-        .outerjoin(UserAlias1,  UserAlias1.rid == query_recursive.c.rid_users)\
-        .outerjoin(UserAlias2,  UserAlias2.rid == query_recursive.c.rid_users_review)\
-        .outerjoin(Project, Project.rid_items == query_recursive.c.rid)\
-        .outerjoin(Event, Event.rid_items == query_recursive.c.rid)\
-        .outerjoin(Feature, Feature.rid_items == query_recursive.c.rid)\
-        .outerjoin(Story, Story.rid_items == query_recursive.c.rid)\
-        .outerjoin(Task, Task.rid_items == query_recursive.c.rid)\
-        .outerjoin(Bug, Bug.rid_items == query_recursive.c.rid)\
-        .order_by(query_recursive.c.path)
+        .select_from(cte_extruct)\
+        .join(Item, Item.rid == cte_extruct.c.rid)\
+        .outerjoin(UserAlias1,  UserAlias1.rid == Item.rid_users)\
+        .outerjoin(UserAlias2,  UserAlias2.rid == Item.rid_users_review)\
+        .outerjoin(Project, Project.rid_items == Item.rid)\
+        .outerjoin(Event, Event.rid_items == Item.rid)\
+        .outerjoin(Feature, Feature.rid_items == Item.rid)\
+        .outerjoin(Story, Story.rid_items == Item.rid)\
+        .outerjoin(Task, Task.rid_items == Item.rid)\
+        .outerjoin(Bug, Bug.rid_items == Item.rid)
 
         result = query_final.all()
         return result
@@ -412,7 +293,7 @@ def getProjects(db: Session):
         raise e
 
 
-def createProject(db: Session, target:schema_item.ProjectCreate):
+def createProject(db: Session, target: schema_item.ProjectCreate):
     try:
         current_datetime = _getCurrentDatetime()
 
@@ -420,11 +301,12 @@ def createProject(db: Session, target:schema_item.ProjectCreate):
         max_id_project = db.query(func.max(Item.id_project)).scalar()
         if max_id_project is None:
             max_id_project = 0
+        max_id_project += 1
 
         item = Item(
             rid_users=target.rid_users,
             rid_users_review=None,
-            id_project=max_id_project + 1,
+            id_project=max_id_project,
             type=ItemType.PROJECT.value,
             title=target.title,
             detail=target.detail,
@@ -440,6 +322,14 @@ def createProject(db: Session, target:schema_item.ProjectCreate):
             datetime_end=target.datetime_end
         )
         db.add(addition)
+
+        tree = Tree(
+            rid_ancestor=max_id_project,
+            rid_descendant=max_id_project,
+            path_sort=_createTreeSortPathRoot(max_id_project)
+        )
+        db.add(tree)
+
         db.commit()
         db.refresh(item)
         return item
@@ -489,10 +379,8 @@ def createEvent(db: Session, target:schema_item.EventCreate):
     try:
         current_datetime = _getCurrentDatetime()
 
-        db.begin()
         item = Item(
             id_project=target.id_project,
-            rid_items=target.rid_items,
             rid_users=target.rid_users,
             rid_users_review=None,
             type=ItemType.EVENT.value,
@@ -501,6 +389,8 @@ def createEvent(db: Session, target:schema_item.EventCreate):
             datetime_entry=current_datetime,
             datetime_update=current_datetime
         )
+
+        db.begin()
         db.add(item)
         db.flush()
 
@@ -509,6 +399,9 @@ def createEvent(db: Session, target:schema_item.EventCreate):
             datetime_end=target.datetime_end
         )
         db.add(addition)
+
+        _createTree(db, ItemType.EVENT, target.rid_items, item.rid)
+
         db.commit()
         db.refresh(item)
         return item
@@ -559,7 +452,6 @@ def createFeature(db: Session, target:schema_item.FeatureCreate):
 
         item = Item(
             id_project=target.id_project,
-            rid_items=target.rid_items,
             rid_users=target.rid_users,
             rid_users_review=None,
             type=ItemType.FEATURE.value,
@@ -568,6 +460,7 @@ def createFeature(db: Session, target:schema_item.FeatureCreate):
             datetime_entry=current_datetime,
             datetime_update=current_datetime
         )
+
         db.begin()
         db.add(item)
         db.flush()
@@ -576,6 +469,9 @@ def createFeature(db: Session, target:schema_item.FeatureCreate):
             rid_items=item.rid
         )
         db.add(addition)
+
+        _createTree(db, ItemType.FEATURE, target.rid_items, item.rid)
+
         db.commit()
         db.refresh(item)
         return item
@@ -621,7 +517,6 @@ def createStory(db: Session, target:schema_item.StoryCreate):
 
         item = Item(
             id_project=target.id_project,
-            rid_items=target.rid_items,
             rid_users=target.rid_users,
             rid_users_review=None,
             type=ItemType.STORY.value,
@@ -630,6 +525,7 @@ def createStory(db: Session, target:schema_item.StoryCreate):
             datetime_entry=current_datetime,
             datetime_update=current_datetime
         )
+
         db.begin()
         db.add(item)
         db.flush()
@@ -640,6 +536,9 @@ def createStory(db: Session, target:schema_item.StoryCreate):
             datetime_end=target.datetime_end
         )
         db.add(addition)
+
+        _createTree(db, ItemType.STORY, target.rid_items, item.rid)
+
         db.commit()
         db.refresh(item)
         return item
@@ -692,7 +591,6 @@ def createTask(db: Session, target:schema_item.TaskCreate):
 
         item = Item(
             id_project=target.id_project,
-            rid_items=target.rid_items,
             rid_users=target.rid_users,
             rid_users_review=None,
             type=ItemType.TASK.value,
@@ -701,6 +599,7 @@ def createTask(db: Session, target:schema_item.TaskCreate):
             datetime_entry=current_datetime,
             datetime_update=current_datetime
         )
+
         db.begin()
         db.add(item)
         db.flush()
@@ -713,6 +612,9 @@ def createTask(db: Session, target:schema_item.TaskCreate):
             number_total=target.number_total
         )
         db.add(addition)
+
+        _createTree(db, ItemType.TASK, target.rid_items, item.rid)
+
         db.commit()
         db.refresh(item)
         return item
@@ -784,7 +686,6 @@ def createBug(db: Session, target:schema_item.BugCreate):
 
         item = Item(
             id_project=target.id_project,
-            rid_items=target.rid_items,
             rid_users=target.rid_users,
             rid_users_review=None,
             type=ItemType.BUG.value,
@@ -793,6 +694,7 @@ def createBug(db: Session, target:schema_item.BugCreate):
             datetime_entry=current_datetime,
             datetime_update=current_datetime
         )
+
         db.begin()
         db.add(item)
         db.flush()
@@ -802,6 +704,9 @@ def createBug(db: Session, target:schema_item.BugCreate):
             workload=target.workload
         )
         db.add(addition)
+
+        _createTree(db, ItemType.BUG, target.rid_items, item.rid)
+
         db.commit()
         db.refresh(item)
         return item

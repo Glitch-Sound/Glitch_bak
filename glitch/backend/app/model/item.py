@@ -11,7 +11,6 @@ class Item(Base):
     __tablename__ = 'items'
 
     rid              = Column(Integer, primary_key=True)
-    rid_items        = Column(Integer, ForeignKey('items.rid'))
     rid_users        = Column(Integer, ForeignKey('users.rid'))
     rid_users_review = Column(Integer, ForeignKey('users.rid'), nullable=True)
     id_project       = Column(Integer, index=True, default=0)
@@ -27,7 +26,9 @@ class Item(Base):
     datetime_update  = Column(String, default='')
     is_deleted       = Column(Integer, index=True, default=0)
 
-    parent      = relationship("Item", remote_side=[rid], backref='children')
+    ancestors = relationship('Tree', foreign_keys='Tree.rid_descendant', back_populates='descendant', cascade="all, delete-orphan")
+    descendants = relationship('Tree', foreign_keys='Tree.rid_ancestor', back_populates='ancestor', cascade="all, delete-orphan")
+
     project     = relationship('Project', back_populates='items')
     event       = relationship('Event', back_populates='items')
     feature     = relationship('Feature', back_populates='items')
