@@ -85,7 +85,7 @@ const setBugPriorityLow = async () => {
         v-if="props.item.type == ItemType.TASK"
         icon="mdi-label"
         v-bind="panelMenuProps"
-        :color="props.item.priority ? '#e94560' : ''"
+        :color="props.item.priority ? '#a11530' : ''"
       />
 
       <v-icon
@@ -93,7 +93,7 @@ const setBugPriorityLow = async () => {
         v-if="props.item.type == ItemType.BUG"
         icon="mdi-spider"
         v-bind="panelMenuProps"
-        :color="props.item.priority ? '#e94560' : ''"
+        :color="props.item.priority ? '#a11530' : ''"
       />
     </template>
 
