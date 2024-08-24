@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { ItemType, type EventCreate } from '@/types/Item'
+import { ItemType, ExtractType, type EventCreate } from '@/types/Item'
 import useItemStore from '@/stores/ItemStore'
 import ItemService from '@/services/ItemService'
 import CreateEventDialog from '@/components/dialog/CreateEventDialog.vue'
@@ -29,6 +29,11 @@ const setEnabledType = (type: ItemType) => {
   store_item.setEnabledType(type)
 }
 
+const setExtractType = (type: ExtractType) => {
+  store_item.setExtractType(type)
+  store_item.fetchItems()
+}
+
 const handleSubmit = async (data: EventCreate) => {
   try {
     const service_item = new ItemService()
@@ -49,11 +54,22 @@ const handleSubmit = async (data: EventCreate) => {
           Event
         </v-btn>
       </v-list-item>
-      <v-list-item><v-icon icon="mdi-moon-full" />All</v-list-item>
-      <v-list-item><v-icon icon="mdi-moon-waning-crescent" />Incomplete</v-list-item>
-      <v-list-item><v-icon icon="mdi-alert" />High Risk</v-list-item>
-      <v-list-item><v-icon icon="mdi-alert-box" />Alert</v-list-item>
-      <v-list-item><v-icon icon="mdi-account" />Assignment</v-list-item>
+
+      <v-list-item @click="setExtractType(ExtractType.ALL)">
+        <v-icon icon="mdi-moon-full" />All
+      </v-list-item>
+      <v-list-item @click="setExtractType(ExtractType.INCOMPLETE)">
+        <v-icon icon="mdi-moon-waning-crescent" />Incomplete
+      </v-list-item>
+      <v-list-item disabled @click="setExtractType(ExtractType.HIGH_RISK)">
+        <v-icon icon="mdi-alert" />High Risk
+      </v-list-item>
+      <v-list-item @click="setExtractType(ExtractType.ALERT)">
+        <v-icon icon="mdi-alert-box" />Alert
+      </v-list-item>
+      <v-list-item @click="setExtractType(ExtractType.ASSIGNMENT)">
+        <v-icon icon="mdi-account" />Assignment
+      </v-list-item>
     </v-sheet>
 
     <v-sheet color="#1d1d1d" class="rounded-lg mt-1 ml-1 py-3">

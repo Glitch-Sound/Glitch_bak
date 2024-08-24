@@ -8,7 +8,7 @@ import useProjectStore from '@/stores/ProjectStore'
 const useItemStore = defineStore('item', {
   state: () => ({
     items: [] as Array<Item>,
-    type_Extract: ExtractType.ALL as ExtractType,
+    type_Extract: ExtractType.INCOMPLETE as ExtractType,
     type_enabled: ItemType.BUG as ItemType
   }),
   actions: {
