@@ -68,6 +68,6 @@ const props = defineProps<{
 <style scoped>
 .v-chip {
   margin: 0 10px;
-  padding: 5px 15px;
+  padding: 2px 10px;
 }
 </style>

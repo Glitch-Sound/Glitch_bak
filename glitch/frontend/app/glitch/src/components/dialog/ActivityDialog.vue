@@ -17,15 +17,24 @@ watch(
 
 <template>
   <v-dialog v-model="dialog" persistent class="panel-common">
-    <v-card
-      max-width="400"
-      prepend-icon="mdi-update"
-      text="Your application will relaunch automatically after the update is complete."
-      title="Update in progress"
-    >
-      <template v-slot:actions>
-        <v-btn class="ms-auto" text="Ok" @click="dialog = false"></v-btn>
-      </template>
+    <v-card>
+      <v-card-title>
+        <span class="text-h5">Activity</span>
+      </v-card-title>
+
+      <v-card-text>
+        <div>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</div>
+
+        <v-form>
+          <v-text-field />
+        </v-form>
+      </v-card-text>
+
+      <v-card-actions>
+        <v-spacer />
+        <v-btn @click="dialog = false">Cancel</v-btn>
+        <v-btn>Submit</v-btn>
+      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
