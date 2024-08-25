@@ -13,6 +13,7 @@ from schema import item as schema_item
 from model.item import Item
 from model.tree import Tree
 from model.summary_item import SummaryItem
+from model.summary_user import SummaryUser
 
 from model.project import Project
 from model.event import Event
@@ -108,7 +109,7 @@ def _createTree(db: Session, type_create: ItemType, rid_parent: int, rid: int):
         raise e
 
 
-def _getSummaryItemCount(list_sum: any, list_count: any):
+def _getSummaryCount(list_sum: any, list_count: any):
     result_sum = {
         'task_workload'         : 0,
         'task_number_completed' : 0,
@@ -223,7 +224,7 @@ def _createSummaryItem(db: Session, rid_target: int):
             .group_by(Item.type, Item.state)\
             .all()
 
-            result_sum, result_count = _getSummaryItemCount(list_sum, list_count)
+            result_sum, result_count = _getSummaryCount(list_sum, list_count)
 
             current_date = _getCurrentDate()
             summary_item = db.query(SummaryItem).filter(
@@ -277,6 +278,97 @@ def _createSummaryItem(db: Session, rid_target: int):
 
     except Exception as e:
         raise e
+
+
+def _createSummaryUser(db: Session, id_project: int, rid_users: int):
+    try:
+        list_sum = db.query(
+            func.sum(Task.workload).label('task_workload'),
+            func.sum(Task.number_completed).label('task_number_completed'),
+            func.sum(Task.number_total).label('task_number_total'),
+            func.sum(Bug.workload).label('bug_workload')
+        )\
+        .select_from(Item)\
+        .outerjoin(Task, Item.rid == Task.rid_items)\
+        .outerjoin(Bug,  Item.rid == Bug.rid_items)\
+        .filter(Item.id_project == id_project)\
+        .filter(Item.rid_users  == rid_users)\
+        .filter(Item.type.in_([ItemType.TASK.value, ItemType.BUG.value]))\
+        .all()
+
+        list_count = db.query(
+            Item.type,
+            Item.state,
+            func.count(Item.rid).label('count')
+        )\
+        .select_from(Item)\
+        .filter(Item.id_project == id_project)\
+        .filter(Item.rid_users  == rid_users)\
+        .filter(Item.type.in_([ItemType.TASK.value, ItemType.BUG.value]))\
+        .group_by(Item.type, Item.state)\
+        .all()
+
+        result_sum, result_count = _getSummaryCount(list_sum, list_count)
+
+        current_date = _getCurrentDate()
+        summary_user = db.query(SummaryUser).filter(
+            SummaryUser.rid_users  == rid_users,
+            SummaryUser.id_project == id_project,
+            SummaryUser.date_entry == current_date
+        ).all()
+
+        if not summary_user:
+            summary = SummaryUser(
+                rid_users=rid_users,
+                id_project=id_project,
+                task_count_idle=result_count['task_count_idle'],
+                task_count_run=result_count['task_count_run'],
+                task_count_alert=result_count['task_count_alert'],
+                task_count_review=result_count['task_count_review'],
+                task_count_complete=result_count['task_count_complete'],
+                task_count_total=result_count['task_count_total'],
+                task_workload_total=result_sum['task_workload'],
+                task_number_completed=result_sum['task_number_completed'],
+                task_number_total=result_sum['task_number_total'],
+                bug_count_idle=result_count['bug_count_idle'],
+                bug_count_run=result_count['bug_count_run'],
+                bug_count_alert=result_count['bug_count_alert'],
+                bug_count_review=result_count['bug_count_review'],
+                bug_count_complete=result_count['bug_count_complete'],
+                bug_count_total=result_count['bug_count_total'],
+                bug_workload_total=result_sum['bug_workload'],
+                date_entry=current_date
+            )
+            db.add(summary)
+
+        else:
+            summary = db.query(SummaryUser).filter(
+                SummaryUser.rid_users  == rid_users,
+                SummaryUser.id_project == id_project,
+                SummaryUser.date_entry == current_date
+            )
+            summary.update({
+                SummaryUser.task_count_idle: result_count['task_count_idle'],
+                SummaryUser.task_count_run: result_count['task_count_run'],
+                SummaryUser.task_count_alert: result_count['task_count_alert'],
+                SummaryUser.task_count_review: result_count['task_count_review'],
+                SummaryUser.task_count_complete: result_count['task_count_complete'],
+                SummaryUser.task_count_total: result_count['task_count_total'],
+                SummaryUser.task_workload_total: result_sum['task_workload'],
+                SummaryUser.task_number_completed: result_sum['task_number_completed'],
+                SummaryUser.task_number_total: result_sum['task_number_total'],
+                SummaryUser.bug_count_idle: result_count['bug_count_idle'],
+                SummaryUser.bug_count_run: result_count['bug_count_run'],
+                SummaryUser.bug_count_alert: result_count['bug_count_alert'],
+                SummaryUser.bug_count_review: result_count['bug_count_review'],
+                SummaryUser.bug_count_complete: result_count['bug_count_complete'],
+                SummaryUser.bug_count_total: result_count['bug_count_total'],
+                SummaryUser.bug_workload_total: result_sum['bug_workload']
+            })
+
+    except Exception as e:
+        raise e
+
 
 
 def _createSortPathRoot(id_project: int):
@@ -815,6 +907,7 @@ def createTask(db: Session, target:schema_item.TaskCreate):
         db.flush()
 
         _createSummaryItem(db, item.rid)
+        _createSummaryUser(db, target.id_project, target.rid_users)
         db.commit()
 
         db.refresh(item)
@@ -847,8 +940,10 @@ def updateTask(db: Session, target:schema_item.TaskUpdate):
             Task.number_total: target.number_total
         })
 
+        id_project = db.query(Item.id_project).filter(Item.rid == target.rid)
 
         _createSummaryItem(db, item.rid)
+        _createSummaryUser(db, id_project, target.rid_users)
         db.commit()
 
         db.refresh(item)
@@ -915,6 +1010,7 @@ def createBug(db: Session, target:schema_item.BugCreate):
         db.flush()
 
         _createSummaryItem(db, item.rid)
+        _createSummaryUser(db, target.id_project, target.rid_users)
         db.commit()
 
         db.refresh(item)
@@ -944,7 +1040,10 @@ def updateBug(db: Session, target:schema_item.BugUpdate):
             Bug.workload: target.workload
         })
 
+        id_project = db.query(Item.id_project).filter(Item.rid == target.rid)
+
         _createSummaryItem(db, item.rid)
+        _createSummaryUser(db, id_project, target.rid_users)
         db.commit()
 
         db.refresh(item)
