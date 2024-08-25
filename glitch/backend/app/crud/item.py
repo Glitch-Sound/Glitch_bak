@@ -71,6 +71,12 @@ class ItemUpdateCommon():
         self.result    = result
 
 
+def _getCurrentDate():
+    current_utc_time = datetime.now(pytz.timezone('Asia/Tokyo'))
+    current_date = current_utc_time.strftime('%Y-%m-%d')
+    return current_date
+
+
 def _getCurrentDatetime():
     current_utc_time = datetime.now(pytz.timezone('Asia/Tokyo'))
     current_datetime = current_utc_time.strftime('%Y-%m-%d %H:%M:%S')
@@ -219,8 +225,13 @@ def _createSummaryItem(db: Session, rid_target: int):
 
             result_sum, result_count = _getSummaryItemCount(list_sum, list_count)
 
-            summary = db.query(SummaryItem).filter(SummaryItem.rid_items == tree.rid_ancestor).all()
-            if not summary:
+            current_date = _getCurrentDate()
+            summary_item = db.query(SummaryItem).filter(
+                SummaryItem.rid_items  == tree.rid_ancestor,
+                SummaryItem.date_entry == current_date
+            ).all()
+
+            if not summary_item:
                 summary = SummaryItem(
                     rid_items=tree.rid_ancestor,
                     task_count_idle=result_count['task_count_idle'],
@@ -238,7 +249,8 @@ def _createSummaryItem(db: Session, rid_target: int):
                     bug_count_review=result_count['bug_count_review'],
                     bug_count_complete=result_count['bug_count_complete'],
                     bug_count_total=result_count['bug_count_total'],
-                    bug_workload_total=result_sum['bug_workload']
+                    bug_workload_total=result_sum['bug_workload'],
+                    date_entry=current_date
                 )
                 db.add(summary)
 
