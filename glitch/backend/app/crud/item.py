@@ -1,8 +1,8 @@
-from sqlalchemy import select, distinct, union_all, Text, case, and_, or_   # type: ignore
-from sqlalchemy.orm import Session, aliased                                 # type: ignore
-from sqlalchemy.sql import func                                             # type: ignore
+from sqlalchemy import select, distinct, desc   # type: ignore
+from sqlalchemy.orm import Session, aliased     # type: ignore
+from sqlalchemy.sql import func                 # type: ignore
 
-import pytz                                                                 # type: ignore
+import pytz                                     # type: ignore
 from datetime import datetime
 from enum import Enum
 
@@ -12,6 +12,8 @@ sys.path.append('~/app')
 from schema import item as schema_item
 from model.item import Item
 from model.tree import Tree
+from model.summary_item import SummaryItem
+
 from model.project import Project
 from model.event import Event
 from model.feature import Feature
@@ -75,21 +77,191 @@ def _getCurrentDatetime():
     return current_datetime
 
 
-def _createTree(db: Session, rid_parent: int, rid: int):
+def _createTree(db: Session, type_create: ItemType, rid_parent: int, rid: int):
     try:
-        trees = db.query(Tree.rid_ancestor).filter(Tree.rid_descendant == rid_parent).all()
+        trees = db.query(Tree.rid_ancestor).filter(Tree.rid_descendant == rid_parent).order_by(Tree.rid_ancestor).all()
         if not trees:
             raise
 
         list_rid_ancestor = [r[0] for r in trees]
         list_rid_ancestor.append(rid)
 
-        for rid_ancestor in list_rid_ancestor:
+        for index, rid_ancestor in enumerate(list_rid_ancestor):
+            type = index + 1
+            if rid_ancestor == rid:
+                type = type_create.value
+
             tree = Tree(
                 rid_ancestor=rid_ancestor,
-                rid_descendant=rid
+                rid_descendant=rid,
+                type=type
             )
             db.add(tree)
+
+    except Exception as e:
+        raise e
+
+
+def _getSummaryItemCount(list_sum: any, list_count: any):
+    result_sum = {
+        'task_workload'         : 0,
+        'task_number_completed' : 0,
+        'task_number_total'     : 0,
+        'bug_workload'          : 0
+    }
+
+    if list_sum[0].task_workload:
+        result_sum['task_workload'] = list_sum[0].task_workload
+
+    if list_sum[0].task_number_completed:
+        result_sum['task_number_completed'] = list_sum[0].task_number_completed
+
+    if list_sum[0].task_number_total:
+        result_sum['task_number_total'] = list_sum[0].task_number_total
+
+    if list_sum[0].bug_workload:
+        result_sum['bug_workload'] = list_sum[0].bug_workload
+
+    result_count = {
+        'task_count_idle'     : 0,
+        'task_count_run'      : 0,
+        'task_count_alert'    : 0,
+        'task_count_review'   : 0,
+        'task_count_complete' : 0,
+        'task_count_total'    : 0,
+        'bug_count_idle'      : 0,
+        'bug_count_run'       : 0,
+        'bug_count_alert'     : 0,
+        'bug_count_review'    : 0,
+        'bug_count_complete'  : 0,
+        'bug_count_total'     : 0
+    }
+
+    sum_task = 0
+    sum_bug  = 0
+    for target in list_count:
+        if   target.type == ItemType.TASK.value:
+            match target.state:
+                case ItemState.IDLE.value:
+                    result_count['task_count_idle'] = target.count
+                    sum_task += target.count
+                case ItemState.RUN.value:
+                    result_count['task_count_run'] = target.count
+                    sum_task += target.count
+                case ItemState.ALERT.value:
+                    result_count['task_count_alert'] = target.count
+                    sum_task += target.count
+                case ItemState.REVIEW.value:
+                    result_count['task_count_review'] = target.count
+                    sum_task += target.count
+                case ItemState.COMPLETE.value:
+                    result_count['task_count_complete'] = target.count
+                    sum_task += target.count
+
+        elif target.type == ItemType.BUG.value:
+            match target.state:
+                case ItemState.IDLE.value:
+                    result_count['bug_count_idle'] = target.count
+                    sum_bug += target.count
+                case ItemState.RUN.value:
+                    result_count['bug_count_run'] = target.count
+                    sum_bug += target.count
+                case ItemState.ALERT.value:
+                    result_count['bug_count_alert'] = target.count
+                    sum_bug += target.count
+                case ItemState.REVIEW.value:
+                    result_count['bug_count_review'] = target.count
+                    sum_bug += target.count
+                case ItemState.COMPLETE.value:
+                    result_count['bug_count_complete'] = target.count
+                    sum_bug += target.count
+
+    result_count['task_count_total'] = sum_task
+    result_count['bug_count_total']  = sum_bug
+
+    return result_sum, result_count
+
+
+def _createSummaryItem(db: Session, rid_target: int):
+    try:
+        trees = db.query(Tree).filter(Tree.rid_descendant == rid_target).order_by(desc(Tree.rid_ancestor)).all()
+        if not trees:
+            raise
+
+        for tree in trees:
+            if tree.rid_ancestor == tree.rid_descendant:
+                continue
+
+            list_sum = db.query(
+                func.sum(Task.workload).label('task_workload'),
+                func.sum(Task.number_completed).label('task_number_completed'),
+                func.sum(Task.number_total).label('task_number_total'),
+                func.sum(Bug.workload).label('bug_workload')
+            )\
+            .select_from(Tree)\
+            .outerjoin(Task, Tree.rid_descendant == Task.rid_items)\
+            .outerjoin(Bug,  Tree.rid_descendant == Bug.rid_items)\
+            .filter(Tree.rid_ancestor   == tree.rid_ancestor)\
+            .filter(Tree.rid_descendant != tree.rid_ancestor)\
+            .all()
+ 
+            list_count = db.query(
+                Item.type,
+                Item.state,
+                func.count(Item.rid).label('count')
+            )\
+            .select_from(Tree)\
+            .join(Item, Tree.rid_descendant == Item.rid)\
+            .filter(Tree.rid_ancestor   == tree.rid_ancestor)\
+            .filter(Tree.rid_descendant != tree.rid_ancestor)\
+            .group_by(Item.type, Item.state)\
+            .all()
+
+            result_sum, result_count = _getSummaryItemCount(list_sum, list_count)
+
+            summary = db.query(SummaryItem).filter(SummaryItem.rid_items == tree.rid_ancestor).all()
+            if not summary:
+                summary = SummaryItem(
+                    rid_items=tree.rid_ancestor,
+                    task_count_idle=result_count['task_count_idle'],
+                    task_count_run=result_count['task_count_run'],
+                    task_count_alert=result_count['task_count_alert'],
+                    task_count_review=result_count['task_count_review'],
+                    task_count_complete=result_count['task_count_complete'],
+                    task_count_total=result_count['task_count_total'],
+                    task_workload_total=result_sum['task_workload'],
+                    task_number_completed=result_sum['task_number_completed'],
+                    task_number_total=result_sum['task_number_total'],
+                    bug_count_idle=result_count['bug_count_idle'],
+                    bug_count_run=result_count['bug_count_run'],
+                    bug_count_alert=result_count['bug_count_alert'],
+                    bug_count_review=result_count['bug_count_review'],
+                    bug_count_complete=result_count['bug_count_complete'],
+                    bug_count_total=result_count['bug_count_total'],
+                    bug_workload_total=result_sum['bug_workload']
+                )
+                db.add(summary)
+
+            else:
+                summary = db.query(SummaryItem).filter(SummaryItem.rid_items == tree.rid_ancestor)
+                summary.update({
+                    SummaryItem.task_count_idle: result_count['task_count_idle'],
+                    SummaryItem.task_count_run: result_count['task_count_run'],
+                    SummaryItem.task_count_alert: result_count['task_count_alert'],
+                    SummaryItem.task_count_review: result_count['task_count_review'],
+                    SummaryItem.task_count_complete: result_count['task_count_complete'],
+                    SummaryItem.task_count_total: result_count['task_count_total'],
+                    SummaryItem.task_workload_total: result_sum['task_workload'],
+                    SummaryItem.task_number_completed: result_sum['task_number_completed'],
+                    SummaryItem.task_number_total: result_sum['task_number_total'],
+                    SummaryItem.bug_count_idle: result_count['bug_count_idle'],
+                    SummaryItem.bug_count_run: result_count['bug_count_run'],
+                    SummaryItem.bug_count_alert: result_count['bug_count_alert'],
+                    SummaryItem.bug_count_review: result_count['bug_count_review'],
+                    SummaryItem.bug_count_complete: result_count['bug_count_complete'],
+                    SummaryItem.bug_count_total: result_count['bug_count_total'],
+                    SummaryItem.bug_workload_total: result_sum['bug_workload']
+                })
 
     except Exception as e:
         raise e
@@ -332,11 +504,12 @@ def createProject(db: Session, target: schema_item.ProjectCreate):
 
         tree = Tree(
             rid_ancestor=max_id_project,
-            rid_descendant=max_id_project
+            rid_descendant=max_id_project,
+            type=ItemType.PROJECT.value
         )
         db.add(tree)
-
         db.commit()
+
         db.refresh(item)
         return item
 
@@ -407,9 +580,10 @@ def createEvent(db: Session, target:schema_item.EventCreate):
         )
         db.add(addition)
 
-        _createTree(db, target.rid_items, item.rid)
-
+        _createTree(db, ItemType.EVENT, target.rid_items, item.rid)
+        db.flush()
         db.commit()
+
         db.refresh(item)
         return item
 
@@ -478,9 +652,10 @@ def createFeature(db: Session, target:schema_item.FeatureCreate):
         )
         db.add(addition)
 
-        _createTree(db, target.rid_items, item.rid)
-
+        _createTree(db, ItemType.FEATURE, target.rid_items, item.rid)
+        db.flush()
         db.commit()
+
         db.refresh(item)
         return item
 
@@ -546,9 +721,10 @@ def createStory(db: Session, target:schema_item.StoryCreate):
         )
         db.add(addition)
 
-        _createTree(db, target.rid_items, item.rid)
-
+        _createTree(db, ItemType.STORY, target.rid_items, item.rid)
+        db.flush()
         db.commit()
+
         db.refresh(item)
         return item
 
@@ -623,9 +799,12 @@ def createTask(db: Session, target:schema_item.TaskCreate):
         )
         db.add(addition)
 
-        _createTree(db, target.rid_items, item.rid)
+        _createTree(db, ItemType.TASK, target.rid_items, item.rid)
+        db.flush()
 
+        _createSummaryItem(db, item.rid)
         db.commit()
+
         db.refresh(item)
         return item
 
@@ -655,7 +834,11 @@ def updateTask(db: Session, target:schema_item.TaskUpdate):
             Task.number_completed: target.number_completed,
             Task.number_total: target.number_total
         })
+
+
+        _createSummaryItem(db, item.rid)
         db.commit()
+
         db.refresh(item)
         return item
 
@@ -716,9 +899,12 @@ def createBug(db: Session, target:schema_item.BugCreate):
         )
         db.add(addition)
 
-        _createTree(db, target.rid_items, item.rid)
+        _createTree(db, ItemType.BUG, target.rid_items, item.rid)
+        db.flush()
 
+        _createSummaryItem(db, item.rid)
         db.commit()
+
         db.refresh(item)
         return item
 
@@ -745,7 +931,10 @@ def updateBug(db: Session, target:schema_item.BugUpdate):
         addition.update({
             Bug.workload: target.workload
         })
+
+        _createSummaryItem(db, item.rid)
         db.commit()
+
         db.refresh(item)
         return item
 
