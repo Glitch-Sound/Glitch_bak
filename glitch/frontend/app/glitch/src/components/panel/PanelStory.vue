@@ -79,7 +79,7 @@ const handleBugSubmit = async (data: BugCreate) => {
 <template>
   <div class="panel-common panel-story">
     <v-row class="align-baseline">
-      <v-col class="type" cols="auto">
+      <v-col class="type type-story" cols="auto">
         <TypeLabel :item="props.item" />
       </v-col>
 

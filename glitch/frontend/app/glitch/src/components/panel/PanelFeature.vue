@@ -51,7 +51,7 @@ const handleSubmit = async (data: StoryCreate) => {
 <template>
   <div class="panel-common panel-feature">
     <v-row class="align-baseline">
-      <v-col class="type" cols="auto">
+      <v-col class="type type-feature" cols="auto">
         <TypeLabel :item="props.item" />
       </v-col>
 

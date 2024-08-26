@@ -24,7 +24,7 @@ const openDialog = () => {
 <template>
   <div class="panel-common panel-task">
     <v-row class="align-baseline">
-      <v-col class="type" cols="auto">
+      <v-col class="type type-task" cols="auto">
         <TypeLabel :item="props.item" />
       </v-col>
 
