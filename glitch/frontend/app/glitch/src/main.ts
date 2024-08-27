@@ -28,7 +28,7 @@ const theme_dark: ThemeDefinition = {
   dark: true,
   colors: {
     background: '#000000',
-    surface: '#0a0a0a',
+    surface: '#080808',
     'on-surface': '#c0c0c0',
     iconColor: '#ededed'
   },

@@ -92,7 +92,7 @@ const handleBugSubmit = async (data: BugCreate) => {
       </v-col>
 
       <v-col cols="auto">
-        <UserLabel :rid_users="props.item.rid_users" :name="props.item.name" />
+        <UserLabel :item="props.item" />
       </v-col>
 
       <v-col class="information" cols="auto">
