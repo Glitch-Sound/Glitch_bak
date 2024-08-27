@@ -63,13 +63,14 @@ class ItemParam():
         self.rid_users = rid_users
 
 class ItemUpdateCommon():
-    def __init__(self, rid: int, state: int, rid_users: int, title: str, detail: str, result: str):
-        self.rid       = rid
-        self.state     = state
-        self.rid_users = rid_users
-        self.title     = title
-        self.detail    = detail
-        self.result    = result
+    def __init__(self, rid: int, state: int, rid_users: int, rid_users_review: int, title: str, detail: str, result: str):
+        self.rid              = rid
+        self.state            = state
+        self.rid_users        = rid_users
+        self.rid_users_review = rid_users_review
+        self.title            = title
+        self.detail           = detail
+        self.result           = result
 
 
 def _getCurrentDate():
@@ -408,6 +409,7 @@ def _updateItem(db: Session, target: ItemUpdateCommon):
         item.update({
             Item.state: target.state,
             Item.rid_users: target.rid_users,
+            Item.rid_users_review: target.rid_users_review,
             Item.title: target.title,
             Item.detail: target.detail,
             Item.result: target.result,
@@ -628,6 +630,7 @@ def updateProject(db: Session, target:schema_item.ProjectUpdate):
             rid=target.rid,
             state=target.state,
             rid_users=target.rid_users,
+            rid_users_review=target.rid_users_review,
             title=target.title,
             detail=target.detail,
             result=target.result
@@ -702,6 +705,7 @@ def updateEvent(db: Session, target:schema_item.EventUpdate):
             rid=target.rid,
             state=target.state,
             rid_users=target.rid_users,
+            rid_users_review=target.rid_users_review,
             title=target.title,
             detail=target.detail,
             result=target.result
@@ -774,6 +778,7 @@ def updateFeature(db: Session, target:schema_item.FeatureUpdate):
             rid=target.rid,
             state=target.state,
             rid_users=target.rid_users,
+            rid_users_review=target.rid_users_review,
             title=target.title,
             detail=target.detail,
             result=target.result
@@ -843,6 +848,7 @@ def updateStory(db: Session, target:schema_item.StoryUpdate):
             rid=target.rid,
             state=target.state,
             rid_users=target.rid_users,
+            rid_users_review=target.rid_users_review,
             title=target.title,
             detail=target.detail,
             result=target.result
@@ -924,6 +930,7 @@ def updateTask(db: Session, target:schema_item.TaskUpdate):
             rid=target.rid,
             state=target.state,
             rid_users=target.rid_users,
+            rid_users_review=target.rid_users_review,
             title=target.title,
             detail=target.detail,
             result=target.result
@@ -1027,6 +1034,7 @@ def updateBug(db: Session, target:schema_item.BugUpdate):
             rid=target.rid,
             state=target.state,
             rid_users=target.rid_users,
+            rid_users_review=target.rid_users_review,
             title=target.title,
             detail=target.detail,
             result=target.result
