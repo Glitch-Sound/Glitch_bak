@@ -1,0 +1,25 @@
+import http from '@/services/ApiClient'
+
+import type { SummaryItem, SummaryUser } from '@/types/Summary'
+
+class SummaryService {
+  public async getSummariesItem(rid_items: number): Promise<SummaryItem[]> {
+    try {
+      const response = await http.get<SummaryItem[]>(`/api/summaries/item/${rid_items}`)
+      return response.data
+    } catch (error) {
+      throw new Error('error: ${error}')
+    }
+  }
+
+  public async getSummariesUser(rid_users: number): Promise<SummaryUser[]> {
+    try {
+      const response = await http.get<SummaryUser[]>(`/api/summaries/user/${rid_users}`)
+      return response.data
+    } catch (error) {
+      throw new Error('error: ${error}')
+    }
+  }
+}
+
+export default SummaryService
