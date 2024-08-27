@@ -40,7 +40,7 @@ const identicon_user_review = computed(() => {
 </script>
 
 <template>
-  <span class="mr-1"> {{ props.item.name }}aaaaaaa </span>
+  <span class="mr-1"> {{ props.item.name }} </span>
 
   <v-btn icon size="x-small">
     <img :src="identicon_user" width="20" height="20" />
