@@ -45,7 +45,7 @@ const props = defineProps<{
 }
 
 .table td {
-  padding: 2px 10px;
+  padding: 0 10px;
 }
 
 .title {
@@ -57,32 +57,32 @@ const props = defineProps<{
 
 .state-idle {
   color: #b0e0e6;
-  opacity: 0.8;
+  opacity: 0.7;
 }
 
 .state-run {
   color: #84c69b;
-  opacity: 0.8;
+  opacity: 0.7;
 }
 
 .state-alert {
   color: #e94560;
-  opacity: 0.8;
+  opacity: 0.7;
 }
 
 .state-review {
   color: #dece9c;
-  opacity: 0.8;
+  opacity: 0.7;
 }
 
 .state-complete {
   color: #a9a9a9;
-  opacity: 0.8;
+  opacity: 0.7;
 }
 
 .state-total {
   color: #f0f0f0;
-  opacity: 0.8;
+  opacity: 0.7;
 }
 
 .value {
