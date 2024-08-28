@@ -49,7 +49,7 @@ const handleSubmit = async (data: StoryCreate) => {
 </script>
 
 <template>
-  <div class="panel-common panel-feature">
+  <div class="panel-common">
     <v-row class="align-baseline">
       <v-col class="type type-feature" cols="auto">
         <TypeLabel :item="props.item" />

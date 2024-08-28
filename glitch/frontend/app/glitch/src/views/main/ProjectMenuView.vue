@@ -62,7 +62,7 @@ const handleSubmit = async (data: EventCreate) => {
         <v-icon icon="mdi-moon-waning-crescent" />Incomplete
       </v-list-item>
       <v-list-item disabled @click="setExtractType(ExtractType.HIGH_RISK)">
-        <v-icon icon="mdi-alert" />High Risk
+        <v-icon icon="mdi-fire" />High Risk
       </v-list-item>
       <v-list-item @click="setExtractType(ExtractType.ALERT)">
         <v-icon icon="mdi-alert-box" />Alert

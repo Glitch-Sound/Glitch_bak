@@ -22,7 +22,7 @@ const openDialog = () => {
 </script>
 
 <template>
-  <div class="panel-common panel-task">
+  <div class="panel-common">
     <v-row class="align-baseline">
       <v-col class="type type-task" cols="auto">
         <TypeLabel :item="props.item" />

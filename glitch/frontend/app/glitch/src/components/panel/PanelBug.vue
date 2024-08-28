@@ -22,7 +22,7 @@ const openDialog = () => {
 </script>
 
 <template>
-  <div class="panel-common panel-bug">
+  <div class="panel-common">
     <v-row class="align-baseline">
       <v-col class="type type-bug" cols="auto">
         <TypeLabel :item="props.item" />

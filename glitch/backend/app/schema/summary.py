@@ -51,3 +51,10 @@ class SummaryUser(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class Ancestor(BaseModel):
+    rid: int
+
+    class Config:
+        orm_mode = True

@@ -12,11 +12,35 @@ sys.path.append('~/app')
 from model.summary_item import SummaryItem
 from model.summary_user import SummaryUser
 from model.user import User
+from model.tree import Tree
 
 
 def getSummariesItem(db: Session, rid: int):
     try:
-        result = db.query(SummaryItem).filter(SummaryItem.rid == rid).order_by(SummaryItem.date_entry).all()
+        query = db.query(
+            SummaryItem.rid_items.label('rid'),
+            SummaryItem.task_count_idle,
+            SummaryItem.task_count_run,
+            SummaryItem.task_count_alert,
+            SummaryItem.task_count_review,
+            SummaryItem.task_count_complete,
+            SummaryItem.task_count_total,
+            SummaryItem.task_workload_total,
+            SummaryItem.task_number_completed,
+            SummaryItem.task_number_total,
+            SummaryItem.bug_count_idle,
+            SummaryItem.bug_count_run,
+            SummaryItem.bug_count_alert,
+            SummaryItem.bug_count_review,
+            SummaryItem.bug_count_complete,
+            SummaryItem.bug_count_total,
+            SummaryItem.bug_workload_total,
+            SummaryItem.date_entry
+        )\
+        .filter(SummaryItem.rid_items == rid)\
+        .order_by(SummaryItem.date_entry)
+
+        result = query.all()
         return result
 
     except Exception as e:
@@ -53,6 +77,21 @@ def getSummariesUser(db: Session, rid: int):
         .join(UserAlias,  UserAlias.rid == SummaryUser.rid_users)\
         .filter(SummaryUser.rid_users == rid)\
         .order_by(SummaryUser.date_entry)
+
+        result = query.all()
+        return result
+
+    except Exception as e:
+        raise e
+
+
+def getAncestorsItem(db: Session, rid: int):
+    try:
+        query = db.query(
+            Tree.rid_ancestor.label('rid')
+        )\
+        .filter(Tree.rid_descendant == rid)\
+        .filter(Tree.rid_descendant != Tree.rid_ancestor)
 
         result = query.all()
         return result

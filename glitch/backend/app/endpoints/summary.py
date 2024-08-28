@@ -32,3 +32,14 @@ def get_summary_item(rid: int, db: Session = Depends(get_db)):
     except Exception as e:
         print(traceback.format_exc())
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
+
+
+@router.get('/ancestors/item/{rid}', response_model=list[schema_summary.Ancestor])
+def get_ancestor_item(rid: int, db: Session = Depends(get_db)):
+    try:
+        result = crud_summary.getAncestorsItem(db, rid)
+        return result
+
+    except Exception as e:
+        print(traceback.format_exc())
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')

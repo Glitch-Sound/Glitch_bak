@@ -9,37 +9,8 @@
     padding-top: 10px;
 }
 
-/*
-.panel-event:hover {
-}
-
-.panel-feature {
-}
-
-.panel-feature:hover {
-}
-
-.panel-story {
-}
-
-.panel-story:hover {
-}
-
-.panel-task {
-}
-
-.panel-task:hover {
-}
-
-.panel-bug {
-}
-
-.panel-bug:hover {
-}
-*/
-
 .type {
-    width: 115px;
+    width: 110px;
     margin: 0;
 }
 
@@ -89,8 +60,7 @@
 }
 
 .information {
-    width: 150px;
-    margin: 0 5px;
+    width: 140px;
     text-align: center;
 }
 
@@ -104,7 +74,7 @@
     padding: 0 5px;
     display: flex;
     align-items: baseline;
-    background-color: #131313;
+    background-color: #191919;
     border-radius: 6px;
 }
 

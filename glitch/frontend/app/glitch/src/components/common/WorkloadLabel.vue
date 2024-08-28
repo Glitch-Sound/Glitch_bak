@@ -46,7 +46,6 @@ const props = defineProps<{
 <style scoped>
 .v-icon {
   width: 40px;
-  margin-left: 15px;
   align-items: center;
 }
 
