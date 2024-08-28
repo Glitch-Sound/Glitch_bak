@@ -31,7 +31,6 @@ watch(
     const items = items_new.get(props.item.rid)
     if (items && items.length > 0) {
       const lastItem = items[items.length - 1]
-
       summary.value.idle = lastItem.task_count_idle
       summary.value.run = lastItem.task_count_run
       summary.value.alert = lastItem.task_count_alert
@@ -39,6 +38,8 @@ watch(
       summary.value.complete = lastItem.task_count_complete
       summary.value.total = lastItem.task_count_total
     }
+
+    console.log(items)
   },
   { immediate: true }
 )

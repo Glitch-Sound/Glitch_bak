@@ -14,10 +14,7 @@ const useSummaryStore = defineStore('summary', {
         const items = await service_summary.getSummariesItem(rid)
 
         if (items) {
-          this.summaries_item.delete(rid)
           this.summaries_item.set(rid, items)
-
-          console.log(items)
         }
       } catch (error) {
         console.error('Error:', error)
