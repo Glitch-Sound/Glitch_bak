@@ -69,7 +69,7 @@
     padding: 0 10px;
 }
 
-.panel-detail-expand-row {
+.panel-detail-expand-detail {
     margin-left: 110px;
     padding: 0 5px;
     display: flex;
@@ -80,4 +80,12 @@
 
 .detail-title {
     color: #d0d0d0;
+}
+
+.panel-detail-expand-summary {
+    margin-left: 110px;
+    padding: 0 5px;
+    display: flex;
+    align-items: baseline;
+    border-radius: 6px;
 }

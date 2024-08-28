@@ -3,6 +3,7 @@ import { ref, defineProps } from 'vue'
 
 import type { Item, BugUpdate } from '@/types/Item'
 import useItemStore from '@/stores/ItemStore'
+import useSummaryStore from '@/stores/SummaryStore'
 import ItemService from '@/services/ItemService'
 import UpdateBugDialog from '@/components/dialog/UpdateBugDialog.vue'
 
@@ -14,6 +15,7 @@ const props = defineProps<{
 }>()
 
 const store_item = useItemStore()
+const store_summary = useSummaryStore()
 
 const dialog = ref(false)
 
@@ -47,6 +49,7 @@ const handleSubmit = async (data: BugUpdate) => {
     const service_item = new ItemService()
     await service_item.updateBug(data)
     store_item.fetchItems()
+    store_summary.fetchSummaryItem(props.item.rid)
     dialog.value = false
   } catch (err) {
     console.error('Error:', err)
@@ -68,7 +71,7 @@ const handleDelete = async () => {
 <template>
   <v-expand-transition class="panel-detail-expand">
     <div v-show="props.expand">
-      <v-row class="panel-detail-expand-row">
+      <v-row class="panel-detail-expand-detail">
         <v-col cols="auto">
           <span class="detail-title">Detail :</span>
         </v-col>

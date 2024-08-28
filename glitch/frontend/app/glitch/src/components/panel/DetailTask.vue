@@ -3,6 +3,7 @@ import { ref, defineProps } from 'vue'
 
 import type { Item, TaskUpdate } from '@/types/Item'
 import useItemStore from '@/stores/ItemStore'
+import useSummaryStore from '@/stores/SummaryStore'
 import ItemService from '@/services/ItemService'
 import UpdateTaskDialog from '@/components/dialog/UpdateTaskDialog.vue'
 
@@ -14,6 +15,7 @@ const props = defineProps<{
 }>()
 
 const store_item = useItemStore()
+const store_summary = useSummaryStore()
 
 const dialog = ref(false)
 
@@ -53,6 +55,7 @@ const handleSubmit = async (data: TaskUpdate) => {
     const service_item = new ItemService()
     await service_item.updateTask(data)
     store_item.fetchItems()
+    store_summary.updateTask(props.item.rid)
     dialog.value = false
   } catch (err) {
     console.error('Error:', err)
@@ -74,7 +77,7 @@ const handleDelete = async () => {
 <template>
   <v-expand-transition class="panel-detail-expand">
     <div v-show="props.expand">
-      <v-row class="panel-detail-expand-row">
+      <v-row class="panel-detail-expand-detail">
         <v-col cols="auto">
           <span class="detail-title">Detail :</span>
         </v-col>

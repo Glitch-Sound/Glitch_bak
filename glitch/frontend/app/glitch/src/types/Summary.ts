@@ -42,3 +42,16 @@ export interface SummaryUser {
   bug_workload_total: number
   date_entry: string
 }
+
+export interface Summary {
+  idle: number
+  run: number
+  alert: number
+  review: number
+  complete: number
+  total: number
+}
+
+export interface Ancestor {
+  rid: number
+}

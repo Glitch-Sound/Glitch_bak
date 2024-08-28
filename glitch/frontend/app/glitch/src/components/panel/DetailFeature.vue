@@ -66,7 +66,7 @@ const handleDelete = async () => {
 <template>
   <v-expand-transition class="panel-detail-expand">
     <div v-show="props.expand">
-      <v-row class="panel-detail-expand-row">
+      <v-row class="panel-detail-expand-detail">
         <v-col cols="auto">
           <span class="detail-title">Detail :</span>
         </v-col>
