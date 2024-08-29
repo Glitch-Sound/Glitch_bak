@@ -1,18 +1,53 @@
 <script setup lang="ts">
-import { ref, defineProps, watch } from 'vue'
+import { ref, defineProps, watch, onMounted } from 'vue'
+
+import useUserStore from '@/stores/UserStore'
+import type { Item } from '@/types/Item'
+import type { Activity } from '@/types/Activity'
+import type { EmitDialog } from '@/components/common/events'
+import ActivityService from '@/services/ActivityService'
 
 const props = defineProps<{
   showDialog: boolean
+  item: Item
 }>()
 
+const store_user = useUserStore()
+
+const emits = defineEmits<EmitDialog>()
+
 const dialog = ref(props.showDialog)
+const comment = ref('')
+const activities = ref<Activity[]>([])
+
+onMounted(async () => {
+  const service_activity = new ActivityService()
+  activities.value = await service_activity.getActivities(props.item.rid)
+})
 
 watch(
   () => props.showDialog,
-  (new_value) => {
-    dialog.value = new_value
+  (newValue) => {
+    dialog.value = newValue
   }
 )
+
+watch(dialog, (newValue) => {
+  emits('update:showDialog', newValue)
+})
+
+const addData = async () => {
+  if (store_user.login_user && comment.value.trim()) {
+    const service_activity = new ActivityService()
+    await service_activity.createActivity({
+      rid_items: props.item.rid,
+      rid_users: store_user.login_user.rid,
+      activity: comment.value
+    })
+
+    activities.value = await service_activity.getActivities(props.item.rid)
+  }
+}
 </script>
 
 <template>
@@ -23,17 +58,23 @@ watch(
       </v-card-title>
 
       <v-card-text>
-        <div>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</div>
+        <div v-for="activity in activities" :key="activity.rid" class="mb-5">
+          <div class="user">
+            <span>{{ activity.datetime_entry }}</span>
+            <span class="mx-3">{{ activity.name }}</span>
+          </div>
+          <div>{{ activity.activity }}</div>
+        </div>
 
-        <v-form>
-          <v-text-field />
+        <v-form class="mt-8">
+          <v-textarea v-model="comment" required />
         </v-form>
       </v-card-text>
 
       <v-card-actions>
         <v-spacer />
         <v-btn @click="dialog = false">Cancel</v-btn>
-        <v-btn>Submit</v-btn>
+        <v-btn @click="addData">Add</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -41,4 +82,9 @@ watch(
 
 <style scoped>
 @import '@/components/dialog/dialog.css';
+
+.user {
+  color: #696969;
+  font-size: 0.9rem;
+}
 </style>

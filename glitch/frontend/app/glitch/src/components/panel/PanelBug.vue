@@ -54,7 +54,7 @@ const openDialog = () => {
     <DetailBug v-bind="{ ...props, expand }" />
   </div>
 
-  <ActivityDialog :showDialog="dialog" />
+  <ActivityDialog :item="props.item" :showDialog="dialog" @update:showDialog="dialog = $event" />
 </template>
 
 <style scoped>
