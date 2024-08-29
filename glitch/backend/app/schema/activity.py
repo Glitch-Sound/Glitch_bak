@@ -4,8 +4,6 @@ from typing import Optional
 
 class Activity(BaseModel):
     rid: int
-    state_pre: int
-    state_post: int
     activity: str
     datetime_entry: str
     datetime_update: str
@@ -19,11 +17,15 @@ class Activity(BaseModel):
 class ActivityCreate(BaseModel):
     rid_items: int
     rid_users: int
-    state_pre: int
-    state_post: int
     activity: str
-    datetime_entry: str
-    datetime_update: str
+
+    class Config:
+        orm_mode = True
+
+
+class ActivityUpdate(BaseModel):
+    rid: int
+    activity: str
 
     class Config:
         orm_mode = True

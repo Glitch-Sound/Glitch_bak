@@ -1,5 +1,6 @@
-from fastapi import Depends, APIRouter, HTTPException   # type: ignore
-from sqlalchemy.orm import Session                      # type: ignore
+import traceback
+from fastapi import Depends, APIRouter, HTTPException, status   # type: ignore
+from sqlalchemy.orm import Session                              # type: ignore
 
 import sys
 sys.path.append('~/app')
@@ -18,6 +19,7 @@ def get_items(rid_items: int, db: Session = Depends(get_db)):
         return result
 
     except Exception as e:
+        print(traceback.format_exc())
         raise HTTPException(status_code=500, detail=f'error: {str(e)}')
 
 
@@ -28,4 +30,27 @@ def create_project(target:schema_activity.ActivityCreate, db: Session = Depends(
         return result
 
     except Exception as e:
+        print(traceback.format_exc())
         raise HTTPException(status_code=500, detail=f'error: {str(e)}')
+
+
+@router.put('/activity/', response_model=schema_activity.Activity)
+def update_project(target:schema_activity.ActivityUpdate, db: Session = Depends(get_db)):
+    try:
+        result = crud_activity.updateActivity(db, target)
+        return result
+
+    except Exception as e:
+        print(traceback.format_exc())
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
+
+
+@router.delete('/activity/{target}', response_model=dict)
+def delete_project(target: int, db: Session = Depends(get_db)):
+    try:
+        crud_activity.deleteActivity(db, target)
+        return {'result': 'success'}
+
+    except Exception as e:
+        print(traceback.format_exc())
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')

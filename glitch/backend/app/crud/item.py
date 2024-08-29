@@ -2,13 +2,12 @@ from sqlalchemy import select, distinct, desc   # type: ignore
 from sqlalchemy.orm import Session, aliased     # type: ignore
 from sqlalchemy.sql import func                 # type: ignore
 
-import pytz                                     # type: ignore
-from datetime import datetime
 from enum import Enum
 
 import sys
 sys.path.append('~/app')
 
+from crud.common import getCurrentDate, getCurrentDatetime
 from schema import item as schema_item
 from model.item import Item
 from model.tree import Tree
@@ -71,18 +70,6 @@ class ItemUpdateCommon():
         self.title            = title
         self.detail           = detail
         self.result           = result
-
-
-def _getCurrentDate():
-    current_utc_time = datetime.now(pytz.timezone('Asia/Tokyo'))
-    current_date = current_utc_time.strftime('%Y-%m-%d')
-    return current_date
-
-
-def _getCurrentDatetime():
-    current_utc_time = datetime.now(pytz.timezone('Asia/Tokyo'))
-    current_datetime = current_utc_time.strftime('%Y-%m-%d %H:%M:%S')
-    return current_datetime
 
 
 def _createTree(db: Session, type_create: ItemType, rid_parent: int, rid: int):
@@ -227,7 +214,7 @@ def _createSummaryItem(db: Session, rid_target: int):
 
             result_sum, result_count = _getSummaryCount(list_sum, list_count)
 
-            current_date = _getCurrentDate()
+            current_date = getCurrentDate()
             summary_item = db.query(SummaryItem).filter(
                 SummaryItem.rid_items  == tree.rid_ancestor,
                 SummaryItem.date_entry == current_date
@@ -311,7 +298,7 @@ def _createSummaryUser(db: Session, id_project: int, rid_users: int):
 
         result_sum, result_count = _getSummaryCount(list_sum, list_count)
 
-        current_date = _getCurrentDate()
+        current_date = getCurrentDate()
         summary_user = db.query(SummaryUser).filter(
             SummaryUser.rid_users  == rid_users,
             SummaryUser.id_project == id_project,
@@ -403,7 +390,7 @@ def _createSortPath(db: Session, type: ItemType, rid_parent: int):
 
 def _updateItem(db: Session, target: ItemUpdateCommon):
     try:
-        current_datetime = _getCurrentDatetime()
+        current_datetime = getCurrentDatetime()
 
         item = db.query(Item).filter(Item.rid == target.rid)
         item.update({
@@ -425,7 +412,7 @@ def _updateItem(db: Session, target: ItemUpdateCommon):
 
 def _deleteItem(db: Session, rid: int):
     try:
-        current_datetime = _getCurrentDatetime()
+        current_datetime = getCurrentDatetime()
 
         db.begin()
         item = db.query(Item).filter(Item.rid == rid)
@@ -579,7 +566,7 @@ def getProjects(db: Session):
 
 def createProject(db: Session, target: schema_item.ProjectCreate):
     try:
-        current_datetime = _getCurrentDatetime()
+        current_datetime = getCurrentDatetime()
 
         db.begin()
         max_id_project = db.query(func.max(Item.id_project)).scalar()
@@ -663,7 +650,7 @@ def deleteProject(db: Session, rid: int):
 
 def createEvent(db: Session, target:schema_item.EventCreate):
     try:
-        current_datetime = _getCurrentDatetime()
+        current_datetime = getCurrentDatetime()
 
         db.begin()
         item = Item(
@@ -737,7 +724,7 @@ def deleteEvent(db: Session, rid: int):
 
 def createFeature(db: Session, target:schema_item.FeatureCreate):
     try:
-        current_datetime = _getCurrentDatetime()
+        current_datetime = getCurrentDatetime()
 
         db.begin()
         item = Item(
@@ -805,7 +792,7 @@ def deleteFeature(db: Session, rid: int):
 
 def createStory(db: Session, target:schema_item.StoryCreate):
     try:
-        current_datetime = _getCurrentDatetime()
+        current_datetime = getCurrentDatetime()
 
         db.begin()
         item = Item(
@@ -882,7 +869,7 @@ def deleteStory(db: Session, rid: int):
 
 def createTask(db: Session, target:schema_item.TaskCreate):
     try:
-        current_datetime = _getCurrentDatetime()
+        current_datetime = getCurrentDatetime()
 
         db.begin()
         item = Item(
@@ -989,7 +976,7 @@ def updateTaskPriority(db: Session, target:schema_item.TaskPriorityUpdate):
 
 def createBug(db: Session, target:schema_item.BugCreate):
     try:
-        current_datetime = _getCurrentDatetime()
+        current_datetime = getCurrentDatetime()
 
         db.begin()
         item = Item(
