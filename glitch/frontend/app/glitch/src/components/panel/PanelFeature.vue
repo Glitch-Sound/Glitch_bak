@@ -59,7 +59,7 @@ const handleSubmit = async (data: StoryCreate) => {
         <StateLabel :state="props.item.state" />
       </v-col>
 
-      <v-col class="title-feature" @click="expand = !expand">
+      <v-col class="title" @click="expand = !expand">
         {{ props.item.title }}
       </v-col>
 

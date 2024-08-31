@@ -51,7 +51,7 @@ const handleLogin = async (data: Login) => {
 
 <template>
   <div v-if="store_user.login_user == null">
-    <v-btn variant="tonal" @click="openDialog()">Login</v-btn>
+    <v-btn variant="text" @click="openDialog()">Login</v-btn>
   </div>
   <div v-else>
     <div class="align-baseline">

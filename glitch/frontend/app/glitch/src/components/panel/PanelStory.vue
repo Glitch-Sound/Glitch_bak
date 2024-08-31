@@ -87,7 +87,7 @@ const handleBugSubmit = async (data: BugCreate) => {
         <StateLabel :state="props.item.state" />
       </v-col>
 
-      <v-col class="title-story" @click="expand = !expand">
+      <v-col class="title" @click="expand = !expand">
         {{ props.item.title }}
       </v-col>
 

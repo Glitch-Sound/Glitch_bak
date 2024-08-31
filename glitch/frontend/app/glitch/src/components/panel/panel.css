@@ -44,25 +44,12 @@
     text-align: center;
 }
 
-.title-event {
-    color: #f0f0f0;
-    font-weight: bold;
-}
-
-.title-feature {
-    color: #f0f0f0;
-}
-
-.title-story {
-    color: #eaeaea;
-}
-
-.title-task {
+.title {
     color: #e0e0e0;
 }
 
-.title-bug {
-    color: #ffe0e0;
+.title:hover {
+    color: #ffffff;
 }
 
 .information {

@@ -53,7 +53,8 @@ const handleSubmit = async () => {
       <v-img gradient="to top, rgba(0, 0, 0, 0), rgba(29, 35, 46, 0.4), rgba(59, 65, 79, 0.7)" />
     </template>
 
-    <v-app-bar-title @click="toggleDialog">
+    <v-app-bar-title @click="toggleDialog" class="app-bar-title">
+      <v-icon class="mr-2" size="small">mdi-grain</v-icon>
       {{ title }}
     </v-app-bar-title>
 
