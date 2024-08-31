@@ -1,8 +1,13 @@
 .panel-common {
     display: flex;
     flex-direction: column;
-    margin: 6px 5px 6px 5px;
-    padding: 1px 10px 1px 0;
+    margin: 6px 5px 6px 6px;
+    padding: 1px 10px 1px 5px;
+    border-left: 2px solid transparent;
+}
+
+.panel-common:hover {
+    border-left: 2px solid #393939;
 }
 
 .panel-event {
@@ -40,7 +45,8 @@
 }
 
 .title-event {
-    color: #ffffff;
+    color: #f0f0f0;
+    font-weight: bold;
 }
 
 .title-feature {
@@ -74,7 +80,7 @@
     padding: 0 5px;
     display: flex;
     align-items: baseline;
-    background-color: #191919;
+    background-color: #101010;
     border-radius: 6px;
 }
 

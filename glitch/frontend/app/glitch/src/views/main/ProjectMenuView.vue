@@ -48,7 +48,7 @@ const handleSubmit = async (data: EventCreate) => {
 
 <template>
   <v-navigation-drawer color="background" class="no-border">
-    <v-sheet color="#1d1d1d" class="rounded-lg mt-1 ml-1 py-3">
+    <v-sheet color="#131313" class="rounded-lg mt-1 ml-1 py-3">
       <v-list-item>
         <v-btn width="250px" color="#9D0B28" prepend-icon="mdi-plus-circle" @click="openDialog()">
           Event
@@ -72,7 +72,7 @@ const handleSubmit = async (data: EventCreate) => {
       </v-list-item>
     </v-sheet>
 
-    <v-sheet color="#1d1d1d" class="rounded-lg mt-1 ml-1 py-3">
+    <v-sheet color="#131313" class="rounded-lg mt-1 ml-1 py-3">
       <v-list-item
         @click="setEnabledType(ItemType.EVENT)"
         :variant="ItemType.EVENT <= store_item.type_enabled ? 'text' : 'plain'"

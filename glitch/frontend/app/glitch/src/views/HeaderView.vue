@@ -48,7 +48,11 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <v-app-bar color="#272d38">
+  <v-app-bar color="#000000">
+    <template v-slot:image>
+      <v-img gradient="to top, rgba(0, 0, 0, 0), rgba(29, 35, 46, 0.4), rgba(59, 65, 79, 0.7)" />
+    </template>
+
     <v-app-bar-title @click="toggleDialog">
       {{ title }}
     </v-app-bar-title>
