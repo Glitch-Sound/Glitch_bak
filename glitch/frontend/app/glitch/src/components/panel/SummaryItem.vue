@@ -246,7 +246,7 @@ function createChartTypeWorkload(type: SummaryType, data: SummaryItem[]) {
 
 <style scoped>
 .summary {
-  margin: 0 0 0 30px;
+  margin: 0 0 0 65px;
   padding: 0;
 }
 
@@ -268,10 +268,10 @@ function createChartTypeWorkload(type: SummaryType, data: SummaryItem[]) {
 
 .value {
   position: absolute;
-  top: 20px;
+  top: 27px;
   right: 34px;
   font-size: 28px;
-  color: #c0c0c0;
+  color: #cfcfcf;
 }
 
 .graph {
