@@ -4,6 +4,7 @@ from typing import Optional
 
 class SummaryItem(BaseModel):
     rid: int
+    task_risk: int
     task_count_idle: int
     task_count_run: int
     task_count_alert: int
@@ -13,6 +14,7 @@ class SummaryItem(BaseModel):
     task_workload_total: int
     task_number_completed: int
     task_number_total: int
+    bug_risk: int
     bug_count_idle: int
     bug_count_run: int
     bug_count_alert: int
@@ -31,6 +33,7 @@ class SummaryUser(BaseModel):
     id_project: int
     rid_users: int
     name: Optional[str] = None
+    task_risk: int
     task_count_idle: int
     task_count_run: int
     task_count_alert: int
@@ -40,6 +43,7 @@ class SummaryUser(BaseModel):
     task_workload_total: int
     task_number_completed: int
     task_number_total: int
+    bug_risk: int
     bug_count_idle: int
     bug_count_run: int
     bug_count_alert: int

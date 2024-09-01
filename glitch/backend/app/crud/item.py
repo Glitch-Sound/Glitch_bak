@@ -244,7 +244,10 @@ def _createSummaryItem(db: Session, rid_target: int):
                 db.add(summary)
 
             else:
-                summary = db.query(SummaryItem).filter(SummaryItem.rid_items == tree.rid_ancestor)
+                summary = db.query(SummaryItem).filter(
+                    SummaryItem.rid_items  == tree.rid_ancestor,
+                    SummaryItem.date_entry == current_date
+                )
                 summary.update({
                     SummaryItem.task_count_idle: result_count['task_count_idle'],
                     SummaryItem.task_count_run: result_count['task_count_run'],
