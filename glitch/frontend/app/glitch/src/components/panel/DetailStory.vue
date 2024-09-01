@@ -4,7 +4,7 @@ import { ref, defineProps } from 'vue'
 import type { Item, StoryUpdate } from '@/types/Item'
 import useItemStore from '@/stores/ItemStore'
 import ItemService from '@/services/ItemService'
-import SummaryStory from '@/components/panel/SummaryStory.vue'
+import SummaryItem from '@/components/panel/SummaryItem.vue'
 import UpdateStoryDialog from '@/components/dialog/UpdateStoryDialog.vue'
 
 import MarkedText from '@/components/common/MarkedText.vue'
@@ -96,7 +96,7 @@ const handleDelete = async () => {
       </v-row>
 
       <v-row class="panel-detail-expand-summary" v-if="props.expand">
-        <v-col cols="auto"><SummaryStory :item="props.item" /></v-col>
+        <SummaryItem :item="props.item" />
       </v-row>
     </div>
   </v-expand-transition>

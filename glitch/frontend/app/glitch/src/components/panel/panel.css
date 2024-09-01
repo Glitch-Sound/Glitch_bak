@@ -45,7 +45,7 @@
 }
 
 .title {
-    color: #e0e0e0;
+    color: #efefef;
 }
 
 .title:hover {
@@ -58,7 +58,7 @@
 }
 
 .panel-detail-expand {
-    margin: 20px 0 32px;
+    margin: 20px 0 40px;
     padding: 0 10px;
 }
 

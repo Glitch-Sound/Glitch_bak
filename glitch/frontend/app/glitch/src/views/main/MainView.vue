@@ -27,7 +27,8 @@ onMounted(async () => {
 const handleEntry = async (data: UserCreate) => {
   try {
     const service_user = new UserService()
-    await service_user.createUser(data)
+    const login_user = await service_user.createUser(data)
+    store_user.setLoginUser(login_user)
     store_user.fetchUsers()
     dialog.value = false
   } catch (err) {

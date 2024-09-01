@@ -4,6 +4,7 @@ import { ref, defineProps } from 'vue'
 import type { Item, EventUpdate } from '@/types/Item'
 import useItemStore from '@/stores/ItemStore'
 import ItemService from '@/services/ItemService'
+import SummaryItem from '@/components/panel/SummaryItem.vue'
 import UpdateEventDialog from '@/components/dialog/UpdateEventDialog.vue'
 
 import MarkedText from '@/components/common/MarkedText.vue'
@@ -90,6 +91,10 @@ const handleDelete = async () => {
             UPDATE
           </v-btn>
         </v-col>
+      </v-row>
+
+      <v-row class="panel-detail-expand-summary" v-if="props.expand">
+        <SummaryItem :item="props.item" />
       </v-row>
     </div>
   </v-expand-transition>

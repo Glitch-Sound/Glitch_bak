@@ -9,7 +9,6 @@ const props = defineProps<{
 </script>
 
 <template>
-  <!-- <div class="d-flex justify-center" style="width: 100px"> -->
   <v-chip
     size="small"
     class="mx-1"
@@ -64,7 +63,6 @@ const props = defineProps<{
   >
     COMPLETE
   </v-chip>
-  <!-- </div> -->
 </template>
 
 <style scoped></style>
