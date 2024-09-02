@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { ItemType, ExtractType, type EventCreate } from '@/types/Item'
+import { ItemType, type EventCreate } from '@/types/Item'
 import useItemStore from '@/stores/ItemStore'
 import ItemService from '@/services/ItemService'
 import CreateEventDialog from '@/components/dialog/CreateEventDialog.vue'
@@ -21,17 +21,19 @@ const dialog_form_data = ref<EventCreate>({
   datetime_end: ''
 })
 
+watch(
+  () => store_item.type_extract,
+  () => {
+    store_item.fetchItems(route)
+  }
+)
+
 const openDialog = () => {
   dialog.value = true
 }
 
 const setEnabledType = (type: ItemType) => {
   store_item.setEnabledType(type)
-}
-
-const setExtractType = (type: ExtractType) => {
-  store_item.setExtractType(type)
-  store_item.fetchItems()
 }
 
 const handleSubmit = async (data: EventCreate) => {
@@ -55,19 +57,19 @@ const handleSubmit = async (data: EventCreate) => {
         </v-btn>
       </v-list-item>
 
-      <v-list-item @click="setExtractType(ExtractType.ALL)">
+      <v-list-item @click="store_item.setExtractAll()">
         <v-icon icon="mdi-moon-full" />All
       </v-list-item>
-      <v-list-item @click="setExtractType(ExtractType.INCOMPLETE)">
+      <v-list-item @click="store_item.setExtractIncomplete()">
         <v-icon icon="mdi-moon-waning-crescent" />Incomplete
       </v-list-item>
-      <v-list-item disabled @click="setExtractType(ExtractType.HIGH_RISK)">
+      <v-list-item disabled @click="store_item.setExtractHighRisk()">
         <v-icon icon="mdi-fire" />High Risk
       </v-list-item>
-      <v-list-item @click="setExtractType(ExtractType.ALERT)">
+      <v-list-item @click="store_item.setExtractAlert()">
         <v-icon icon="mdi-alert-box" />Alert
       </v-list-item>
-      <v-list-item @click="setExtractType(ExtractType.ASSIGNMENT)">
+      <v-list-item @click="store_item.setExtractAssignment()">
         <v-icon icon="mdi-account" />Assignment
       </v-list-item>
     </v-sheet>

@@ -15,7 +15,7 @@ const router = createRouter({
       component: MainView
     },
     {
-      path: '/project/:id_project',
+      path: '/project/:id_project/:extruct?/:item?',
       component: ProjectView
     },
     {

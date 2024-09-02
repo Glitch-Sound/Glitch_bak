@@ -49,7 +49,7 @@ const handleSubmit = async (data: BugUpdate) => {
     const service_item = new ItemService()
     await service_item.updateBug(data)
     store_item.fetchItems()
-    store_summary.fetchSummaryItem(props.item.rid)
+    store_summary.updateTask(props.item.rid)
     dialog.value = false
   } catch (err) {
     console.error('Error:', err)

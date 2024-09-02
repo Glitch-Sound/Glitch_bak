@@ -8,8 +8,9 @@ import useProjectStore from '@/stores/ProjectStore'
 const useItemStore = defineStore('item', {
   state: () => ({
     items: [] as Array<Item>,
-    type_Extract: ExtractType.INCOMPLETE as ExtractType,
-    type_enabled: ItemType.BUG as ItemType
+    type_extract: ExtractType.INCOMPLETE as ExtractType,
+    type_enabled: ItemType.BUG as ItemType,
+    rid_item: 0 as number
   }),
   actions: {
     async fetchItems() {
@@ -18,14 +19,16 @@ const useItemStore = defineStore('item', {
         const store_user = useUserStore()
         const store_project = useProjectStore()
 
-        switch (this.type_Extract) {
+        const path = `/project/${store_project.selected_id_project}`
+
+        switch (this.type_extract) {
           case ExtractType.ALL:
           case ExtractType.INCOMPLETE:
           case ExtractType.HIGH_RISK:
           case ExtractType.ALERT:
             this.items = await service_item.getItems(
               store_project.selected_id_project,
-              this.type_Extract
+              this.type_extract
             )
             break
           case ExtractType.ASSIGNMENT:
@@ -34,13 +37,31 @@ const useItemStore = defineStore('item', {
               store_user.login_user?.rid
             )
             break
+          case ExtractType.ITEM:
+            break
         }
       } catch (error) {
         console.error('Error:', error)
       }
     },
-    setExtractType(type: ExtractType) {
-      this.type_Extract = type
+    setExtractAll() {
+      this.type_extract = ExtractType.ALL
+    },
+    setExtractIncomplete() {
+      this.type_extract = ExtractType.INCOMPLETE
+    },
+    setExtractHighRisk() {
+      this.type_extract = ExtractType.HIGH_RISK
+    },
+    setExtractAlert() {
+      this.type_extract = ExtractType.ALERT
+    },
+    setExtractAssignment() {
+      this.type_extract = ExtractType.ASSIGNMENT
+    },
+    setExtractItem(rid_item: number) {
+      this.type_extract = ExtractType.ITEM
+      this.rid_item = rid_item
     },
     setEnabledType(type: ItemType) {
       this.type_enabled = type

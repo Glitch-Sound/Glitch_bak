@@ -26,7 +26,7 @@ const hash = computed(() => {
   if (store_user.login_user == undefined) {
     return ''
   }
-  return CryptoJS.MD5(store_user.login_user?.rid + store_user.login_user?.user || '').toString()
+  return CryptoJS.MD5(store_user.login_user.rid + store_user.login_user.name).toString()
 })
 
 const identiconDataUri = computed(() => {

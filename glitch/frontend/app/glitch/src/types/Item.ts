@@ -48,7 +48,8 @@ export enum ExtractType {
   INCOMPLETE,
   HIGH_RISK,
   ALERT,
-  ASSIGNMENT
+  ASSIGNMENT,
+  ITEM
 }
 
 export interface Item {

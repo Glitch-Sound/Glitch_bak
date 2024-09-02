@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, defineProps } from 'vue'
+import { ref, onMounted, defineProps, watch } from 'vue'
 
 import type { Item } from '@/types/Item'
 import type { SummaryItem } from '@/types/Summary'
@@ -29,11 +29,21 @@ enum SummaryType {
 
 onMounted(async () => {
   await store_summary.fetchSummaryItem(props.item.rid)
+})
 
-  const list_data = store_summary.summaries_item.get(props.item.rid)
-  if (list_data) {
+watch(
+  () => store_summary.summaries_item.get(props.item.rid),
+  (list_data) => {
+    if (!list_data) {
+      return
+    }
+
+    d3.select(`#graph-workload-${props.item.rid}`).selectAll('svg').remove()
+    d3.select(`#graph-number-${props.item.rid}`).selectAll('svg').remove()
+    d3.select(`#graph-bug-${props.item.rid}`).selectAll('svg').remove()
+    d3.select(`#graph-risk-alert-${props.item.rid}`).selectAll('svg').remove()
+
     const latest = list_data[list_data.length - 1]
-
     value_workload.value = Math.floor((latest.task_count_complete / latest.task_count_total) * 100)
     value_number.value = Math.floor((latest.task_number_completed / latest.task_number_total) * 100)
     value_bug.value = Math.floor((latest.bug_count_complete / latest.bug_count_total) * 100)
@@ -44,7 +54,7 @@ onMounted(async () => {
     createChartTypeWorkload(SummaryType.BUG, list_data)
     createChartTypeWorkload(SummaryType.RISK_ALERT, list_data)
   }
-})
+)
 
 function createChartTypeWorkload(type: SummaryType, data: SummaryItem[]) {
   const date_end = d3.max(data, (d: any) => new Date(d.date_entry)) as Date
@@ -233,7 +243,9 @@ function createChartTypeWorkload(type: SummaryType, data: SummaryItem[]) {
             <div class="title-sub">caution</div>
             <div class="title">
               <span>Risk & Alert</span>
-              <span class="value" v-if="!isNaN(value_risk_alert)">{{ value_risk_alert }} item</span>
+              <span class="value" v-if="!isNaN(value_risk_alert)">
+                {{ value_risk_alert }} alert
+              </span>
               <span class="value" v-else>-</span>
             </div>
             <div class="graph" :id="`graph-risk-alert-${props.item.rid}`"></div>
