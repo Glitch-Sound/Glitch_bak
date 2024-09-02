@@ -13,7 +13,7 @@ const useItemStore = defineStore('item', {
     rid_item: 0 as number
   }),
   actions: {
-    async fetchItems() {
+    async fetchItems(router: any) {
       try {
         const service_item = new ItemService()
         const store_user = useUserStore()
@@ -26,16 +26,24 @@ const useItemStore = defineStore('item', {
           case ExtractType.INCOMPLETE:
           case ExtractType.HIGH_RISK:
           case ExtractType.ALERT:
-            this.items = await service_item.getItems(
-              store_project.selected_id_project,
-              this.type_extract
-            )
+            {
+              this.items = await service_item.getItems(
+                store_project.selected_id_project,
+                this.type_extract
+              )
+              const query = { extruct: this.type_extract }
+              router.push({ path, query })
+            }
             break
           case ExtractType.ASSIGNMENT:
-            this.items = await service_item.getItemsByUser(
-              store_project.selected_id_project,
-              store_user.login_user?.rid
-            )
+            {
+              this.items = await service_item.getItemsByUser(
+                store_project.selected_id_project,
+                store_user.login_user?.rid
+              )
+              const query = { extruct: this.type_extract }
+              router.push({ path, query })
+            }
             break
           case ExtractType.ITEM:
             break

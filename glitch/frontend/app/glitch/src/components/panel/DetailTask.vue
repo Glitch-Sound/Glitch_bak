@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, defineProps } from 'vue'
+import { useRouter } from 'vue-router'
 
 import type { Item, TaskUpdate } from '@/types/Item'
 import useItemStore from '@/stores/ItemStore'
@@ -14,6 +15,7 @@ const props = defineProps<{
   item: Item
 }>()
 
+const router = useRouter()
 const store_item = useItemStore()
 const store_summary = useSummaryStore()
 
@@ -54,7 +56,7 @@ const handleSubmit = async (data: TaskUpdate) => {
   try {
     const service_item = new ItemService()
     await service_item.updateTask(data)
-    store_item.fetchItems()
+    store_item.fetchItems(router)
     store_summary.updateTask(props.item.rid)
     dialog.value = false
   } catch (err) {
@@ -66,7 +68,7 @@ const handleDelete = async () => {
   try {
     const service_item = new ItemService()
     await service_item.deleteTask(props.item.rid)
-    store_item.fetchItems()
+    store_item.fetchItems(router)
     dialog.value = false
   } catch (err) {
     console.error('Error:', err)

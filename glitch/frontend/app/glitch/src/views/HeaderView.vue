@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
+import { ExtractType } from '@/types/Item'
 import useUserStore from '@/stores/UserStore'
 import useProjectStore from '@/stores/ProjectStore'
 import useItemStore from '@/stores/ItemStore'
@@ -9,6 +10,7 @@ import UserDetail from '@/components/common/UserDetail.vue'
 import ProjectDialog from '@/components/dialog/ProjectDialog.vue'
 
 const route = useRoute()
+const router = useRouter()
 const store_user = useUserStore()
 const store_project = useProjectStore()
 const store_item = useItemStore()
@@ -29,7 +31,28 @@ watch([() => route.params.id_project, () => store_project.projects.length], () =
 
   if (route.params.id_project) {
     store_project.setSelectedProjectID(Number(route.params.id_project))
-    store_item.fetchItems()
+
+    switch (Number(route.query.extruct)) {
+      case ExtractType.ALL:
+        store_item.setExtractAll()
+        break
+      case ExtractType.INCOMPLETE:
+        store_item.setExtractIncomplete()
+        break
+      case ExtractType.HIGH_RISK:
+        store_item.setExtractHighRisk()
+        break
+      case ExtractType.ALERT:
+        store_item.setExtractAlert()
+        break
+      case ExtractType.ASSIGNMENT:
+        store_item.setExtractAssignment()
+        break
+      case ExtractType.ITEM:
+        break
+    }
+
+    store_item.fetchItems(router)
   }
 })
 

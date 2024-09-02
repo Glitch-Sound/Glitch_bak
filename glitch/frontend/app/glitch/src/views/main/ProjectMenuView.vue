@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 import { ItemType, type EventCreate } from '@/types/Item'
 import useItemStore from '@/stores/ItemStore'
@@ -8,6 +8,7 @@ import ItemService from '@/services/ItemService'
 import CreateEventDialog from '@/components/dialog/CreateEventDialog.vue'
 
 const route = useRoute()
+const router = useRouter()
 const store_item = useItemStore()
 
 const dialog = ref(false)
@@ -24,7 +25,7 @@ const dialog_form_data = ref<EventCreate>({
 watch(
   () => store_item.type_extract,
   () => {
-    store_item.fetchItems(route)
+    store_item.fetchItems(router)
   }
 )
 
@@ -40,7 +41,7 @@ const handleSubmit = async (data: EventCreate) => {
   try {
     const service_item = new ItemService()
     await service_item.createEvent(data)
-    store_item.fetchItems()
+    store_item.fetchItems(router)
     dialog.value = false
   } catch (err) {
     console.error('Error:', err)

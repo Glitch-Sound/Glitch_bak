@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
 import { ItemType } from '@/types/Item'
 import useItemStore from '@/stores/ItemStore'
@@ -9,10 +10,11 @@ import PanelStory from '@/components/panel/PanelStory.vue'
 import PanelTask from '@/components/panel/PanelTask.vue'
 import PanelBug from '@/components/panel/PanelBug.vue'
 
+const router = useRouter()
 const store_item = useItemStore()
 
 onMounted(() => {
-  store_item.fetchItems()
+  store_item.fetchItems(router)
 })
 </script>
 
