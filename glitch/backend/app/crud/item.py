@@ -7,7 +7,7 @@ from enum import Enum
 import sys
 sys.path.append('~/app')
 
-from crud.common import getCurrentDate, getCurrentDatetime
+from crud.common import getCurrentDate, getCurrentDatetime, getPreviousDate
 from schema import item as schema_item
 from model.item import Item
 from model.tree import Tree
@@ -97,7 +97,7 @@ def _createTree(db: Session, type_create: ItemType, rid_parent: int, rid: int):
         raise e
 
 
-def _getSummaryCount(list_sum: any, list_count: any):
+def _getSummary(list_sum: any, list_count: any):
     result_sum = {
         'task_workload'         : 0,
         'task_number_completed' : 0,
@@ -212,12 +212,40 @@ def _createSummaryItem(db: Session, rid_target: int):
             .group_by(Item.type, Item.state)\
             .all()
 
-            result_sum, result_count = _getSummaryCount(list_sum, list_count)
+            result_sum, result_count = _getSummary(list_sum, list_count)
 
-            current_date = getCurrentDate()
             summary_item = db.query(SummaryItem).filter(
                 SummaryItem.rid_items  == tree.rid_ancestor,
-                SummaryItem.date_entry == current_date
+            ).all()
+
+            if not summary_item:
+                date_previous = getPreviousDate()
+                summary = SummaryItem(
+                    rid_items=tree.rid_ancestor,
+                    task_count_idle=0,
+                    task_count_run=0,
+                    task_count_alert=0,
+                    task_count_review=0,
+                    task_count_complete=0,
+                    task_count_total=0,
+                    task_workload_total=0,
+                    task_number_completed=0,
+                    task_number_total=0,
+                    bug_count_idle=0,
+                    bug_count_run=0,
+                    bug_count_alert=0,
+                    bug_count_review=0,
+                    bug_count_complete=0,
+                    bug_count_total=0,
+                    bug_workload_total=0,
+                    date_entry=date_previous
+                )
+                db.add(summary)
+
+            date_current = getCurrentDate()
+            summary_item = db.query(SummaryItem).filter(
+                SummaryItem.rid_items  == tree.rid_ancestor,
+                SummaryItem.date_entry == date_current
             ).all()
 
             if not summary_item:
@@ -239,14 +267,14 @@ def _createSummaryItem(db: Session, rid_target: int):
                     bug_count_complete=result_count['bug_count_complete'],
                     bug_count_total=result_count['bug_count_total'],
                     bug_workload_total=result_sum['bug_workload'],
-                    date_entry=current_date
+                    date_entry=date_current
                 )
                 db.add(summary)
 
             else:
                 summary = db.query(SummaryItem).filter(
                     SummaryItem.rid_items  == tree.rid_ancestor,
-                    SummaryItem.date_entry == current_date
+                    SummaryItem.date_entry == date_current
                 )
                 summary.update({
                     SummaryItem.task_count_idle: result_count['task_count_idle'],
@@ -299,16 +327,40 @@ def _createSummaryUser(db: Session, id_project: int, rid_users: int):
         .group_by(Item.type, Item.state)\
         .all()
 
-        result_sum, result_count = _getSummaryCount(list_sum, list_count)
+        result_sum, result_count = _getSummary(list_sum, list_count)
 
-        current_date = getCurrentDate()
+        date_current = getCurrentDate()
         summary_user = db.query(SummaryUser).filter(
             SummaryUser.rid_users  == rid_users,
             SummaryUser.id_project == id_project,
-            SummaryUser.date_entry == current_date
+            SummaryUser.date_entry == date_current
         ).all()
 
         if not summary_user:
+            date_previous = getPreviousDate()
+            summary = SummaryUser(
+                rid_users=rid_users,
+                id_project=id_project,
+                task_count_idle=0,
+                task_count_run=0,
+                task_count_alert=0,
+                task_count_review=0,
+                task_count_complete=0,
+                task_count_total=0,
+                task_workload_total=0,
+                task_number_completed=0,
+                task_number_total=0,
+                bug_count_idle=0,
+                bug_count_run=0,
+                bug_count_alert=0,
+                bug_count_review=0,
+                bug_count_complete=0,
+                bug_count_total=0,
+                bug_workload_total=0,
+                date_entry=date_previous
+            )
+            db.add(summary)
+
             summary = SummaryUser(
                 rid_users=rid_users,
                 id_project=id_project,
@@ -328,7 +380,7 @@ def _createSummaryUser(db: Session, id_project: int, rid_users: int):
                 bug_count_complete=result_count['bug_count_complete'],
                 bug_count_total=result_count['bug_count_total'],
                 bug_workload_total=result_sum['bug_workload'],
-                date_entry=current_date
+                date_entry=date_current
             )
             db.add(summary)
 
@@ -336,7 +388,7 @@ def _createSummaryUser(db: Session, id_project: int, rid_users: int):
             summary = db.query(SummaryUser).filter(
                 SummaryUser.rid_users  == rid_users,
                 SummaryUser.id_project == id_project,
-                SummaryUser.date_entry == current_date
+                SummaryUser.date_entry == date_current
             )
             summary.update({
                 SummaryUser.task_count_idle: result_count['task_count_idle'],
@@ -393,7 +445,7 @@ def _createSortPath(db: Session, type: ItemType, rid_parent: int):
 
 def _updateItem(db: Session, target: ItemUpdateCommon):
     try:
-        current_datetime = getCurrentDatetime()
+        datetime_current = getCurrentDatetime()
 
         item = db.query(Item).filter(Item.rid == target.rid)
         item.update({
@@ -403,7 +455,7 @@ def _updateItem(db: Session, target: ItemUpdateCommon):
             Item.title: target.title,
             Item.detail: target.detail,
             Item.result: target.result,
-            Item.datetime_update: current_datetime
+            Item.datetime_update: datetime_current
         })
 
         item_updated = item.first()
@@ -415,13 +467,13 @@ def _updateItem(db: Session, target: ItemUpdateCommon):
 
 def _deleteItem(db: Session, rid: int):
     try:
-        current_datetime = getCurrentDatetime()
+        datetime_current = getCurrentDatetime()
 
         db.begin()
         item = db.query(Item).filter(Item.rid == rid)
         item.update({
             Item.is_deleted: 1,
-            Item.datetime_update: current_datetime
+            Item.datetime_update: datetime_current
         })
         db.commit()
 
@@ -569,7 +621,7 @@ def getProjects(db: Session):
 
 def createProject(db: Session, target: schema_item.ProjectCreate):
     try:
-        current_datetime = getCurrentDatetime()
+        datetime_current = getCurrentDatetime()
 
         db.begin()
         max_id_project = db.query(func.max(Item.id_project)).scalar()
@@ -585,8 +637,8 @@ def createProject(db: Session, target: schema_item.ProjectCreate):
             type=ItemType.PROJECT.value,
             title=target.title,
             detail=target.detail,
-            datetime_entry=current_datetime,
-            datetime_update=current_datetime
+            datetime_entry=datetime_current,
+            datetime_update=datetime_current
         )
         db.add(item)
         db.flush()
@@ -653,7 +705,7 @@ def deleteProject(db: Session, rid: int):
 
 def createEvent(db: Session, target:schema_item.EventCreate):
     try:
-        current_datetime = getCurrentDatetime()
+        datetime_current = getCurrentDatetime()
 
         db.begin()
         item = Item(
@@ -664,8 +716,8 @@ def createEvent(db: Session, target:schema_item.EventCreate):
             type=ItemType.EVENT.value,
             title=target.title,
             detail=target.detail,
-            datetime_entry=current_datetime,
-            datetime_update=current_datetime
+            datetime_entry=datetime_current,
+            datetime_update=datetime_current
         )
 
         db.add(item)
@@ -727,7 +779,7 @@ def deleteEvent(db: Session, rid: int):
 
 def createFeature(db: Session, target:schema_item.FeatureCreate):
     try:
-        current_datetime = getCurrentDatetime()
+        datetime_current = getCurrentDatetime()
 
         db.begin()
         item = Item(
@@ -738,8 +790,8 @@ def createFeature(db: Session, target:schema_item.FeatureCreate):
             type=ItemType.FEATURE.value,
             title=target.title,
             detail=target.detail,
-            datetime_entry=current_datetime,
-            datetime_update=current_datetime
+            datetime_entry=datetime_current,
+            datetime_update=datetime_current
         )
 
         db.add(item)
@@ -795,7 +847,7 @@ def deleteFeature(db: Session, rid: int):
 
 def createStory(db: Session, target:schema_item.StoryCreate):
     try:
-        current_datetime = getCurrentDatetime()
+        datetime_current = getCurrentDatetime()
 
         db.begin()
         item = Item(
@@ -806,8 +858,8 @@ def createStory(db: Session, target:schema_item.StoryCreate):
             type=ItemType.STORY.value,
             title=target.title,
             detail=target.detail,
-            datetime_entry=current_datetime,
-            datetime_update=current_datetime
+            datetime_entry=datetime_current,
+            datetime_update=datetime_current
         )
 
         db.add(item)
@@ -872,7 +924,7 @@ def deleteStory(db: Session, rid: int):
 
 def createTask(db: Session, target:schema_item.TaskCreate):
     try:
-        current_datetime = getCurrentDatetime()
+        datetime_current = getCurrentDatetime()
 
         db.begin()
         item = Item(
@@ -883,8 +935,8 @@ def createTask(db: Session, target:schema_item.TaskCreate):
             type=ItemType.TASK.value,
             title=target.title,
             detail=target.detail,
-            datetime_entry=current_datetime,
-            datetime_update=current_datetime
+            datetime_entry=datetime_current,
+            datetime_update=datetime_current
         )
 
         db.add(item)
@@ -979,7 +1031,7 @@ def updateTaskPriority(db: Session, target:schema_item.TaskPriorityUpdate):
 
 def createBug(db: Session, target:schema_item.BugCreate):
     try:
-        current_datetime = getCurrentDatetime()
+        datetime_current = getCurrentDatetime()
 
         db.begin()
         item = Item(
@@ -990,8 +1042,8 @@ def createBug(db: Session, target:schema_item.BugCreate):
             type=ItemType.BUG.value,
             title=target.title,
             detail=target.detail,
-            datetime_entry=current_datetime,
-            datetime_update=current_datetime
+            datetime_entry=datetime_current,
+            datetime_update=datetime_current
         )
 
         db.add(item)

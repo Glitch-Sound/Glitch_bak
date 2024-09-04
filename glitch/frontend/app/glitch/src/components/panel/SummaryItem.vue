@@ -14,6 +14,7 @@ const props = defineProps<{
 
 const store_summary = useSummaryStore()
 
+const is_enable = ref(false)
 const value_workload = ref(0)
 const value_number = ref(0)
 const value_bug = ref(0)
@@ -29,41 +30,53 @@ enum SummaryType {
 
 onMounted(async () => {
   await store_summary.fetchSummaryItem(props.item.rid)
+  createChart()
 })
 
 watch(
   () => store_summary.summaries_item.get(props.item.rid),
-  (list_data) => {
-    if (!list_data) {
-      return
-    }
-
-    d3.select(`#graph-workload-${props.item.rid}`).selectAll('svg').remove()
-    d3.select(`#graph-number-${props.item.rid}`).selectAll('svg').remove()
-    d3.select(`#graph-bug-${props.item.rid}`).selectAll('svg').remove()
-    d3.select(`#graph-risk-alert-${props.item.rid}`).selectAll('svg').remove()
-
-    const latest = list_data[list_data.length - 1]
-    value_workload.value = Math.floor((latest.task_count_complete / latest.task_count_total) * 100)
-    value_number.value = Math.floor((latest.task_number_completed / latest.task_number_total) * 100)
-    value_bug.value = Math.floor((latest.bug_count_complete / latest.bug_count_total) * 100)
-    value_risk_alert.value = latest.task_count_alert + latest.bug_count_alert
-
-    createChartTypeWorkload(SummaryType.WORKLOAD, list_data)
-    createChartTypeWorkload(SummaryType.NUMBER, list_data)
-    createChartTypeWorkload(SummaryType.BUG, list_data)
-    createChartTypeWorkload(SummaryType.RISK_ALERT, list_data)
+  () => {
+    createChart()
   }
 )
 
-function createChartTypeWorkload(type: SummaryType, data: SummaryItem[]) {
+function createChart() {
+  const list_data = store_summary.summaries_item.get(props.item.rid)
+  if (!list_data || list_data.length === 0) {
+    return
+  }
+
+  const max_value = d3.max(list_data, (d: SummaryItem) =>
+    Math.max(d.task_count_complete + d.bug_count_complete, d.task_count_total + d.bug_count_total)
+  ) as number
+
+  if (max_value == 0) {
+    return
+  }
+
+  is_enable.value = true
+
+  d3.select(`#graph-workload-${props.item.rid}`).selectAll('svg').remove()
+  d3.select(`#graph-number-${props.item.rid}`).selectAll('svg').remove()
+  d3.select(`#graph-bug-${props.item.rid}`).selectAll('svg').remove()
+  d3.select(`#graph-risk-alert-${props.item.rid}`).selectAll('svg').remove()
+
+  const latest = list_data[list_data.length - 1]
+  value_workload.value = Math.floor((latest.task_count_complete / latest.task_count_total) * 100)
+  value_number.value = Math.floor((latest.task_number_completed / latest.task_number_total) * 100)
+  value_bug.value = Math.floor((latest.bug_count_complete / latest.bug_count_total) * 100)
+  value_risk_alert.value = latest.task_count_alert + latest.bug_count_alert
+
+  createChartTypeWorkload(SummaryType.WORKLOAD, list_data, max_value)
+  createChartTypeWorkload(SummaryType.NUMBER, list_data, max_value)
+  createChartTypeWorkload(SummaryType.BUG, list_data, max_value)
+  createChartTypeWorkload(SummaryType.RISK_ALERT, list_data, max_value)
+}
+
+function createChartTypeWorkload(type: SummaryType, data: SummaryItem[], max_value: number) {
   const date_end = d3.max(data, (d: any) => new Date(d.date_entry)) as Date
   const date_start = new Date(date_end)
   date_start.setDate(date_end.getDate() - 21)
-
-  const max_value = d3.max(data, (d: SummaryItem) =>
-    Math.max(d.task_count_complete + d.bug_count_complete, d.task_count_total + d.bug_count_total)
-  ) as number
 
   const width = 270
   const height = 110
@@ -193,7 +206,7 @@ function createChartTypeWorkload(type: SummaryType, data: SummaryItem[]) {
 </script>
 
 <template>
-  <v-container class="summary">
+  <v-container class="summary" v-if="is_enable">
     <v-row>
       <v-col cols="auto" class="d-flex summary-block">
         <v-card class="flex-grow-1">
