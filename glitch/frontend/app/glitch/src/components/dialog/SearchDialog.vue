@@ -1,0 +1,62 @@
+<script setup lang="ts">
+import { ref, defineProps, watch } from 'vue'
+import { useRouter } from 'vue-router'
+
+import useItemStore from '@/stores/ItemStore'
+import type { EmitDialog } from '@/components/common/events'
+
+const props = defineProps<{
+  showDialog: boolean
+}>()
+
+const router = useRouter()
+const store_item = useItemStore()
+
+const emits = defineEmits<EmitDialog>()
+
+const dialog = ref(props.showDialog)
+const target = ref('')
+
+watch(
+  () => props.showDialog,
+  (newValue) => {
+    dialog.value = newValue
+  }
+)
+
+watch(dialog, (newValue) => {
+  emits('update:showDialog', newValue)
+})
+
+const search = async () => {
+  store_item.setExtractSearch(target.value)
+  store_item.fetchItems(router)
+  dialog.value = false
+}
+</script>
+
+<template>
+  <v-dialog v-model="dialog" persistent class="panel-common">
+    <v-card>
+      <v-card-title>
+        <span class="text-h5">Search</span>
+      </v-card-title>
+
+      <v-card-text>
+        <v-form>
+          <v-text-field v-model="target" label="Target" required />
+        </v-form>
+      </v-card-text>
+
+      <v-card-actions>
+        <v-spacer />
+        <v-btn @click="dialog = false">Cancel</v-btn>
+        <v-btn @click="search">Search</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+</template>
+
+<style scoped>
+@import '@/components/dialog/dialog.css';
+</style>

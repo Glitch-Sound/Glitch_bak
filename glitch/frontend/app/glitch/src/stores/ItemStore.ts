@@ -119,7 +119,7 @@ const useItemStore = defineStore('item', {
       this.extract_rid_item = rid_item
     },
     setExtractSearch(target: string) {
-      this.type_extract = ExtractType.RELATION
+      this.type_extract = ExtractType.SEARCH
       this.extract_search_target = target
     },
 

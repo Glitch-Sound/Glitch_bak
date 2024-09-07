@@ -8,6 +8,7 @@ import useProjectStore from '@/stores/ProjectStore'
 import useItemStore from '@/stores/ItemStore'
 import UserDetail from '@/components/common/UserDetail.vue'
 import ProjectDialog from '@/components/dialog/ProjectDialog.vue'
+import SearchDialog from '@/components/dialog/SearchDialog.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -18,7 +19,8 @@ const store_item = useItemStore()
 const title = ref('Glitch')
 const link_project = ref('/')
 const link_disabled = ref(true)
-const dialog = ref(false)
+const dialog_project = ref(false)
+const dialog_search = ref(false)
 
 onMounted(() => {
   store_project.fetchProjects()
@@ -65,12 +67,16 @@ watch([() => store_project.selected_id_project], () => {
   link_disabled.value = false
 })
 
-const toggleDialog = () => {
-  dialog.value = !dialog.value
+const toggleDialogProject = () => {
+  dialog_project.value = !dialog_project.value
 }
 
-const handleSubmit = async () => {
-  dialog.value = false
+const toggleDialogSearch = () => {
+  dialog_search.value = !dialog_search.value
+}
+
+const handleSubmitProject = async () => {
+  dialog_project.value = false
 }
 </script>
 
@@ -80,8 +86,8 @@ const handleSubmit = async () => {
       <v-img gradient="to top, rgba(0, 0, 0, 0), rgba(29, 35, 46, 0.4), rgba(59, 65, 79, 0.7)" />
     </template>
 
-    <v-app-bar-title @click="toggleDialog" class="app-bar-title">
-      <v-icon class="mr-2" size="small">mdi-grain</v-icon>
+    <v-app-bar-title @click="toggleDialogProject" class="app-bar-title">
+      <v-icon class="mr-1" size="small">mdi-grain</v-icon>
       {{ title }}
     </v-app-bar-title>
 
@@ -111,7 +117,12 @@ const handleSubmit = async () => {
       <UserDetail />
     </div>
 
-    <v-btn icon disabled class="mx-1">
+    <v-btn
+      icon
+      class="mx-1"
+      :disabled="store_project.selected_id_project == null"
+      @click="toggleDialogSearch"
+    >
       <v-icon>mdi-magnify</v-icon>
     </v-btn>
 
@@ -122,7 +133,8 @@ const handleSubmit = async () => {
     </v-btn>
   </v-app-bar>
 
-  <ProjectDialog :showDialog="dialog" @submit="handleSubmit" />
+  <ProjectDialog :showDialog="dialog_project" @submit="handleSubmitProject" />
+  <SearchDialog :showDialog="dialog_search" @update:showDialog="dialog_search = $event" />
 </template>
 
 <style scoped>
