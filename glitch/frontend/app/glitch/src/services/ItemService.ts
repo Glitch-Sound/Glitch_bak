@@ -34,6 +34,78 @@ class ItemService {
     }
   }
 
+  public async getItemsAll(id_project: number | null): Promise<Item[]> {
+    try {
+      const response = await http.get<Item[]>(`/api/items/all/${id_project}`)
+      return response.data
+    } catch (error) {
+      throw new Error('error: ${error}')
+    }
+  }
+
+  public async getItemsIncomplete(id_project: number | null): Promise<Item[]> {
+    try {
+      const response = await http.get<Item[]>(`/api/items/incomplete/${id_project}`)
+      return response.data
+    } catch (error) {
+      throw new Error('error: ${error}')
+    }
+  }
+
+  public async getItemsHighRisk(id_project: number | null): Promise<Item[]> {
+    try {
+      const response = await http.get<Item[]>(`/api/items/high-risk/${id_project}`)
+      return response.data
+    } catch (error) {
+      throw new Error('error: ${error}')
+    }
+  }
+
+  public async getItemsAlert(id_project: number | null): Promise<Item[]> {
+    try {
+      const response = await http.get<Item[]>(`/api/items/alert/${id_project}`)
+      return response.data
+    } catch (error) {
+      throw new Error('error: ${error}')
+    }
+  }
+
+  public async getItemsAssignment(
+    id_project: number | null,
+    rid_users: number | undefined
+  ): Promise<Item[]> {
+    try {
+      if (rid_users === undefined) {
+        return []
+      }
+      const response = await http.get<Item[]>(`/api/items/assignment/${id_project}/${rid_users}`)
+      return response.data
+    } catch (error) {
+      throw new Error('error: ${error}')
+    }
+  }
+
+  public async getItemsRelation(
+    id_project: number | null,
+    rid_items: number | null
+  ): Promise<Item[]> {
+    try {
+      const response = await http.get<Item[]>(`/api/items/relation/${id_project}/${rid_items}`)
+      return response.data
+    } catch (error) {
+      throw new Error('error: ${error}')
+    }
+  }
+
+  public async getItemsSearch(id_project: number | null, target: string | null): Promise<Item[]> {
+    try {
+      const response = await http.get<Item[]>(`/api/items/search/${id_project}/${target}`)
+      return response.data
+    } catch (error) {
+      throw new Error('error: ${error}')
+    }
+  }
+
   public async getItemsByUser(
     id_project: number | null,
     rid_users: number | undefined
@@ -43,6 +115,40 @@ class ItemService {
         params: {
           type_extract: ExtractType.ASSIGNMENT,
           rid_users: rid_users
+        }
+      })
+      return response.data
+    } catch (error) {
+      throw new Error('error: ${error}')
+    }
+  }
+
+  public async getItemsByItem(
+    id_project: number | null,
+    rid_items: number | undefined
+  ): Promise<Item[]> {
+    try {
+      const response = await http.get<Item[]>(`/api/items/${id_project}`, {
+        params: {
+          type_extract: ExtractType.RELATION,
+          rid_items: rid_items
+        }
+      })
+      return response.data
+    } catch (error) {
+      throw new Error('error: ${error}')
+    }
+  }
+
+  public async getItemsBySearch(
+    id_project: number | null,
+    search: string | undefined
+  ): Promise<Item[]> {
+    try {
+      const response = await http.get<Item[]>(`/api/items/${id_project}`, {
+        params: {
+          type_extract: ExtractType.SEARCH,
+          search: search
         }
       })
       return response.data

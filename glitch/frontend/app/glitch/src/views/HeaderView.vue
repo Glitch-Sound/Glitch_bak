@@ -48,7 +48,11 @@ watch([() => route.params.id_project, () => store_project.projects.length], () =
       case ExtractType.ASSIGNMENT:
         store_item.setExtractAssignment()
         break
-      case ExtractType.ITEM:
+      case ExtractType.RELATION:
+        store_item.setExtractItem(Number(route.query.target))
+        break
+      case ExtractType.SEARCH:
+        store_item.setExtractSearch(String(route.query.target))
         break
     }
 

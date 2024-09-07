@@ -49,7 +49,8 @@ export enum ExtractType {
   HIGH_RISK,
   ALERT,
   ASSIGNMENT,
-  ITEM
+  RELATION,
+  SEARCH
 }
 
 export interface Item {

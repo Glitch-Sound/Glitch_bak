@@ -10,7 +10,8 @@ const useItemStore = defineStore('item', {
     items: [] as Array<Item>,
     type_extract: ExtractType.INCOMPLETE as ExtractType,
     type_enabled: ItemType.BUG as ItemType,
-    rid_item: 0 as number
+    extract_rid_item: 0 as number,
+    extract_search_target: '' as string
   }),
   actions: {
     async fetchItems(router: any) {
@@ -23,31 +24,45 @@ const useItemStore = defineStore('item', {
 
         switch (this.type_extract) {
           case ExtractType.ALL:
+            this.items = await service_item.getItemsAll(store_project.selected_id_project)
+            break
+
           case ExtractType.INCOMPLETE:
+            this.items = await service_item.getItemsIncomplete(store_project.selected_id_project)
+            break
+
           case ExtractType.HIGH_RISK:
+            this.items = await service_item.getItemsHighRisk(store_project.selected_id_project)
+            break
+
           case ExtractType.ALERT:
-            {
-              this.items = await service_item.getItems(
-                store_project.selected_id_project,
-                this.type_extract
-              )
-              const query = { extruct: this.type_extract }
-              router.push({ path, query })
-            }
+            this.items = await service_item.getItemsAlert(store_project.selected_id_project)
             break
+
           case ExtractType.ASSIGNMENT:
-            {
-              this.items = await service_item.getItemsByUser(
-                store_project.selected_id_project,
-                store_user.login_user?.rid
-              )
-              const query = { extruct: this.type_extract }
-              router.push({ path, query })
-            }
+            this.items = await service_item.getItemsAssignment(
+              store_project.selected_id_project,
+              store_user.login_user?.rid
+            )
             break
-          case ExtractType.ITEM:
+
+          case ExtractType.RELATION:
+            this.items = await service_item.getItemsRelation(
+              store_project.selected_id_project,
+              this.extract_rid_item
+            )
+            break
+
+          case ExtractType.SEARCH:
+            this.items = await service_item.getItemsSearch(
+              store_project.selected_id_project,
+              this.extract_search_target
+            )
             break
         }
+
+        const query = { extruct: this.type_extract }
+        router.push({ path, query })
       } catch (error) {
         console.error('Error:', error)
       }
@@ -68,9 +83,14 @@ const useItemStore = defineStore('item', {
       this.type_extract = ExtractType.ASSIGNMENT
     },
     setExtractItem(rid_item: number) {
-      this.type_extract = ExtractType.ITEM
-      this.rid_item = rid_item
+      this.type_extract = ExtractType.RELATION
+      this.extract_rid_item = rid_item
     },
+    setExtractSearch(target: string) {
+      this.type_extract = ExtractType.RELATION
+      this.extract_search_target = target
+    },
+
     setEnabledType(type: ItemType) {
       this.type_enabled = type
     }
