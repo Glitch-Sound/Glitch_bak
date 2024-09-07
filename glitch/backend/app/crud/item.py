@@ -1,6 +1,6 @@
-from sqlalchemy import select, distinct, desc   # type: ignore
-from sqlalchemy.orm import Session, aliased     # type: ignore
-from sqlalchemy.sql import func                 # type: ignore
+from sqlalchemy import select, distinct, desc, and_, or_    # type: ignore
+from sqlalchemy.orm import Session, aliased                 # type: ignore
+from sqlalchemy.sql import func                             # type: ignore
 
 from enum import Enum
 
@@ -546,6 +546,26 @@ def _extructItem(db: Session, params: ItemParam):
                 ).filter(Tree.rid_ancestor == params.rid_items)
 
                 cte_extruct = cte_extruct_ancestor.union(cte_extruct_descendant)
+
+            case ExtractType.SEARCH.value:
+                subquery_target = (
+                    select(Item.rid)
+                    .where(
+                        and_(
+                            Item.id_project == params.id_project,
+                            or_(
+                                Item.title.like(f"%{params.search}%"),
+                                Item.detail.like(f"%{params.search}%"),
+                                Item.result.like(f"%{params.search}%")
+                            )
+                        )
+                    )
+                ).subquery()
+
+                cte_extruct = db.query(
+                    distinct(Tree.rid_ancestor).label('rid')
+                )\
+                .where(Tree.rid_descendant.in_(subquery_target))
 
         return cte_extruct.cte(name='targets')
 
