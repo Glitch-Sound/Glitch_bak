@@ -6,6 +6,7 @@ import type { Item } from '@/types/Item'
 import type { Activity } from '@/types/Activity'
 import type { EmitDialog } from '@/components/common/events'
 import ActivityService from '@/services/ActivityService'
+import MarkedText from '@/components/common/MarkedText.vue'
 
 const props = defineProps<{
   dialog_show: boolean
@@ -63,7 +64,7 @@ const addData = async () => {
             <span>{{ activity.datetime_entry }}</span>
             <span class="mx-3">{{ activity.name }}</span>
           </div>
-          <div>{{ activity.activity }}</div>
+          <div><MarkedText :src="activity.activity" /></div>
         </div>
 
         <v-form class="mt-8">
