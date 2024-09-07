@@ -1,5 +1,6 @@
 export type EmitSubmit = {
   (e: 'submit'): void
+  (e: 'submit', id_project: number): void
 }
 
 export type EmitDelete = {

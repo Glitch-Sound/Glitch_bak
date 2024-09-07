@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import { ExtractType } from '@/types/Item'
@@ -22,17 +22,31 @@ const link_disabled = ref(true)
 const dialog_project = ref(false)
 const dialog_search = ref(false)
 
-onMounted(() => {
-  store_project.fetchProjects()
+watch([() => store_project.selected_id_project], () => {
+  common()
 })
 
-watch([() => route.params.id_project, () => store_project.projects.length], () => {
+const toggleDialogProject = () => {
+  dialog_project.value = !dialog_project.value
+}
+
+const toggleDialogSearch = () => {
+  dialog_search.value = !dialog_search.value
+}
+
+const handleSubmitProject = async (id_project: number) => {
+  store_project.setSelectedProjectID(id_project)
+  common()
+  dialog_project.value = false
+}
+
+const common = () => {
   title.value =
-    store_project.projects.find((project) => project.rid == Number(route.params.id_project))
+    store_project.projects.find((project) => project.rid == store_project.selected_id_project)
       ?.title || 'Glitch'
 
-  if (route.params.id_project) {
-    store_project.setSelectedProjectID(Number(route.params.id_project))
+  if (store_project.selected_id_project) {
+    link_disabled.value = false
 
     switch (Number(route.query.extruct)) {
       case ExtractType.ALL:
@@ -60,23 +74,6 @@ watch([() => route.params.id_project, () => store_project.projects.length], () =
 
     store_item.fetchItems(router)
   }
-})
-
-watch([() => store_project.selected_id_project], () => {
-  link_project.value = '/project/' + store_project.selected_id_project
-  link_disabled.value = false
-})
-
-const toggleDialogProject = () => {
-  dialog_project.value = !dialog_project.value
-}
-
-const toggleDialogSearch = () => {
-  dialog_search.value = !dialog_search.value
-}
-
-const handleSubmitProject = async () => {
-  dialog_project.value = false
 }
 </script>
 

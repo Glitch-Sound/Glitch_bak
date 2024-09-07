@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 
 import type { ProjectCreate, ProjectUpdate } from '@/types/Item'
 import useProjectStore from '@/stores/ProjectStore'
@@ -19,6 +20,7 @@ const headers = [
   { title: '', width: '140px' }
 ]
 
+const route = useRoute()
 const store_project = useProjectStore()
 
 const dialog_entry = ref(false)
@@ -46,7 +48,7 @@ const dialog_form_data_update = ref<ProjectUpdate>({
 })
 
 onMounted(() => {
-  store_project.fetchProjects()
+  store_project.setSelectedProjectID(Number(route.params.id_project))
 })
 
 const openEntryDialog = () => {

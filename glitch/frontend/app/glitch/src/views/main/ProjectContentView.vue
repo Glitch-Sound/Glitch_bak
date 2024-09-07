@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 
 import { ItemType } from '@/types/Item'
+import useProjectStore from '@/stores/ProjectStore'
 import useItemStore from '@/stores/ItemStore'
 import PanelEvent from '@/components/panel/PanelEvent.vue'
 import PanelFeature from '@/components/panel/PanelFeature.vue'
@@ -10,11 +11,12 @@ import PanelStory from '@/components/panel/PanelStory.vue'
 import PanelTask from '@/components/panel/PanelTask.vue'
 import PanelBug from '@/components/panel/PanelBug.vue'
 
-const router = useRouter()
+const route = useRoute()
+const store_project = useProjectStore()
 const store_item = useItemStore()
 
 onMounted(() => {
-  store_item.fetchItems(router)
+  store_project.setSelectedProjectID(Number(route.params.id_project))
 })
 </script>
 

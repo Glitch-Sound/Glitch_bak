@@ -35,9 +35,10 @@ watch(
 )
 
 const emit = defineEmits<EmitSubmit>()
-const handleSubmit = async () => {
+const handleSubmit = async (id_project: number) => {
+  store_project.setSelectedProjectID(id_project)
   dialog.value = false
-  emit('submit')
+  emit('submit', id_project)
 }
 </script>
 
@@ -54,7 +55,10 @@ const handleSubmit = async () => {
             <td>{{ item.id_project }}</td>
             <td><StateLabel :state="item.state" /></td>
             <td class="title">
-              <router-link :to="`/project/${item.id_project}`" @click="handleSubmit">
+              <router-link
+                :to="`/project/${item.id_project}`"
+                @click="handleSubmit(item.id_project)"
+              >
                 {{ item.title }}
               </router-link>
             </td>
