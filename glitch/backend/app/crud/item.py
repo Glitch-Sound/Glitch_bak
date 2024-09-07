@@ -59,12 +59,12 @@ class ExtractType(Enum):
 
 
 class ItemParam():
-    def __init__(self, type_extract: ExtractType, id_project: int, rid_users: int = None, rid_items: int = None, target: str  = None):
+    def __init__(self, type_extract: ExtractType, id_project: int, rid_users: int = None, rid_items: int = None, search: str  = None):
         self.type_extract = type_extract
         self.id_project   = id_project
         self.rid_users    = rid_users if rid_users is not None else 0
         self.rid_items    = rid_items if rid_items is not None else 0
-        self.search       = target    if target    is not None else ''
+        self.search       = search    if search    is not None else ''
 
 
 class ItemUpdateCommon():
@@ -534,6 +534,18 @@ def _extructItem(db: Session, params: ItemParam):
                     distinct(Tree.rid_ancestor).label('rid')
                 )\
                 .where(Tree.rid_descendant.in_(subquery_target))
+
+            case ExtractType.RELATION.value:
+                cte_extruct_ancestor = db.query(
+                    Tree.rid_ancestor.label('rid')
+                )\
+                .filter(Tree.rid_descendant == params.rid_items)
+
+                cte_extruct_descendant = db.query(
+                    Tree.rid_descendant.label('rid')
+                ).filter(Tree.rid_ancestor == params.rid_items)
+
+                cte_extruct = cte_extruct_ancestor.union(cte_extruct_descendant)
 
         return cte_extruct.cte(name='targets')
 

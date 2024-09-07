@@ -73,10 +73,10 @@ def get_items_assignment(id_project: int, rid_users: int, db: Session = Depends(
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
-@router.get('/items/relation/{id_project}/{rid_items}', response_model=list[schema_item.Item])
-def get_items_relation(id_project: int, rid_items: int, db: Session = Depends(get_db)):
+@router.get('/items/relation/{id_project}/{target}', response_model=list[schema_item.Item])
+def get_items_relation(id_project: int, target: int, db: Session = Depends(get_db)):
     try:
-        params = ItemParam(type_extract=ExtractType.RELATION.value, id_project=id_project, rid_items=rid_items)
+        params = ItemParam(type_extract=ExtractType.RELATION.value, id_project=id_project, rid_items=target)
         result = crud_item.getItems(db, params)
         return result
 
@@ -86,9 +86,9 @@ def get_items_relation(id_project: int, rid_items: int, db: Session = Depends(ge
 
 
 @router.get('/items/search/{id_project}/{target}', response_model=list[schema_item.Item])
-def get_items_search(id_project: int, target: int, db: Session = Depends(get_db)):
+def get_items_search(id_project: int, target: str, db: Session = Depends(get_db)):
     try:
-        params = ItemParam(type_extract=ExtractType.SEARCH.value, id_project=id_project, target=target)
+        params = ItemParam(type_extract=ExtractType.SEARCH.value, id_project=id_project, search=target)
         result = crud_item.getItems(db, params)
         return result
 
