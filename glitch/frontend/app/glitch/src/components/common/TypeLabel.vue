@@ -2,7 +2,13 @@
 import { defineProps } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { ItemType, type Item, type TaskPriorityUpdate, type BugPriorityUpdate } from '@/types/Item'
+import {
+  ItemType,
+  ExtractType,
+  type Item,
+  type TaskPriorityUpdate,
+  type BugPriorityUpdate
+} from '@/types/Item'
 import useItemStore from '@/stores/ItemStore'
 import ItemService from '@/services/ItemService'
 
@@ -13,9 +19,17 @@ const props = defineProps<{
 const router = useRouter()
 const store_item = useItemStore()
 
-const copyLink = () => {}
+const copyLink = () => {
+  const url = new URL(window.location.href)
+  url.searchParams.set('extruct', String(ExtractType.RELATION))
+  url.searchParams.set('target', props.item.rid.toString())
+  navigator.clipboard.writeText(url.toString())
+}
 
-const jumpRelation = () => {}
+const jumpRelation = () => {
+  store_item.setExtractItem(props.item.rid)
+  store_item.fetchItems(router)
+}
 
 const setTaskPriorityHigh = async () => {
   const data: TaskPriorityUpdate = {
@@ -103,6 +117,7 @@ const setBugPriorityLow = async () => {
       <v-list-item-title>
         <v-btn prepend-icon="mdi-content-copy" @click="copyLink()">Copy link</v-btn>
       </v-list-item-title>
+
       <v-list-item-title>
         <v-btn prepend-icon="mdi-relation-one-to-zero-or-many" @click="jumpRelation()">
           Jump relation

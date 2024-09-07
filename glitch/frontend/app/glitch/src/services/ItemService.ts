@@ -90,6 +90,9 @@ class ItemService {
     rid_items: number | null
   ): Promise<Item[]> {
     try {
+      if (rid_items == null || isNaN(rid_items)) {
+        return []
+      }
       const response = await http.get<Item[]>(`/api/items/relation/${id_project}/${rid_items}`)
       return response.data
     } catch (error) {

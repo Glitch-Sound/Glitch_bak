@@ -24,45 +24,77 @@ const useItemStore = defineStore('item', {
 
         switch (this.type_extract) {
           case ExtractType.ALL:
-            this.items = await service_item.getItemsAll(store_project.selected_id_project)
+            {
+              this.items = await service_item.getItemsAll(store_project.selected_id_project)
+
+              const query = { extruct: this.type_extract }
+              router.push({ path, query })
+            }
             break
 
           case ExtractType.INCOMPLETE:
-            this.items = await service_item.getItemsIncomplete(store_project.selected_id_project)
+            {
+              this.items = await service_item.getItemsIncomplete(store_project.selected_id_project)
+
+              const query = { extruct: this.type_extract }
+              router.push({ path, query })
+            }
             break
 
           case ExtractType.HIGH_RISK:
-            this.items = await service_item.getItemsHighRisk(store_project.selected_id_project)
+            {
+              this.items = await service_item.getItemsHighRisk(store_project.selected_id_project)
+
+              const query = { extruct: this.type_extract }
+              router.push({ path, query })
+            }
             break
 
           case ExtractType.ALERT:
-            this.items = await service_item.getItemsAlert(store_project.selected_id_project)
+            {
+              this.items = await service_item.getItemsAlert(store_project.selected_id_project)
+
+              const query = { extruct: this.type_extract }
+              router.push({ path, query })
+            }
             break
 
           case ExtractType.ASSIGNMENT:
-            this.items = await service_item.getItemsAssignment(
-              store_project.selected_id_project,
-              store_user.login_user?.rid
-            )
+            {
+              this.items = await service_item.getItemsAssignment(
+                store_project.selected_id_project,
+                store_user.login_user?.rid
+              )
+
+              const query = { extruct: this.type_extract, target: store_user.login_user?.rid }
+              router.push({ path, query })
+            }
             break
 
           case ExtractType.RELATION:
-            this.items = await service_item.getItemsRelation(
-              store_project.selected_id_project,
-              this.extract_rid_item
-            )
+            {
+              this.items = await service_item.getItemsRelation(
+                store_project.selected_id_project,
+                this.extract_rid_item
+              )
+
+              const query = { extruct: this.type_extract, target: this.extract_rid_item }
+              router.push({ path, query })
+            }
             break
 
           case ExtractType.SEARCH:
-            this.items = await service_item.getItemsSearch(
-              store_project.selected_id_project,
-              this.extract_search_target
-            )
+            {
+              this.items = await service_item.getItemsSearch(
+                store_project.selected_id_project,
+                this.extract_search_target
+              )
+
+              const query = { extruct: this.type_extract, target: this.extract_search_target }
+              router.push({ path, query })
+            }
             break
         }
-
-        const query = { extruct: this.type_extract }
-        router.push({ path, query })
       } catch (error) {
         console.error('Error:', error)
       }
