@@ -54,12 +54,18 @@ class ExtractType(Enum):
     HIGH_RISK  = 3
     ALERT      = 4
     ASSIGNMENT = 5
+    RELATION   = 6
+    SEARCH     = 7
+
 
 class ItemParam():
-    def __init__(self, id_project: int, type_extract: ExtractType, rid_users: int):
-        self.id_project = id_project
+    def __init__(self, type_extract: ExtractType, id_project: int, rid_users: int = None, rid_items: int = None, target: str  = None):
         self.type_extract = type_extract
-        self.rid_users = rid_users
+        self.id_project   = id_project
+        self.rid_users    = rid_users if rid_users is not None else 0
+        self.rid_items    = rid_items if rid_items is not None else 0
+        self.search       = target    if target    is not None else ''
+
 
 class ItemUpdateCommon():
     def __init__(self, rid: int, state: int, rid_users: int, rid_users_review: int, title: str, detail: str, result: str):

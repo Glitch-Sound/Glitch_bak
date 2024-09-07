@@ -8,15 +8,87 @@ sys.path.append('~/app')
 from database import get_db
 from schema import item as schema_item
 from crud import item as crud_item
-from crud.item import ItemParam
+from crud.item import ItemParam, ExtractType
 
 
 router = APIRouter()
 
-@router.get('/items/{id_project}', response_model=list[schema_item.Item])
-def get_items(id_project: int, type_extract: int = Query(None), rid_users: int = Query(None), db: Session = Depends(get_db)):
+@router.get('/items/all/{id_project}', response_model=list[schema_item.Item])
+def get_items_all(id_project: int, db: Session = Depends(get_db)):
     try:
-        params = ItemParam(id_project=id_project, type_extract=type_extract, rid_users=rid_users)
+        params = ItemParam(type_extract=ExtractType.ALL.value, id_project=id_project)
+        result = crud_item.getItems(db, params)
+        return result
+
+    except Exception as e:
+        print(traceback.format_exc())
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
+
+
+@router.get('/items/incomplete/{id_project}', response_model=list[schema_item.Item])
+def get_items_incomplete(id_project: int, db: Session = Depends(get_db)):
+    try:
+        params = ItemParam(type_extract=ExtractType.INCOMPLETE.value, id_project=id_project)
+        result = crud_item.getItems(db, params)
+        return result
+
+    except Exception as e:
+        print(traceback.format_exc())
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
+
+
+@router.get('/items/high-risk/{id_project}', response_model=list[schema_item.Item])
+def get_items_high_risk(id_project: int, db: Session = Depends(get_db)):
+    try:
+        params = ItemParam(type_extract=ExtractType.HIGH_RISK.value, id_project=id_project)
+        result = crud_item.getItems(db, params)
+        return result
+
+    except Exception as e:
+        print(traceback.format_exc())
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
+
+
+@router.get('/items/alert/{id_project}', response_model=list[schema_item.Item])
+def get_items_alert(id_project: int, db: Session = Depends(get_db)):
+    try:
+        params = ItemParam(type_extract=ExtractType.ALERT.value, id_project=id_project)
+        result = crud_item.getItems(db, params)
+        return result
+
+    except Exception as e:
+        print(traceback.format_exc())
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
+
+
+@router.get('/items/assignment/{id_project}/{rid_users}', response_model=list[schema_item.Item])
+def get_items_assignment(id_project: int, rid_users: int, db: Session = Depends(get_db)):
+    try:
+        params = ItemParam(type_extract=ExtractType.ASSIGNMENT.value, id_project=id_project, rid_users=rid_users)
+        result = crud_item.getItems(db, params)
+        return result
+
+    except Exception as e:
+        print(traceback.format_exc())
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
+
+
+@router.get('/items/relation/{id_project}/{rid_items}', response_model=list[schema_item.Item])
+def get_items_relation(id_project: int, rid_items: int, db: Session = Depends(get_db)):
+    try:
+        params = ItemParam(type_extract=ExtractType.RELATION.value, id_project=id_project, rid_items=rid_items)
+        result = crud_item.getItems(db, params)
+        return result
+
+    except Exception as e:
+        print(traceback.format_exc())
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
+
+
+@router.get('/items/search/{id_project}/{target}', response_model=list[schema_item.Item])
+def get_items_search(id_project: int, target: int, db: Session = Depends(get_db)):
+    try:
+        params = ItemParam(type_extract=ExtractType.SEARCH.value, id_project=id_project, target=target)
         result = crud_item.getItems(db, params)
         return result
 
