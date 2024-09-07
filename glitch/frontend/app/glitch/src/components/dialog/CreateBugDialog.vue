@@ -9,19 +9,19 @@ import WorkloadSelect from '@/components/common/WorkloadSelect.vue'
 import { type EmitDialog } from '@/components/common/events'
 
 const props = defineProps<{
-  showDialog: boolean
-  formData: BugCreate
+  dialog_show: boolean
+  data_form: BugCreate
 }>()
 
 const emit = defineEmits<EmitDialog>()
-const { dialog, valid, formData, formRef, rules, submitData } = useDialog(props, emit)
+const { dialog, valid, data_form, ref_form, rules, submitData } = useDialog(props, emit)
 
 const handleUserSelected = (user: User) => {
-  formData.value.rid_users = user.rid
+  data_form.value.rid_users = user.rid
 }
 
 const handleWorkloadSelect = (workload: number) => {
-  formData.value.workload = workload
+  data_form.value.workload = workload
 }
 </script>
 
@@ -33,12 +33,22 @@ const handleWorkloadSelect = (workload: number) => {
       </v-card-title>
 
       <v-card-text>
-        <v-form ref="formRef" v-model="valid" lazy-validation>
+        <v-form ref="ref_form" v-model="valid" lazy-validation>
           <UserSelect @itemSelected="handleUserSelected" />
 
-          <v-text-field v-model="formData.title" :rules="[rules.required]" label="Title" required />
+          <v-text-field
+            v-model="data_form.title"
+            :rules="[rules.required]"
+            label="Title"
+            required
+          />
 
-          <v-textarea v-model="formData.detail" :rules="[rules.required]" label="Detail" required />
+          <v-textarea
+            v-model="data_form.detail"
+            :rules="[rules.required]"
+            label="Detail"
+            required
+          />
 
           <WorkloadSelect :workload="null" @itemSelected="handleWorkloadSelect" />
         </v-form>

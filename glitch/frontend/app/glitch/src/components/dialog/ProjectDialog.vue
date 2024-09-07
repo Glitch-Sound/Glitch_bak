@@ -16,10 +16,10 @@ const headers = [
 ]
 
 const props = defineProps<{
-  showDialog: boolean
+  dialog_show: boolean
 }>()
 
-const dialog = ref(props.showDialog)
+const dialog = ref(props.dialog_show)
 
 const store_project = useProjectStore()
 
@@ -28,7 +28,7 @@ onMounted(() => {
 })
 
 watch(
-  () => props.showDialog,
+  () => props.dialog_show,
   (new_value) => {
     dialog.value = new_value
   }

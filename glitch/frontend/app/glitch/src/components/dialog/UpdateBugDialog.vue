@@ -12,17 +12,17 @@ import StateSelect from '@/components/common/StateSelect.vue'
 import DeleteButton from '@/components/common/DeleteButton.vue'
 
 const props = defineProps<{
-  showDialog: boolean
-  formData: BugUpdate
+  dialog_show: boolean
+  data_form: BugUpdate
 }>()
 
 const is_review = ref(false)
 
 const emit = defineEmits<EmitDialog>()
-const { dialog, valid, formData, formRef, rules, submitData, deleteData } = useDialog(props, emit)
+const { dialog, valid, data_form, ref_form, rules, submitData, deleteData } = useDialog(props, emit)
 
 watch(
-  () => formData.value.state,
+  () => data_form.value.state,
   (state_new) => {
     if (state_new == ItemState.REVIEW) {
       is_review.value = true
@@ -33,19 +33,19 @@ watch(
 )
 
 const handleUserSelected = (user: User) => {
-  formData.value.rid_users = user.rid
+  data_form.value.rid_users = user.rid
 }
 
 const handleUserReviewSelected = (user: User) => {
-  formData.value.rid_users_review = user.rid
+  data_form.value.rid_users_review = user.rid
 }
 
 const handleStateSelected = (state: ItemState) => {
-  formData.value.state = state
+  data_form.value.state = state
 }
 
 const handleWorkloadSelect = (workload: number) => {
-  formData.value.workload = workload
+  data_form.value.workload = workload
 }
 </script>
 
@@ -57,28 +57,43 @@ const handleWorkloadSelect = (workload: number) => {
       </v-card-title>
 
       <v-card-text>
-        <v-form ref="formRef" v-model="valid" lazy-validation>
-          <UserSelect v-model="formData.rid_users" @itemSelected="handleUserSelected" />
+        <v-form ref="ref_form" v-model="valid" lazy-validation>
+          <UserSelect v-model="data_form.rid_users" @itemSelected="handleUserSelected" />
 
           <UserReviewSelect
             v-if="is_review"
-            v-model="formData.rid_users_review"
+            v-model="data_form.rid_users_review"
             @itemSelected="handleUserReviewSelected"
           />
 
           <StateSelect
             :type="ItemType.EVENT"
-            :state="formData.state"
+            :state="data_form.state"
             @itemSelected="handleStateSelected"
           />
 
-          <v-text-field v-model="formData.title" :rules="[rules.required]" label="Title" required />
+          <v-text-field
+            v-model="data_form.title"
+            :rules="[rules.required]"
+            label="Title"
+            required
+          />
 
-          <v-textarea v-model="formData.detail" :rules="[rules.required]" label="Detail" required />
+          <v-textarea
+            v-model="data_form.detail"
+            :rules="[rules.required]"
+            label="Detail"
+            required
+          />
 
-          <v-textarea v-model="formData.result" :rules="[rules.required]" label="Result" required />
+          <v-textarea
+            v-model="data_form.result"
+            :rules="[rules.required]"
+            label="Result"
+            required
+          />
 
-          <WorkloadSelect :workload="formData.workload" @itemSelected="handleWorkloadSelect" />
+          <WorkloadSelect :workload="data_form.workload" @itemSelected="handleWorkloadSelect" />
         </v-form>
       </v-card-text>
 

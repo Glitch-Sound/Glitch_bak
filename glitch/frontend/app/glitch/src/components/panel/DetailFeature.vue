@@ -100,8 +100,8 @@ const handleDelete = async () => {
   </v-expand-transition>
 
   <UpdateFeatureDialog
-    :showDialog="dialog"
-    :formData="dialog_form_data"
+    :dialog_show="dialog"
+    :data_form="dialog_form_data"
     @update:showDialog="dialog = $event"
     @submit="handleSubmit"
     @delete="handleDelete"

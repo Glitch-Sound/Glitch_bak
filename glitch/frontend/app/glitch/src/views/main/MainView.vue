@@ -42,8 +42,8 @@ const handleEntry = async (data: UserCreate) => {
     <v-container>Glitchの使い方</v-container>
 
     <CreateUserDialog
-      :showDialog="dialog"
-      :formData="dialog_form_data"
+      :dialog_show="dialog"
+      :data_form="dialog_form_data"
       :is_startup="true"
       @update:showDialog="dialog = $event"
       @submit="handleEntry"

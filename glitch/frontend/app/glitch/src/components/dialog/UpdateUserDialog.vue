@@ -8,12 +8,12 @@ import DeleteButton from '@/components/common/DeleteButton.vue'
 import { type EmitDialog } from '@/components/common/events'
 
 const props = defineProps<{
-  showDialog: boolean
-  formData: UserUpdate
+  dialog_show: boolean
+  data_form: UserUpdate
 }>()
 
 const emit = defineEmits<EmitDialog>()
-const { dialog, valid, formData, formRef, rules, submitData, deleteData } = useDialog(props, emit)
+const { dialog, valid, data_form, ref_form, rules, submitData, deleteData } = useDialog(props, emit)
 </script>
 
 <template>
@@ -24,18 +24,18 @@ const { dialog, valid, formData, formRef, rules, submitData, deleteData } = useD
       </v-card-title>
 
       <v-card-text>
-        <v-form ref="formRef" v-model="valid" lazy-validation>
-          <v-text-field v-model="formData.user" :rules="[rules.required]" label="User" required />
+        <v-form ref="ref_form" v-model="valid" lazy-validation>
+          <v-text-field v-model="data_form.user" :rules="[rules.required]" label="User" required />
 
           <v-text-field
-            v-model="formData.password"
+            v-model="data_form.password"
             :rules="[rules.required]"
             label="Password"
             type="password"
             required
           />
 
-          <v-text-field v-model="formData.name" :rules="[rules.required]" label="Name" required />
+          <v-text-field v-model="data_form.name" :rules="[rules.required]" label="Name" required />
         </v-form>
       </v-card-text>
 

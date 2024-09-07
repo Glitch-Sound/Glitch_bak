@@ -133,8 +133,8 @@ const handleSubmitProject = async () => {
     </v-btn>
   </v-app-bar>
 
-  <ProjectDialog :showDialog="dialog_project" @submit="handleSubmitProject" />
-  <SearchDialog :showDialog="dialog_search" @update:showDialog="dialog_search = $event" />
+  <ProjectDialog :dialog_show="dialog_project" @submit="handleSubmitProject" />
+  <SearchDialog :dialog_show="dialog_search" @update:showDialog="dialog_search = $event" />
 </template>
 
 <style scoped>

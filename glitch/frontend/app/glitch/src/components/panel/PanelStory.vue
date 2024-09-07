@@ -124,15 +124,15 @@ const handleBugSubmit = async (data: BugCreate) => {
   </div>
 
   <CreateTaskDialog
-    :showDialog="dialogTask"
-    :formData="dialog_form_data_task"
+    :dialog_show="dialogTask"
+    :data_form="dialog_form_data_task"
     @update:showDialog="dialogTask = $event"
     @submit="handleTaskSubmit"
   />
 
   <CreateBugDialog
-    :showDialog="dialogBug"
-    :formData="dialog_form_data_bug"
+    :dialog_show="dialogBug"
+    :data_form="dialog_form_data_bug"
     @update:showDialog="dialogBug = $event"
     @submit="handleBugSubmit"
   />

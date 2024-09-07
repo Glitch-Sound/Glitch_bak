@@ -6,7 +6,7 @@ import useItemStore from '@/stores/ItemStore'
 import type { EmitDialog } from '@/components/common/events'
 
 const props = defineProps<{
-  showDialog: boolean
+  dialog_show: boolean
 }>()
 
 const router = useRouter()
@@ -14,11 +14,11 @@ const store_item = useItemStore()
 
 const emits = defineEmits<EmitDialog>()
 
-const dialog = ref(props.showDialog)
+const dialog = ref(props.dialog_show)
 const target = ref('')
 
 watch(
-  () => props.showDialog,
+  () => props.dialog_show,
   (newValue) => {
     dialog.value = newValue
   }

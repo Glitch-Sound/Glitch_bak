@@ -1,18 +1,18 @@
 import { ref, watch } from 'vue'
 
 export const useDialog = (props: any, emits: any) => {
-  const dialog = ref(props.showDialog)
+  const dialog = ref(props.dialog_show)
   const valid = ref(false)
-  const formData = ref({ ...props.formData })
-  const formRef = ref()
+  const data_form = ref({ ...props.data_form })
+  const ref_form = ref()
 
   const rules = {
     required: (value: string) => !!value || 'Required field'
   }
 
   const submitData = () => {
-    if (formRef.value?.validate()) {
-      emits('submit', formData.value)
+    if (ref_form.value?.validate()) {
+      emits('submit', data_form.value)
       dialog.value = false
     }
   }
@@ -23,7 +23,7 @@ export const useDialog = (props: any, emits: any) => {
   }
 
   watch(
-    () => props.showDialog,
+    () => props.dialog_show,
     (newValue) => {
       dialog.value = newValue
     }
@@ -34,9 +34,9 @@ export const useDialog = (props: any, emits: any) => {
   })
 
   watch(
-    () => props.formData,
+    () => props.data_form,
     (newData) => {
-      formData.value = { ...newData }
+      data_form.value = { ...newData }
     },
     { immediate: true, deep: true }
   )
@@ -44,8 +44,8 @@ export const useDialog = (props: any, emits: any) => {
   return {
     dialog,
     valid,
-    formData,
-    formRef,
+    data_form,
+    ref_form,
     rules,
     submitData,
     deleteData

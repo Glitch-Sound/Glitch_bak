@@ -83,8 +83,8 @@ const handleSubmit = async (data: StoryCreate) => {
   </div>
 
   <CreateStoryDialog
-    :showDialog="dialog"
-    :formData="dialog_form_data"
+    :dialog_show="dialog"
+    :data_form="dialog_form_data"
     @update:showDialog="dialog = $event"
     @submit="handleSubmit"
   />

@@ -10,19 +10,19 @@ import DeleteButton from '@/components/common/DeleteButton.vue'
 import { type EmitDialog } from '@/components/common/events'
 
 const props = defineProps<{
-  showDialog: boolean
-  formData: ProjectUpdate
+  dialog_show: boolean
+  data_form: ProjectUpdate
 }>()
 
 const emit = defineEmits<EmitDialog>()
-const { dialog, valid, formData, formRef, rules, submitData, deleteData } = useDialog(props, emit)
+const { dialog, valid, data_form, ref_form, rules, submitData, deleteData } = useDialog(props, emit)
 
 const handleUserSelected = (user: User) => {
-  formData.value.rid_users = user.rid
+  data_form.value.rid_users = user.rid
 }
 
 const handleStateSelected = (state: ItemState) => {
-  formData.value.state = state
+  data_form.value.state = state
 }
 </script>
 
@@ -34,23 +34,38 @@ const handleStateSelected = (state: ItemState) => {
       </v-card-title>
 
       <v-card-text>
-        <v-form ref="formRef" v-model="valid" lazy-validation>
-          <UserSelect v-model="formData.rid_users" @itemSelected="handleUserSelected" />
+        <v-form ref="ref_form" v-model="valid" lazy-validation>
+          <UserSelect v-model="data_form.rid_users" @itemSelected="handleUserSelected" />
 
           <StateSelect
             :type="ItemType.PROJECT"
-            :state="formData.state"
+            :state="data_form.state"
             @itemSelected="handleStateSelected"
           />
 
-          <v-text-field v-model="formData.title" :rules="[rules.required]" label="Title" required />
+          <v-text-field
+            v-model="data_form.title"
+            :rules="[rules.required]"
+            label="Title"
+            required
+          />
 
-          <v-textarea v-model="formData.detail" :rules="[rules.required]" label="Detail" required />
+          <v-textarea
+            v-model="data_form.detail"
+            :rules="[rules.required]"
+            label="Detail"
+            required
+          />
 
-          <v-textarea v-model="formData.result" :rules="[rules.required]" label="Result" required />
+          <v-textarea
+            v-model="data_form.result"
+            :rules="[rules.required]"
+            label="Result"
+            required
+          />
 
           <v-text-field
-            v-model="formData.datetime_start"
+            v-model="data_form.datetime_start"
             :rules="[rules.required]"
             label="Start"
             type="date"
@@ -58,7 +73,7 @@ const handleStateSelected = (state: ItemState) => {
           />
 
           <v-text-field
-            v-model="formData.datetime_end"
+            v-model="data_form.datetime_end"
             :rules="[rules.required]"
             label="End"
             type="date"

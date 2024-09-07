@@ -12,17 +12,17 @@ import DeleteButton from '@/components/common/DeleteButton.vue'
 import { type EmitDialog } from '@/components/common/events'
 
 const props = defineProps<{
-  showDialog: boolean
-  formData: TaskUpdate
+  dialog_show: boolean
+  data_form: TaskUpdate
 }>()
 
 const is_review = ref(false)
 
 const emit = defineEmits<EmitDialog>()
-const { dialog, valid, formData, formRef, rules, submitData, deleteData } = useDialog(props, emit)
+const { dialog, valid, data_form, ref_form, rules, submitData, deleteData } = useDialog(props, emit)
 
 watch(
-  () => formData.value.state,
+  () => data_form.value.state,
   (state_new) => {
     if (state_new == ItemState.REVIEW) {
       is_review.value = true
@@ -33,23 +33,23 @@ watch(
 )
 
 onBeforeUpdate(() => {
-  formData.value.type = TaskType.WORKLOAD
+  data_form.value.type = TaskType.WORKLOAD
 })
 
 const handleUserSelected = (user: User) => {
-  formData.value.rid_users = user.rid
+  data_form.value.rid_users = user.rid
 }
 
 const handleUserReviewSelected = (user: User) => {
-  formData.value.rid_users_review = user.rid
+  data_form.value.rid_users_review = user.rid
 }
 
 const handleStateSelected = (state: ItemState) => {
-  formData.value.state = state
+  data_form.value.state = state
 }
 
 const handleWorkloadSelect = (workload: number) => {
-  formData.value.workload = workload
+  data_form.value.workload = workload
 }
 </script>
 
@@ -61,50 +61,65 @@ const handleWorkloadSelect = (workload: number) => {
       </v-card-title>
 
       <v-card-text>
-        <v-form ref="formRef" v-model="valid" lazy-validation>
-          <UserSelect v-model="formData.rid_users" @itemSelected="handleUserSelected" />
+        <v-form ref="ref_form" v-model="valid" lazy-validation>
+          <UserSelect v-model="data_form.rid_users" @itemSelected="handleUserSelected" />
 
           <UserReviewSelect
             v-if="is_review"
-            v-model="formData.rid_users_review"
+            v-model="data_form.rid_users_review"
             @itemSelected="handleUserReviewSelected"
           />
 
           <StateSelect
             :type="ItemType.EVENT"
-            :state="formData.state"
+            :state="data_form.state"
             @itemSelected="handleStateSelected"
           />
 
-          <v-text-field v-model="formData.title" :rules="[rules.required]" label="Title" required />
+          <v-text-field
+            v-model="data_form.title"
+            :rules="[rules.required]"
+            label="Title"
+            required
+          />
 
-          <v-textarea v-model="formData.detail" :rules="[rules.required]" label="Detail" required />
+          <v-textarea
+            v-model="data_form.detail"
+            :rules="[rules.required]"
+            label="Detail"
+            required
+          />
 
-          <v-textarea v-model="formData.result" :rules="[rules.required]" label="Result" required />
+          <v-textarea
+            v-model="data_form.result"
+            :rules="[rules.required]"
+            label="Result"
+            required
+          />
 
           <div class="mb-4 text-center">
-            <v-btn-toggle v-model="formData.type" mandatory>
+            <v-btn-toggle v-model="data_form.type" mandatory>
               <v-btn :value="TaskType.WORKLOAD">Workload</v-btn>
               <v-btn :value="TaskType.NUMBER">Number</v-btn>
             </v-btn-toggle>
           </div>
 
           <WorkloadSelect
-            v-if="formData.type == TaskType.WORKLOAD"
-            :workload="formData.workload"
+            v-if="data_form.type == TaskType.WORKLOAD"
+            :workload="data_form.workload"
             @itemSelected="handleWorkloadSelect"
           />
 
           <v-text-field
-            v-if="formData.type == TaskType.NUMBER"
-            v-model="formData.number_completed"
+            v-if="data_form.type == TaskType.NUMBER"
+            v-model="data_form.number_completed"
             :rules="[rules.required]"
             label="Number completed"
           />
 
           <v-text-field
-            v-if="formData.type == TaskType.NUMBER"
-            v-model="formData.number_total"
+            v-if="data_form.type == TaskType.NUMBER"
+            v-model="data_form.number_total"
             :rules="[rules.required]"
             label="Number total"
           />

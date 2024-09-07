@@ -167,16 +167,16 @@ const handleDelete = async () => {
   </v-main>
 
   <CreateUserDialog
-    :showDialog="dialog_entry"
-    :formData="dialog_form_data_entry"
+    :dialog_show="dialog_entry"
+    :data_form="dialog_form_data_entry"
     :is_startup="false"
     @update:showDialog="dialog_entry = $event"
     @submit="handleEntry"
   />
 
   <UpdateUserDialog
-    :showDialog="dialog_update"
-    :formData="dialog_form_data_update"
+    :dialog_show="dialog_update"
+    :data_form="dialog_form_data_update"
     @update:showDialog="dialog_update = $event"
     @submit="handleUpdate"
     @delete="handleDelete"

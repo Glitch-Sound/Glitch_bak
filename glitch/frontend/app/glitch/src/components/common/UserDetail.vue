@@ -66,8 +66,8 @@ const handleLogin = async (data: Login) => {
   </div>
 
   <LoginDialog
-    :showDialog="dialog"
-    :formData="dialog_form_data"
+    :dialog_show="dialog"
+    :data_form="dialog_form_data"
     :is_startup="true"
     @update:showDialog="dialog = $event"
     @submit="handleLogin"

@@ -8,7 +8,7 @@ import type { EmitDialog } from '@/components/common/events'
 import ActivityService from '@/services/ActivityService'
 
 const props = defineProps<{
-  showDialog: boolean
+  dialog_show: boolean
   item: Item
 }>()
 
@@ -16,7 +16,7 @@ const store_user = useUserStore()
 
 const emits = defineEmits<EmitDialog>()
 
-const dialog = ref(props.showDialog)
+const dialog = ref(props.dialog_show)
 const comment = ref('')
 const activities = ref<Activity[]>([])
 
@@ -26,7 +26,7 @@ onMounted(async () => {
 })
 
 watch(
-  () => props.showDialog,
+  () => props.dialog_show,
   (newValue) => {
     dialog.value = newValue
   }

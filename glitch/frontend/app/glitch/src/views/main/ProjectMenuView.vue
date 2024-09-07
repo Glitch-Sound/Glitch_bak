@@ -115,8 +115,8 @@ const handleSubmit = async (data: EventCreate) => {
   </v-navigation-drawer>
 
   <CreateEventDialog
-    :showDialog="dialog"
-    :formData="dialog_form_data"
+    :dialog_show="dialog"
+    :data_form="dialog_form_data"
     @update:showDialog="dialog = $event"
     @submit="handleSubmit"
   />
