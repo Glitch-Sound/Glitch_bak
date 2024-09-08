@@ -73,10 +73,10 @@ def get_items_alert(id_project: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
-@router.get('/items/assignment/{id_project}/{rid_users}', response_model=list[schema_item.Item])
-def get_items_assignment(id_project: int, rid_users: int, db: Session = Depends(get_db)):
+@router.get('/items/assignment/{id_project}/{target}', response_model=list[schema_item.Item])
+def get_items_assignment(id_project: int, target: int, db: Session = Depends(get_db)):
     try:
-        params = ItemParam(type_extract=ExtractType.ASSIGNMENT.value, id_project=id_project, rid_users=rid_users)
+        params = ItemParam(type_extract=ExtractType.ASSIGNMENT.value, id_project=id_project, rid_users=target)
         result = crud_item.getItems(db, params)
         return result
 
@@ -101,6 +101,18 @@ def get_items_relation(id_project: int, target: int, db: Session = Depends(get_d
 def get_items_search(id_project: int, target: str, db: Session = Depends(get_db)):
     try:
         params = ItemParam(type_extract=ExtractType.SEARCH.value, id_project=id_project, search=target)
+        result = crud_item.getItems(db, params)
+        return result
+
+    except Exception as e:
+        print(traceback.format_exc())
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
+
+
+@router.get('/items/summary-user/{id_project}/{target}', response_model=list[schema_item.Item])
+def get_items_search(id_project: int, target: int, db: Session = Depends(get_db)):
+    try:
+        params = ItemParam(type_extract=ExtractType.SUMMARY_USER.value, id_project=id_project, rid_users=target)
         result = crud_item.getItems(db, params)
         return result
 

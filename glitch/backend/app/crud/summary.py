@@ -43,7 +43,7 @@ def getSummariesItem(db: Session, rid: int):
         raise e
 
 
-def getSummariesUser(db: Session, rid: int):
+def getSummariesUser(db: Session, id_project: int, rid_users: int):
     try:
         UserAlias = aliased(User)
 
@@ -73,7 +73,10 @@ def getSummariesUser(db: Session, rid: int):
             SummaryUser.date_entry
         )\
         .join(UserAlias,  UserAlias.rid == SummaryUser.rid_users)\
-        .filter(SummaryUser.rid_users == rid)\
+        .filter(
+            SummaryUser.rid_users == rid_users,
+            SummaryUser.id_project == id_project
+        )\
         .order_by(SummaryUser.date_entry)
 
         result = query.all()

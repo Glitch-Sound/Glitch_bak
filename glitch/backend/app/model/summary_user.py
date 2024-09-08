@@ -36,5 +36,5 @@ class SummaryUser(Base):
     user  = relationship('User', back_populates='summaries_user')
 
     __table_args__ = (
-        Index('idx_summaries_user_01', 'rid_users', 'date_entry'),
+        Index('idx_summaries_user_01', 'rid_users', 'id_project', 'date_entry'),
     )

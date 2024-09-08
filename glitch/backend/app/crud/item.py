@@ -49,14 +49,15 @@ class ItemState(Enum):
     COMPLETE = 5
 
 class ExtractType(Enum):
-    ALL        =  1
-    INCOMPLETE =  2
-    HIGH_RISK  =  3
-    ALERT      =  4
-    ASSIGNMENT =  5
-    RELATION   =  6
-    SEARCH     =  7
-    PARENT     = 10
+    ALL          =  1
+    INCOMPLETE   =  2
+    HIGH_RISK    =  3
+    ALERT        =  4
+    ASSIGNMENT   =  5
+    RELATION     =  6
+    SEARCH       =  7
+    PARENT       = 11
+    SUMMARY_USER = 21
 
 
 class ItemParam():
@@ -573,6 +574,17 @@ def _extructItem(db: Session, params: ItemParam):
                     Tree.rid_ancestor.label('rid')
                 )\
                 .filter(Tree.rid_descendant == params.rid_items)
+
+            case ExtractType.SUMMARY_USER.value:
+                subquery_target = (
+                    select(Item.rid)
+                    .where(Item.rid_users == params.rid_users)
+                ).subquery()
+
+                cte_extruct = db.query(
+                    distinct(Tree.rid_ancestor).label('rid')
+                )\
+                .where(Tree.rid_descendant.in_(subquery_target))
 
         return cte_extruct.cte(name='targets')
 
