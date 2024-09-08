@@ -12,6 +12,15 @@ class UserService {
     }
   }
 
+  public async getUsersProject(id_project: number | null): Promise<User[]> {
+    try {
+      const response = await http.get<User[]>(`/api/users/project/${id_project}`)
+      return response.data
+    } catch (error) {
+      throw new Error('error: ${error}')
+    }
+  }
+
   public async createUser(user: UserCreate): Promise<User> {
     try {
       const response = await http.post<User>('/api/user', user)

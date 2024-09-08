@@ -19,7 +19,7 @@ const store_item = useItemStore()
 const title = ref('Glitch')
 
 const link_project = ref('/')
-const link_user = ref('/')
+const link_progress = ref('/')
 const link_analyze = ref('/')
 
 const link_disabled = ref(true)
@@ -50,7 +50,8 @@ const common = () => {
       ?.title || 'Glitch'
 
   link_project.value = '/project/' + store_project.selected_id_project
-  link_user.value = '/user/' + store_project.selected_id_project + '/' + store_user.login_user?.rid
+  link_progress.value =
+    '/progress/' + store_project.selected_id_project + '/' + store_user.login_user?.rid
   link_analyze.value = '/analyze/' + store_project.selected_id_project
 
   if (store_project.selected_id_project) {
@@ -109,7 +110,7 @@ const common = () => {
     </v-btn>
 
     <v-btn icon color="iconColor" :disabled="link_disabled">
-      <router-link :to="link_user">
+      <router-link :to="link_progress">
         <v-icon>mdi-account-tag</v-icon>
       </router-link>
     </v-btn>

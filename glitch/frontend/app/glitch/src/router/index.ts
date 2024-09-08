@@ -3,7 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import useUserStore from '@/stores/UserStore'
 import MainView from '@/views/main/MainView.vue'
 import ProjectView from '@/views/main/ProjectView.vue'
-import UserView from '@/views/main/UserView.vue'
+import ProgressView from '@/views/main/ProgressView.vue'
 import AnalyzeView from '@/views/main/AnalyzeView.vue'
 import SettingMainView from '@/views/setting/SettingMainView.vue'
 import SettingUserView from '@/views/setting/SettingUserView.vue'
@@ -22,8 +22,8 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
-      path: '/user/:id_project/:target',
-      component: UserView,
+      path: '/progress/:id_project/:target',
+      component: ProgressView,
       meta: { requiresAuth: true }
     },
     {
