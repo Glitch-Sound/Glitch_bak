@@ -2,6 +2,7 @@
 import { ref, defineProps, watch, onMounted } from 'vue'
 
 import { type EmitSubmit } from '@/components/common/events'
+import useUserStore from '@/stores/UserStore'
 import useProjectStore from '@/stores/ProjectStore'
 import MarkedText from '@/components/common/MarkedText.vue'
 import StateLabel from '@/components/common/StateLabel.vue'
@@ -21,6 +22,7 @@ const props = defineProps<{
 
 const dialog = ref(props.dialog_show)
 
+const store_user = useUserStore()
 const store_project = useProjectStore()
 
 onMounted(() => {
@@ -49,28 +51,33 @@ const handleSubmit = async (id_project: number) => {
         <span class="text-h5">Project</span>
       </v-card-title>
 
-      <v-data-table class="ml-5 data-table" :items="store_project.projects" :headers="headers">
-        <template v-slot:item="{ item }">
-          <tr>
-            <td>{{ item.id_project }}</td>
-            <td><StateLabel :state="item.state" /></td>
-            <td class="title">
-              <router-link
-                :to="`/project/${item.id_project}`"
-                @click="handleSubmit(item.id_project)"
-              >
-                {{ item.title }}
-              </router-link>
-            </td>
-            <td><MarkedText :src="item.detail" /></td>
-            <td>{{ item.project_datetime_end }}</td>
-            <td>{{ item.name }}</td>
-          </tr>
-        </template>
-      </v-data-table>
+      <template v-if="store_user.login_user != null">
+        <v-data-table class="ml-5 data-table" :items="store_project.projects" :headers="headers">
+          <template v-slot:item="{ item }">
+            <tr>
+              <td>{{ item.id_project }}</td>
+              <td><StateLabel :state="item.state" /></td>
+              <td class="title">
+                <router-link
+                  :to="`/project/${item.id_project}`"
+                  @click="handleSubmit(item.id_project)"
+                >
+                  {{ item.title }}
+                </router-link>
+              </td>
+              <td><MarkedText :src="item.detail" /></td>
+              <td>{{ item.project_datetime_end }}</td>
+              <td>{{ item.name }}</td>
+            </tr>
+          </template>
+        </v-data-table>
+      </template>
+      <template v-else>
+        <div class="mt-3 ml-10">Please login.</div>
+      </template>
 
       <template v-slot:actions>
-        <v-btn class="ms-auto" text="Ok" @click="handleSubmit"></v-btn>
+        <v-btn class="ms-auto" text="Ok" @click="handleSubmit(0)"></v-btn>
       </template>
     </v-card>
   </v-dialog>

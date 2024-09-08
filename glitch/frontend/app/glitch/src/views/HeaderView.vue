@@ -35,6 +35,10 @@ const toggleDialogSearch = () => {
 }
 
 const handleSubmitProject = async (id_project: number) => {
+  if (id_project == 0) {
+    dialog_project.value = false
+    return
+  }
   store_project.setSelectedProjectID(id_project)
   common()
   dialog_project.value = false
@@ -44,6 +48,8 @@ const common = () => {
   title.value =
     store_project.projects.find((project) => project.rid == store_project.selected_id_project)
       ?.title || 'Glitch'
+
+  link_project.value = '/project/' + store_project.selected_id_project
 
   if (store_project.selected_id_project) {
     link_disabled.value = false

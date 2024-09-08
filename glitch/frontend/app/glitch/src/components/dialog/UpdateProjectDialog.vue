@@ -50,19 +50,8 @@ const handleStateSelected = (state: ItemState) => {
             required
           />
 
-          <v-textarea
-            v-model="data_form.detail"
-            :rules="[rules.required]"
-            label="Detail"
-            required
-          />
-
-          <v-textarea
-            v-model="data_form.result"
-            :rules="[rules.required]"
-            label="Result"
-            required
-          />
+          <v-textarea v-model="data_form.detail" label="Detail" />
+          <v-textarea v-model="data_form.result" label="Result" />
 
           <v-text-field
             v-model="data_form.datetime_start"
@@ -86,7 +75,7 @@ const handleStateSelected = (state: ItemState) => {
         <DeleteButton @delete="deleteData" />
         <v-spacer />
         <v-btn @click="dialog = false">Cancel</v-btn>
-        <v-btn @click="submitData">Submit</v-btn>
+        <v-btn :disabled="!valid" @click="submitData">Submit</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

@@ -3,12 +3,14 @@ import { ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import { ItemType, type EventCreate } from '@/types/Item'
+import useUserStore from '@/stores/UserStore'
 import useItemStore from '@/stores/ItemStore'
 import ItemService from '@/services/ItemService'
 import CreateEventDialog from '@/components/dialog/CreateEventDialog.vue'
 
 const route = useRoute()
 const router = useRouter()
+const store_user = useUserStore()
 const store_item = useItemStore()
 
 const dialog = ref(false)
@@ -16,7 +18,7 @@ const dialog = ref(false)
 const dialog_form_data = ref<EventCreate>({
   id_project: Number(route.params.id_project),
   rid_items: Number(route.params.id_project),
-  rid_users: 0,
+  rid_users: store_user.login_user?.rid ?? 0,
   title: '',
   detail: '',
   datetime_end: ''
@@ -29,7 +31,7 @@ watch(
   }
 )
 
-const openDialog = () => {
+const openDialog = async () => {
   dialog.value = true
 }
 
@@ -117,6 +119,7 @@ const handleSubmit = async (data: EventCreate) => {
   <CreateEventDialog
     :dialog_show="dialog"
     :data_form="dialog_form_data"
+    :rid_parent="Number(route.params.id_project)"
     @update:showDialog="dialog = $event"
     @submit="handleSubmit"
   />

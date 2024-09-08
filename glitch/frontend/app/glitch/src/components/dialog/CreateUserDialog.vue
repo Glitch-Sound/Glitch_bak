@@ -27,24 +27,34 @@ const { dialog, valid, data_form, ref_form, rules, submitData } = useDialog(prop
 
       <v-card-text>
         <v-form ref="ref_form" v-model="valid" lazy-validation>
-          <v-text-field v-model="data_form.user" :rules="[rules.required]" label="User" required />
+          <v-text-field
+            v-model="data_form.user"
+            :rules="[rules.required, rules.alphanumeric]"
+            label="User"
+            required
+          />
 
           <v-text-field
             v-model="data_form.password"
-            :rules="[rules.required]"
+            :rules="[rules.required, rules.alphanumeric]"
             label="Password"
             type="password"
             required
           />
 
-          <v-text-field v-model="data_form.name" :rules="[rules.required]" label="Name" required />
+          <v-text-field
+            v-model="data_form.name"
+            :rules="[rules.required, rules.alphanumeric]"
+            label="Name"
+            required
+          />
         </v-form>
       </v-card-text>
 
       <v-card-actions>
         <v-spacer />
         <v-btn @click="dialog = false" v-if="props.is_startup == false">Cancel</v-btn>
-        <v-btn @click="submitData">Submit</v-btn>
+        <v-btn :disabled="!valid" @click="submitData">Submit</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

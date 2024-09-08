@@ -16,7 +16,8 @@ const router = createRouter({
     },
     {
       path: '/project/:id_project/:extruct?/:target?',
-      component: ProjectView
+      component: ProjectView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/setting',

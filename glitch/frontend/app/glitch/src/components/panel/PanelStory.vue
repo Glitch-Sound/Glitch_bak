@@ -3,6 +3,7 @@ import { ref, defineProps } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import type { Item, TaskCreate, BugCreate } from '@/types/Item'
+import useUserStore from '@/stores/UserStore'
 import useItemStore from '@/stores/ItemStore'
 import ItemService from '@/services/ItemService'
 import CreateTaskDialog from '@/components/dialog/CreateTaskDialog.vue'
@@ -19,6 +20,7 @@ const props = defineProps<{
 
 const route = useRoute()
 const router = useRouter()
+const store_user = useUserStore()
 const store_item = useItemStore()
 
 const expand = ref(false)
@@ -28,7 +30,7 @@ const dialogBug = ref(false)
 const dialog_form_data_task = ref<TaskCreate>({
   id_project: Number(route.params.id_project),
   rid_items: props.item.rid,
-  rid_users: 0,
+  rid_users: store_user.login_user?.rid ?? 0,
   title: '',
   detail: '',
   type: 0,
@@ -40,7 +42,7 @@ const dialog_form_data_task = ref<TaskCreate>({
 const dialog_form_data_bug = ref<BugCreate>({
   id_project: Number(route.params.id_project),
   rid_items: props.item.rid,
-  rid_users: 0,
+  rid_users: store_user.login_user?.rid ?? 0,
   title: '',
   detail: '',
   workload: 0

@@ -34,7 +34,7 @@ const handleWorkloadSelect = (workload: number) => {
 
       <v-card-text>
         <v-form ref="ref_form" v-model="valid" lazy-validation>
-          <UserSelect @itemSelected="handleUserSelected" />
+          <UserSelect v-model="data_form.rid_users" @itemSelected="handleUserSelected" />
 
           <v-text-field
             v-model="data_form.title"
@@ -43,12 +43,7 @@ const handleWorkloadSelect = (workload: number) => {
             required
           />
 
-          <v-textarea
-            v-model="data_form.detail"
-            :rules="[rules.required]"
-            label="Detail"
-            required
-          />
+          <v-textarea v-model="data_form.detail" label="Detail" />
 
           <WorkloadSelect :workload="null" @itemSelected="handleWorkloadSelect" />
         </v-form>
@@ -57,7 +52,7 @@ const handleWorkloadSelect = (workload: number) => {
       <v-card-actions>
         <v-spacer />
         <v-btn @click="dialog = false">Cancel</v-btn>
-        <v-btn @click="submitData">Submit</v-btn>
+        <v-btn :disabled="!valid" @click="submitData">Submit</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

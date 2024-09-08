@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 import type { ProjectCreate, ProjectUpdate } from '@/types/Item'
+import useUserStore from '@/stores/UserStore'
 import useProjectStore from '@/stores/ProjectStore'
 import ItemService from '@/services/ItemService'
 import StateLabel from '@/components/common/StateLabel.vue'
@@ -21,6 +22,7 @@ const headers = [
 ]
 
 const route = useRoute()
+const store_user = useUserStore()
 const store_project = useProjectStore()
 
 const dialog_entry = ref(false)
@@ -28,7 +30,7 @@ const dialog_update = ref(false)
 const target_delete = ref(0)
 
 const dialog_form_data_entry = ref<ProjectCreate>({
-  rid_users: 0,
+  rid_users: store_user.login_user?.rid ?? 0,
   title: '',
   detail: '',
   datetime_start: '',

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, defineProps, watch } from 'vue'
+import { onMounted, ref, defineProps, watch } from 'vue'
 
 import { ItemType, ItemState, type EventUpdate } from '@/types/Item'
 import type { User } from '@/types/User'
-import { useDialog } from '@/components/dialog/BaseDialog'
+import { useDialog, getDateRange } from '@/components/dialog/BaseDialog'
 import UserSelect from '@/components/common/UserSelect.vue'
 import UserReviewSelect from '@/components/common/UserReviewSelect.vue'
 import StateSelect from '@/components/common/StateSelect.vue'
@@ -13,12 +13,22 @@ import { type EmitDialog } from '@/components/common/events'
 const props = defineProps<{
   dialog_show: boolean
   data_form: EventUpdate
+  rid_parent: number
 }>()
 
 const is_review = ref(false)
+const date_min = ref('')
+const date_max = ref('')
 
 const emit = defineEmits<EmitDialog>()
 const { dialog, valid, data_form, ref_form, rules, submitData, deleteData } = useDialog(props, emit)
+
+onMounted(async () => {
+  const range = await getDateRange(ItemType.EVENT, props.rid_parent)
+  if (range) {
+    ;[date_min.value, date_max.value] = range
+  }
+})
 
 watch(
   () => data_form.value.state,
@@ -74,19 +84,8 @@ const handleStateSelected = (state: ItemState) => {
             required
           />
 
-          <v-textarea
-            v-model="data_form.detail"
-            :rules="[rules.required]"
-            label="Detail"
-            required
-          />
-
-          <v-textarea
-            v-model="data_form.result"
-            :rules="[rules.required]"
-            label="Result"
-            required
-          />
+          <v-textarea v-model="data_form.detail" label="Detail" />
+          <v-textarea v-model="data_form.result" label="Result" />
 
           <v-text-field
             v-model="data_form.datetime_end"
@@ -94,6 +93,8 @@ const handleStateSelected = (state: ItemState) => {
             label="End"
             type="date"
             required
+            :min="date_min"
+            :max="date_max"
           />
         </v-form>
       </v-card-text>
@@ -102,7 +103,7 @@ const handleStateSelected = (state: ItemState) => {
         <DeleteButton @delete="deleteData" />
         <v-spacer />
         <v-btn @click="dialog = false">Cancel</v-btn>
-        <v-btn @click="submitData">Submit</v-btn>
+        <v-btn :disabled="!valid" @click="submitData">Submit</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

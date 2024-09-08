@@ -1,16 +1,27 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import { defineProps, onMounted, ref } from 'vue'
 
-import type { EventCreate } from '@/types/Item'
+import { ItemType, type EventCreate } from '@/types/Item'
 import type { User } from '@/types/User'
-import { useDialog } from '@/components/dialog/BaseDialog'
+import { useDialog, getDateRange } from '@/components/dialog/BaseDialog'
 import UserSelect from '@/components/common/UserSelect.vue'
 import { type EmitDialog } from '@/components/common/events'
 
 const props = defineProps<{
   dialog_show: boolean
   data_form: EventCreate
+  rid_parent: number
 }>()
+
+const date_min = ref('')
+const date_max = ref('')
+
+onMounted(async () => {
+  const range = await getDateRange(ItemType.EVENT, props.rid_parent)
+  if (range) {
+    ;[date_min.value, date_max.value] = range
+  }
+})
 
 const emit = defineEmits<EmitDialog>()
 const { dialog, valid, data_form, ref_form, rules, submitData } = useDialog(props, emit)
@@ -29,7 +40,7 @@ const handleUserSelected = (user: User) => {
 
       <v-card-text>
         <v-form ref="ref_form" v-model="valid" lazy-validation>
-          <UserSelect @itemSelected="handleUserSelected" />
+          <UserSelect v-model="data_form.rid_users" @itemSelected="handleUserSelected" />
 
           <v-text-field
             v-model="data_form.title"
@@ -38,12 +49,7 @@ const handleUserSelected = (user: User) => {
             required
           />
 
-          <v-textarea
-            v-model="data_form.detail"
-            :rules="[rules.required]"
-            label="Detail"
-            required
-          />
+          <v-textarea v-model="data_form.detail" label="Detail" />
 
           <v-text-field
             v-model="data_form.datetime_end"
@@ -51,6 +57,8 @@ const handleUserSelected = (user: User) => {
             label="End"
             type="date"
             required
+            :min="date_min"
+            :max="date_max"
           />
         </v-form>
       </v-card-text>
@@ -58,7 +66,7 @@ const handleUserSelected = (user: User) => {
       <v-card-actions>
         <v-spacer />
         <v-btn @click="dialog = false">Cancel</v-btn>
-        <v-btn @click="submitData">Submit</v-btn>
+        <v-btn :disabled="!valid" @click="submitData">Submit</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

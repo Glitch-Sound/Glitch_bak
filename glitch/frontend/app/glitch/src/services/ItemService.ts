@@ -21,13 +21,9 @@ import type {
 } from '@/types/Item'
 
 class ItemService {
-  public async getItems(id_project: number | null, type_extract: ExtractType): Promise<Item[]> {
+  public async getItemsParent(rid_items: number | null): Promise<Item[]> {
     try {
-      const response = await http.get<Item[]>(`/api/items/${id_project}`, {
-        params: {
-          type_extract: type_extract
-        }
-      })
+      const response = await http.get<Item[]>(`/api/items/parent/${rid_items}`)
       return response.data
     } catch (error) {
       throw new Error('error: ${error}')

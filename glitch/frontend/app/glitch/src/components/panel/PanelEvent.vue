@@ -3,6 +3,7 @@ import { ref, defineProps } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import type { Item, FeatureCreate } from '@/types/Item'
+import useUserStore from '@/stores/UserStore'
 import useItemStore from '@/stores/ItemStore'
 import ItemService from '@/services/ItemService'
 import CreateFeatureDialog from '@/components/dialog/CreateFeatureDialog.vue'
@@ -18,6 +19,7 @@ const props = defineProps<{
 
 const route = useRoute()
 const router = useRouter()
+const store_user = useUserStore()
 const store_item = useItemStore()
 
 const expand = ref(false)
@@ -26,7 +28,7 @@ const dialog = ref(false)
 const dialog_form_data = ref<FeatureCreate>({
   id_project: Number(route.params.id_project),
   rid_items: props.item.rid,
-  rid_users: 0,
+  rid_users: store_user.login_user?.rid ?? 0,
   title: '',
   detail: ''
 })
