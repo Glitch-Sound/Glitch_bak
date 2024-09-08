@@ -39,7 +39,22 @@ const handleEntry = async (data: UserCreate) => {
 
 <template>
   <v-main>
-    <v-container>Glitchの使い方</v-container>
+    <v-sheet class="main">
+      <v-container class="block">
+        <div class="title">Release</div>
+        <div class="detail">…</div>
+      </v-container>
+
+      <v-container class="block">
+        <div class="title">How to use</div>
+        <div class="detail">…</div>
+      </v-container>
+
+      <v-container class="block">
+        <div class="title">Bug & Request</div>
+        <div class="detail">…</div>
+      </v-container>
+    </v-sheet>
 
     <CreateUserDialog
       :dialog_show="dialog"
@@ -51,4 +66,26 @@ const handleEntry = async (data: UserCreate) => {
   </v-main>
 </template>
 
-<style scoped></style>
+<style scoped>
+.main {
+  max-width: 1200px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.block {
+  margin-bottom: 10px;
+}
+
+.title {
+  font-size: 24px;
+  color: #f0f0f0;
+}
+
+.detail {
+  margin: 10px 20px;
+  font-size: 18px;
+  color: #dedede;
+}
+</style>
