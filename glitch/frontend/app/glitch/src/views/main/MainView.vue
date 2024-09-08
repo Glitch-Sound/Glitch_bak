@@ -39,22 +39,34 @@ const handleEntry = async (data: UserCreate) => {
 
 <template>
   <v-main>
-    <v-sheet class="main">
-      <v-container class="block">
-        <div class="title">Release</div>
-        <div class="detail">…</div>
-      </v-container>
+    <v-row justify="center" class="mt-13 mx-auto">
+      <v-col cols="auto">
+        <v-card prepend-icon="mdi-checkbox-multiple-blank-circle" class="card" width="500">
+          <template v-slot:title>
+            <span class="font-weight-black mx-1">Release</span>
+          </template>
+          <v-card-text class="px-10 py-3">...</v-card-text>
+        </v-card>
+      </v-col>
 
-      <v-container class="block">
-        <div class="title">How to use</div>
-        <div class="detail">…</div>
-      </v-container>
+      <v-col cols="auto">
+        <v-card prepend-icon="mdi-help" class="card" width="500">
+          <template v-slot:title>
+            <span class="font-weight-black mx-1">How to use</span>
+          </template>
+          <v-card-text class="px-10 py-3">...</v-card-text>
+        </v-card>
+      </v-col>
 
-      <v-container class="block">
-        <div class="title">Bug & Request</div>
-        <div class="detail">…</div>
-      </v-container>
-    </v-sheet>
+      <v-col cols="auto">
+        <v-card prepend-icon="mdi-spider" class="card" width="500">
+          <template v-slot:title>
+            <span class="font-weight-black mx-1">Bug & Request</span>
+          </template>
+          <v-card-text class="px-10 py-3">...</v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
 
     <CreateUserDialog
       :dialog_show="dialog"
@@ -67,25 +79,7 @@ const handleEntry = async (data: UserCreate) => {
 </template>
 
 <style scoped>
-.main {
-  max-width: 1200px;
-  margin: auto;
-  display: flex;
-  flex-direction: column;
-}
-
-.block {
-  margin-bottom: 10px;
-}
-
-.title {
-  font-size: 24px;
-  color: #f0f0f0;
-}
-
-.detail {
-  margin: 10px 20px;
-  font-size: 18px;
-  color: #dedede;
+.card {
+  background-color: #000000;
 }
 </style>
