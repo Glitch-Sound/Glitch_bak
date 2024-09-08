@@ -1,5 +1,5 @@
-import bcrypt                       # type: ignore
-from sqlalchemy.orm import Session  # type: ignore
+import bcrypt                                   # type: ignore
+from sqlalchemy.orm import Session, aliased     # type: ignore
 
 from enum import Enum
 
@@ -7,6 +7,7 @@ import sys
 sys.path.append('~/app')
 
 from model.user import User
+from model.item import Item
 from schema import user as schema_user
 
 
@@ -32,6 +33,37 @@ def getUsers(db: Session):
         )\
         .filter(User.is_deleted == 0)\
         .order_by(User.rid)
+
+        result = query.all()
+        return result
+
+    except Exception as e:
+        raise e
+
+
+def getUsersProject(db: Session, id_project: int):
+    try:
+        UserAlias = aliased(User)
+
+        cte_target = (
+            db.query(
+                Item.rid_users.label('rid_users')
+            )
+            .filter(
+                Item.is_deleted == 0,
+                Item.id_project == id_project
+            )
+            .group_by(Item.rid_users)
+            .order_by(Item.rid_users)
+            .cte('target')
+        )
+
+        query = (
+            db.query(UserAlias)
+            .join(cte_target, UserAlias.rid == cte_target.c.rid_users)
+            .filter(UserAlias.is_deleted == 0) 
+            .order_by(UserAlias.rid)
+        )
 
         result = query.all()
         return result

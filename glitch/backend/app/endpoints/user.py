@@ -23,8 +23,20 @@ def get_users(db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
+@router.get('/users/project/{id_project}', response_model=list[schema_user.User])
+def get_users(id_project: int, db: Session = Depends(get_db)):
+    try:
+        result = crud_user.getUsersProject(db, id_project)
+        return result
+
+    except Exception as e:
+        print(traceback.format_exc())
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
+
+
+
 @router.get('/user/{rid_users}', response_model=schema_user.User)
-def get_users(rid_users: int, db: Session = Depends(get_db)):
+def get_user(rid_users: int, db: Session = Depends(get_db)):
     try:
         result = crud_user.getUser(db, rid_users)
         return result
