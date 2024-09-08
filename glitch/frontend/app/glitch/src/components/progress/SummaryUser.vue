@@ -265,12 +265,12 @@ function createChartTypeWorkload(type: SummaryType, data: SummaryItem[], max_val
 
 <style scoped>
 .summary {
-  margin: 0 0 0 32px;
+  margin: 0 0 30px 60px;
   padding: 0;
 }
 
 .summary-block {
-  margin: 5px 10px 0 0;
+  margin: 0 10px 0 0;
   padding: 10px 0 0 0;
 }
 

@@ -105,6 +105,18 @@ class ItemService {
     }
   }
 
+  public async getItemsSummaryUser(
+    id_project: number | null,
+    target: number | null
+  ): Promise<Item[]> {
+    try {
+      const response = await http.get<Item[]>(`/api/items/summary-user/${id_project}/${target}`)
+      return response.data
+    } catch (error) {
+      throw new Error('error: ${error}')
+    }
+  }
+
   public async getItemsByUser(
     id_project: number | null,
     rid_users: number | undefined

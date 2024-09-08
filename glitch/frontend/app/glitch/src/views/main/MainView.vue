@@ -41,7 +41,7 @@ const handleEntry = async (data: UserCreate) => {
   <v-main>
     <v-row justify="center" class="mt-13 mx-auto">
       <v-col cols="auto">
-        <v-card prepend-icon="mdi-checkbox-multiple-blank-circle" class="card" width="500">
+        <v-card prepend-icon="mdi-checkbox-multiple-blank-circle" class="card" width="400">
           <template v-slot:title>
             <span class="font-weight-black mx-1">Release</span>
           </template>
@@ -50,7 +50,7 @@ const handleEntry = async (data: UserCreate) => {
       </v-col>
 
       <v-col cols="auto">
-        <v-card prepend-icon="mdi-help" class="card" width="500">
+        <v-card prepend-icon="mdi-help" class="card" width="400">
           <template v-slot:title>
             <span class="font-weight-black mx-1">How to use</span>
           </template>
@@ -59,7 +59,7 @@ const handleEntry = async (data: UserCreate) => {
       </v-col>
 
       <v-col cols="auto">
-        <v-card prepend-icon="mdi-spider" class="card" width="500">
+        <v-card prepend-icon="mdi-spider" class="card" width="400">
           <template v-slot:title>
             <span class="font-weight-black mx-1">Bug & Request</span>
           </template>
