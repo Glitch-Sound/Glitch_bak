@@ -5,6 +5,7 @@ import { useRoute, useRouter } from 'vue-router'
 import type { Item, TaskCreate, BugCreate } from '@/types/Item'
 import useUserStore from '@/stores/UserStore'
 import useItemStore from '@/stores/ItemStore'
+import useSummaryStore from '@/stores/SummaryStore'
 import ItemService from '@/services/ItemService'
 import CreateTaskDialog from '@/components/dialog/CreateTaskDialog.vue'
 import CreateBugDialog from '@/components/dialog/CreateBugDialog.vue'
@@ -22,6 +23,7 @@ const route = useRoute()
 const router = useRouter()
 const store_user = useUserStore()
 const store_item = useItemStore()
+const store_summary = useSummaryStore()
 
 const expand = ref(false)
 const dialogTask = ref(false)
@@ -59,8 +61,9 @@ const openBugDialog = () => {
 const handleTaskSubmit = async (data: TaskCreate) => {
   try {
     const service_item = new ItemService()
-    await service_item.createTask(data)
+    const result = await service_item.createTask(data)
     store_item.fetchItems(router)
+    store_summary.updateTaskBug(result.rid)
     dialogTask.value = false
   } catch (err) {
     console.error('Error:', err)
@@ -70,8 +73,9 @@ const handleTaskSubmit = async (data: TaskCreate) => {
 const handleBugSubmit = async (data: BugCreate) => {
   try {
     const service_item = new ItemService()
-    await service_item.createBug(data)
+    const result = await service_item.createBug(data)
     store_item.fetchItems(router)
+    store_summary.updateTaskBug(result.rid)
     dialogBug.value = false
   } catch (err) {
     console.error('Error:', err)

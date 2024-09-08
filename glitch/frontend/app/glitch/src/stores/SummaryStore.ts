@@ -20,7 +20,7 @@ const useSummaryStore = defineStore('summary', {
         console.error('Error:', error)
       }
     },
-    async updateTask(rid: number) {
+    async updateTaskBug(rid: number) {
       try {
         const service_summary = new SummaryService()
         const ancestors_item = await service_summary.getAncestorsItem(rid)
