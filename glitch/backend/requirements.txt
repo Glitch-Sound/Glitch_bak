@@ -4,3 +4,4 @@ uvicorn
 sqlalchemy
 pytz
 bcrypt
+jpholiday

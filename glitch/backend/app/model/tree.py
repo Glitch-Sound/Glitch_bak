@@ -12,7 +12,7 @@ class Tree(Base):
 
     rid_ancestor   = Column(Integer, ForeignKey('items.rid'), primary_key=True)
     rid_descendant = Column(Integer, ForeignKey('items.rid'), primary_key=True)
-    type           = Column(Integer, index=True, default=0)
+    type           = Column(Integer, default=0)
 
-    ancestor = relationship('Item', foreign_keys=[rid_ancestor], back_populates='descendants')
+    ancestor   = relationship('Item', foreign_keys=[rid_ancestor],   back_populates='descendants')
     descendant = relationship('Item', foreign_keys=[rid_descendant], back_populates='ancestors')

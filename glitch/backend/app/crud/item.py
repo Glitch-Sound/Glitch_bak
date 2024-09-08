@@ -655,9 +655,12 @@ def getProjects(db: Session):
             Project.datetime_end.label('project_datetime_end'))\
         .outerjoin(UserAlias,  UserAlias.rid == Item.rid_users)\
         .outerjoin(Project, Project.rid_items == Item.rid)\
-        .filter(Item.type == ItemType.PROJECT.value)\
+        .filter(
+            Item.is_deleted == 0,
+            Item.type == ItemType.PROJECT.value
+        )\
         .order_by(Item.rid)
-         
+
         result = query.all()
         return result
 

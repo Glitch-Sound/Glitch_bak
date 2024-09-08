@@ -27,7 +27,14 @@ def _verifyHashPassword(plain_password: str, hashed_password: str) -> bool:
 
 def getUsers(db: Session):
     try:
-        return db.query(User).filter(User.is_deleted == 0).all()
+        query = db.query(
+            User
+        )\
+        .filter(User.is_deleted == 0)\
+        .order_by(User.rid)
+
+        result = query.all()
+        return result
 
     except Exception as e:
         raise e
@@ -35,7 +42,16 @@ def getUsers(db: Session):
 
 def getUser(db: Session, rid_users: int):
     try:
-        return db.query(User).filter(User.rid_users == rid_users).one()
+        query = db.query(
+            User
+        )\
+        .filter(
+            User.is_deleted == 0,
+            User.rid == rid_users
+        )
+
+        result = query.one()
+        return result
 
     except Exception as e:
         raise e

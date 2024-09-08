@@ -1,5 +1,5 @@
-from sqlalchemy import Column, ForeignKey, String, Integer      # type: ignore
-from sqlalchemy.orm import relationship                         # type: ignore
+from sqlalchemy import Column, ForeignKey, String, Integer, Index   # type: ignore
+from sqlalchemy.orm import relationship                             # type: ignore
 
 import sys
 sys.path.append('~/app')
@@ -30,6 +30,10 @@ class SummaryItem(Base):
     bug_count_complete    = Column(Integer, default=0)
     bug_count_total       = Column(Integer, default=0)
     bug_workload_total    = Column(Integer, default=0)
-    date_entry            = Column(String, index=True, default='')
+    date_entry            = Column(String,  default='')
 
     items = relationship('Item', back_populates='summary_item')
+
+    __table_args__ = (
+        Index('idx_summaries_item_01', 'rid_items', 'date_entry'),
+    )

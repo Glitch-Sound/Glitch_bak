@@ -1,15 +1,9 @@
-from sqlalchemy import Text                     # type: ignore
-from sqlalchemy.orm import Session, aliased     # type: ignore
-from sqlalchemy.sql import func                 # type: ignore
-from sqlalchemy.sql import select               # type: ignore
-
-import pytz                                     # type: ignore
-from datetime import datetime
+from sqlalchemy.orm import Session      # type: ignore
 
 import sys
 sys.path.append('~/app')
 
-from crud.common import getCurrentDate, getCurrentDatetime
+from crud.common import getCurrentDatetime
 from schema import activity as schema_activity
 from model.activity import Activity
 from model.user import User
@@ -26,9 +20,12 @@ def getActivities(db: Session, rid_items: int):
             User.name.label('name')
         )\
         .outerjoin(User,  User.rid == Activity.rid_users)\
-        .filter(Activity.rid_items == rid_items)\
+        .filter(
+            Activity.is_deleted == 0,
+            Activity.rid_items == rid_items
+        )\
         .order_by(Activity.rid)
-         
+
         result = query.all()
         return result
 

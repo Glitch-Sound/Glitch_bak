@@ -1,10 +1,4 @@
-from sqlalchemy import select, distinct, desc   # type: ignore
 from sqlalchemy.orm import Session, aliased     # type: ignore
-from sqlalchemy.sql import func                 # type: ignore
-
-import pytz                                     # type: ignore
-from datetime import datetime
-from enum import Enum
 
 import sys
 sys.path.append('~/app')
@@ -58,7 +52,7 @@ def getSummariesUser(db: Session, rid: int):
             SummaryUser.id_project,
             UserAlias.rid.label('rid_users'),
             UserAlias.name.label('name'),
-            SummaryItem.task_risk,
+            SummaryUser.task_risk,
             SummaryUser.task_count_idle,
             SummaryUser.task_count_run,
             SummaryUser.task_count_alert,
@@ -68,7 +62,7 @@ def getSummariesUser(db: Session, rid: int):
             SummaryUser.task_workload_total,
             SummaryUser.task_number_completed,
             SummaryUser.task_number_total,
-            SummaryItem.bug_risk,
+            SummaryUser.bug_risk,
             SummaryUser.bug_count_idle,
             SummaryUser.bug_count_run,
             SummaryUser.bug_count_alert,
@@ -95,7 +89,8 @@ def getAncestorsItem(db: Session, rid: int):
             Tree.rid_ancestor.label('rid')
         )\
         .filter(Tree.rid_descendant == rid)\
-        .filter(Tree.rid_descendant != Tree.rid_ancestor)
+        .filter(Tree.rid_descendant != Tree.rid_ancestor)\
+        .order_by(Tree.rid_ancestor)
 
         result = query.all()
         return result

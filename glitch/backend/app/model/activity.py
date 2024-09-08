@@ -1,5 +1,5 @@
-from sqlalchemy import Column, ForeignKey, Integer, String  # type: ignore
-from sqlalchemy.orm import relationship                     # type: ignore
+from sqlalchemy import Column, ForeignKey, Integer, String, Index   # type: ignore
+from sqlalchemy.orm import relationship                             # type: ignore
 
 import sys
 sys.path.append('~/app')
@@ -13,10 +13,14 @@ class Activity(Base):
     rid             = Column(Integer, primary_key=True)
     rid_items       = Column(Integer, ForeignKey('items.rid'))
     rid_users       = Column(Integer, ForeignKey('users.rid'))
-    activity        = Column(String, default='')
-    datetime_entry  = Column(String, index=True, default='')
-    datetime_update = Column(String, default='')
-    is_deleted      = Column(Integer, index=True, default=0)
+    activity        = Column(String,  default='')
+    datetime_entry  = Column(String,  default='')
+    datetime_update = Column(String,  default='')
+    is_deleted      = Column(Integer, default=0)
 
     items = relationship('Item', back_populates='activity')
     user  = relationship('User', back_populates='activities')
+
+    __table_args__ = (
+        Index('idx_activities_01', 'is_deleted', 'rid_items', 'rid'),
+    )
