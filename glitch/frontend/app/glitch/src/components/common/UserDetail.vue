@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 
 import type { Login } from '@/types/User'
 import useUserStore from '@/stores/UserStore'
+import useProgressStore from '@/stores/ProgressStore'
 import UserService from '@/services/UserService'
 import LoginDialog from '@/components/dialog/LoginDialog.vue'
 
@@ -10,6 +11,7 @@ import Identicon from 'identicon.js'
 import * as CryptoJS from 'crypto-js'
 
 const store_user = useUserStore()
+const store_progress = useProgressStore()
 
 const dialog = ref(false)
 
@@ -43,6 +45,7 @@ const handleLogin = async (data: Login) => {
     const service_user = new UserService()
     const login_user = await service_user.login(data)
     store_user.setLoginUser(login_user)
+    store_progress.setTarget(login_user.rid)
     dialog.value = false
   } catch (err) {
     console.error('Error:', err)

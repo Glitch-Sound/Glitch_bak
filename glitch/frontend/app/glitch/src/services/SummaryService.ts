@@ -12,9 +12,11 @@ class SummaryService {
     }
   }
 
-  public async getSummariesUser(rid_users: number): Promise<SummaryUser[]> {
+  public async getSummariesUser(id_project: number, rid_users: number): Promise<SummaryUser[]> {
     try {
-      const response = await http.get<SummaryUser[]>(`/api/summaries/user/${rid_users}`)
+      const response = await http.get<SummaryUser[]>(
+        `/api/summaries/user/${id_project}/${rid_users}`
+      )
       return response.data
     } catch (error) {
       throw new Error('error: ${error}')
