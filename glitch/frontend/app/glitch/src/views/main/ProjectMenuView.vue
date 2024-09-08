@@ -31,7 +31,7 @@ watch(
   }
 )
 
-const openDialog = async () => {
+const openDialog = () => {
   dialog.value = true
 }
 

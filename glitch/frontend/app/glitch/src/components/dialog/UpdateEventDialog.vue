@@ -25,8 +25,8 @@ const { dialog, valid, data_form, ref_form, rules, submitData, deleteData } = us
 
 watch(
   () => props.dialog_show,
-  async (newVal) => {
-    if (newVal) {
+  async (value_new) => {
+    if (value_new) {
       const range = await getDateRange(ItemType.EVENT, props.rid_parent)
       if (range) {
         ;[date_min.value, date_max.value] = range

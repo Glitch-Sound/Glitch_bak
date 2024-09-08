@@ -19,13 +19,13 @@ const target = ref('')
 
 watch(
   () => props.dialog_show,
-  (newValue) => {
-    dialog.value = newValue
+  (value_new) => {
+    dialog.value = value_new
   }
 )
 
-watch(dialog, (newValue) => {
-  emits('update:showDialog', newValue)
+watch(dialog, (value_new) => {
+  emits('update:showDialog', value_new)
 })
 
 const search = async () => {
@@ -36,7 +36,7 @@ const search = async () => {
 </script>
 
 <template>
-  <v-dialog v-model="dialog" persistent class="panel-common">
+  <v-dialog v-model="dialog" class="panel-common">
     <v-card>
       <v-card-title>
         <span class="text-h5">Search</span>

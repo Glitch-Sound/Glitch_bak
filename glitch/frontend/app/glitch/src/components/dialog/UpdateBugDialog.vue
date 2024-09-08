@@ -50,7 +50,7 @@ const handleWorkloadSelect = (workload: number) => {
 </script>
 
 <template>
-  <v-dialog v-model="dialog" persistent class="panel-common">
+  <v-dialog v-model="dialog" class="panel-common">
     <v-card>
       <v-card-title>
         <span class="text-h5">Update Bug</span>

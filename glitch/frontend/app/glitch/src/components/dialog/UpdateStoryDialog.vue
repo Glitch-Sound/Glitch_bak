@@ -25,8 +25,8 @@ const { dialog, valid, data_form, ref_form, rules, submitData, deleteData } = us
 
 watch(
   () => props.dialog_show,
-  async (newVal) => {
-    if (newVal) {
+  async (value_new) => {
+    if (value_new) {
       const range = await getDateRange(ItemType.STORY, props.rid_parent)
       if (range) {
         ;[date_min.value, date_max.value] = range
@@ -60,7 +60,7 @@ const handleStateSelected = (state: ItemState) => {
 </script>
 
 <template>
-  <v-dialog v-model="dialog" persistent class="panel-common">
+  <v-dialog v-model="dialog" class="panel-common">
     <v-card>
       <v-card-title>
         <span class="text-h5">Update Story</span>

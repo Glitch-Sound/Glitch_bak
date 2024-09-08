@@ -17,7 +17,7 @@ const { dialog, valid, data_form, ref_form, rules, submitData, deleteData } = us
 </script>
 
 <template>
-  <v-dialog v-model="dialog" persistent max-width="600px">
+  <v-dialog v-model="dialog" max-width="600px">
     <v-card>
       <v-card-title>
         <span class="text-h5">Update User</span>

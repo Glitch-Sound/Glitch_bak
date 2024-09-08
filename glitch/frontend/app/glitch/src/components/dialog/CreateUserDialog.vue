@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import { defineProps, watch } from 'vue'
 
 import type { UserCreate } from '@/types/User'
 import { useDialog } from '@/components/dialog/BaseDialog'
@@ -11,12 +11,23 @@ const props = defineProps<{
   is_startup: boolean
 }>()
 
+watch(
+  () => props.dialog_show,
+  async (value_new) => {
+    if (value_new) {
+      data_form.value.user = ''
+      data_form.value.password = ''
+      data_form.value.name = ''
+    }
+  }
+)
+
 const emit = defineEmits<EmitDialog>()
 const { dialog, valid, data_form, ref_form, rules, submitData } = useDialog(props, emit)
 </script>
 
 <template>
-  <v-dialog v-model="dialog" persistent max-width="600px">
+  <v-dialog v-model="dialog" max-width="600px">
     <v-card>
       <v-card-title v-if="props.is_startup == true">
         <span class="text-h5">Add Administrator</span>

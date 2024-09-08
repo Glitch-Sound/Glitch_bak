@@ -18,8 +18,11 @@ const date_max = ref('')
 
 watch(
   () => props.dialog_show,
-  async (newVal) => {
-    if (newVal) {
+  async (value_new) => {
+    if (value_new) {
+      data_form.value.title = ''
+      data_form.value.detail = ''
+
       const range = await getDateRange(ItemType.EVENT, props.rid_parent)
       if (range) {
         ;[date_min.value, date_max.value] = range
@@ -37,7 +40,7 @@ const handleUserSelected = (user: User) => {
 </script>
 
 <template>
-  <v-dialog v-model="dialog" persistent class="panel-common">
+  <v-dialog v-model="dialog" class="panel-common">
     <v-card>
       <v-card-title>
         <span class="text-h5">Add Event</span>

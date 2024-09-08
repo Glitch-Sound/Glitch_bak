@@ -19,6 +19,7 @@ const dialog_form_data = ref<Login>({
 })
 
 const openDialog = () => {
+  dialog_form_data.value = { user: '', password: '' }
   dialog.value = true
 }
 

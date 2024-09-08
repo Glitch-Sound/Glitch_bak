@@ -30,13 +30,13 @@ export const useDialog = (props: any, emits: any) => {
 
   watch(
     () => props.dialog_show,
-    (newValue) => {
-      dialog.value = newValue
+    (value_new) => {
+      dialog.value = value_new
     }
   )
 
-  watch(dialog, (newValue) => {
-    emits('update:showDialog', newValue)
+  watch(dialog, (value_new) => {
+    emits('update:showDialog', value_new)
   })
 
   watch(

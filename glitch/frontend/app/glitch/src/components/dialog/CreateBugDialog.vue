@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import { defineProps, watch } from 'vue'
 
 import type { BugCreate } from '@/types/Item'
 import type { User } from '@/types/User'
@@ -12,6 +12,16 @@ const props = defineProps<{
   dialog_show: boolean
   data_form: BugCreate
 }>()
+
+watch(
+  () => props.dialog_show,
+  async (value_new) => {
+    if (value_new) {
+      data_form.value.title = ''
+      data_form.value.detail = ''
+    }
+  }
+)
 
 const emit = defineEmits<EmitDialog>()
 const { dialog, valid, data_form, ref_form, rules, submitData } = useDialog(props, emit)
@@ -26,7 +36,7 @@ const handleWorkloadSelect = (workload: number) => {
 </script>
 
 <template>
-  <v-dialog v-model="dialog" persistent class="panel-common">
+  <v-dialog v-model="dialog" class="panel-common">
     <v-card>
       <v-card-title>
         <span class="text-h5">Add Bug</span>
