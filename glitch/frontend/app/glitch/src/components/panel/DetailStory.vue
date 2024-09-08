@@ -106,6 +106,7 @@ const handleDelete = async () => {
   <UpdateStoryDialog
     :dialog_show="dialog"
     :data_form="dialog_form_data"
+    :rid_parent="props.item.rid"
     @update:showDialog="dialog = $event"
     @submit="handleSubmit"
     @delete="handleDelete"

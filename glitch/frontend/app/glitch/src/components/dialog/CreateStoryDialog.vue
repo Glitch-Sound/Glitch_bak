@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, defineProps, ref } from 'vue'
+import { watch, defineProps, ref } from 'vue'
 
 import { ItemType, type StoryCreate } from '@/types/Item'
 import type { User } from '@/types/User'
@@ -16,12 +16,17 @@ const props = defineProps<{
 const date_min = ref('')
 const date_max = ref('')
 
-onMounted(async () => {
-  const range = await getDateRange(ItemType.STORY, props.rid_parent)
-  if (range) {
-    ;[date_min.value, date_max.value] = range
+watch(
+  () => props.dialog_show,
+  async (newVal) => {
+    if (newVal) {
+      const range = await getDateRange(ItemType.STORY, props.rid_parent)
+      if (range) {
+        ;[date_min.value, date_max.value] = range
+      }
+    }
   }
-})
+)
 
 const emit = defineEmits<EmitDialog>()
 const { dialog, valid, data_form, ref_form, rules, submitData } = useDialog(props, emit)

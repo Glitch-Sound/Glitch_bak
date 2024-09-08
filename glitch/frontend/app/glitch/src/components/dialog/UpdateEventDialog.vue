@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, defineProps, watch } from 'vue'
+import { ref, defineProps, watch } from 'vue'
 
 import { ItemType, ItemState, type EventUpdate } from '@/types/Item'
 import type { User } from '@/types/User'
@@ -23,12 +23,17 @@ const date_max = ref('')
 const emit = defineEmits<EmitDialog>()
 const { dialog, valid, data_form, ref_form, rules, submitData, deleteData } = useDialog(props, emit)
 
-onMounted(async () => {
-  const range = await getDateRange(ItemType.EVENT, props.rid_parent)
-  if (range) {
-    ;[date_min.value, date_max.value] = range
+watch(
+  () => props.dialog_show,
+  async (newVal) => {
+    if (newVal) {
+      const range = await getDateRange(ItemType.EVENT, props.rid_parent)
+      if (range) {
+        ;[date_min.value, date_max.value] = range
+      }
+    }
   }
-})
+)
 
 watch(
   () => data_form.value.state,
