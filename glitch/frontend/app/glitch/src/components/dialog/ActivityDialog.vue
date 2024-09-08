@@ -30,6 +30,7 @@ watch(
   () => props.dialog_show,
   (value_new) => {
     dialog.value = value_new
+    comment.value = ''
   }
 )
 
@@ -76,7 +77,7 @@ const addData = async () => {
       <v-card-actions>
         <v-spacer />
         <v-btn @click="dialog = false">Cancel</v-btn>
-        <v-btn @click="addData">Add</v-btn>
+        <v-btn color="primary" :disabled="comment == ''" @click="addData">Submit</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

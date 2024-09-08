@@ -77,7 +77,7 @@ const handleSubmit = async (id_project: number) => {
       </template>
 
       <template v-slot:actions>
-        <v-btn class="ms-auto" text="Ok" @click="handleSubmit(0)"></v-btn>
+        <v-btn color="primary" class="ms-auto" text="Ok" @click="handleSubmit(0)"></v-btn>
       </template>
     </v-card>
   </v-dialog>

@@ -90,7 +90,7 @@ const handleWorkloadSelect = (workload: number) => {
         <DeleteButton @delete="deleteData" />
         <v-spacer />
         <v-btn @click="dialog = false">Cancel</v-btn>
-        <v-btn :disabled="!valid" @click="submitData">Submit</v-btn>
+        <v-btn color="primary" :disabled="!valid" @click="submitData">Submit</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

@@ -51,7 +51,7 @@ const search = async () => {
       <v-card-actions>
         <v-spacer />
         <v-btn @click="dialog = false">Cancel</v-btn>
-        <v-btn @click="search">Search</v-btn>
+        <v-btn color="primary" @click="search">Search</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
