@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, defineProps, onBeforeUpdate, watch } from 'vue'
+import { ref, defineProps, watch } from 'vue'
 
 import { TaskType, ItemType, ItemState, type TaskUpdate } from '@/types/Item'
 import type { User } from '@/types/User'
@@ -31,10 +31,6 @@ watch(
     }
   }
 )
-
-onBeforeUpdate(() => {
-  data_form.value.type = TaskType.WORKLOAD
-})
 
 const handleUserSelected = (user: User) => {
   data_form.value.rid_users = user.rid
@@ -86,28 +82,22 @@ const handleWorkloadSelect = (workload: number) => {
           <v-textarea v-model="data_form.detail" label="Detail" />
           <v-textarea v-model="data_form.result" label="Result" />
 
-          <div class="mb-4 text-center">
-            <v-btn-toggle v-model="data_form.type" mandatory>
-              <v-btn :value="TaskType.WORKLOAD">Workload</v-btn>
-              <v-btn :value="TaskType.NUMBER">Number</v-btn>
-            </v-btn-toggle>
-          </div>
-
           <WorkloadSelect
-            v-if="data_form.type == TaskType.WORKLOAD"
+            disabled
+            v-if="props.data_form.type == TaskType.WORKLOAD"
             :workload="data_form.workload"
             @itemSelected="handleWorkloadSelect"
           />
 
           <v-text-field
-            v-if="data_form.type == TaskType.NUMBER"
+            v-if="props.data_form.type == TaskType.NUMBER"
             v-model="data_form.number_completed"
             :rules="[rules.required]"
             label="Number completed"
           />
 
           <v-text-field
-            v-if="data_form.type == TaskType.NUMBER"
+            v-if="props.data_form.type == TaskType.NUMBER"
             v-model="data_form.number_total"
             :rules="[rules.required]"
             label="Number total"

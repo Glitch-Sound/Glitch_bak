@@ -49,8 +49,11 @@ function createChart() {
   const max_value = d3.max(list_data, (d: SummaryItem) =>
     Math.max(d.task_count_complete + d.bug_count_complete, d.task_count_total + d.bug_count_total)
   ) as number
+  const max_value_number = d3.max(list_data, (d: SummaryItem) =>
+    Math.max(d.task_number_total)
+  ) as number
 
-  if (max_value == 0) {
+  if (max_value == 0 && max_value_number == 0) {
     return
   }
 
@@ -68,7 +71,7 @@ function createChart() {
   value_risk_alert.value = latest.task_count_alert + latest.bug_count_alert
 
   createChartTypeWorkload(SummaryType.WORKLOAD, list_data, max_value)
-  createChartTypeWorkload(SummaryType.NUMBER, list_data, max_value)
+  createChartTypeWorkload(SummaryType.NUMBER, list_data, max_value_number)
   createChartTypeWorkload(SummaryType.BUG, list_data, max_value)
   createChartTypeWorkload(SummaryType.RISK_ALERT, list_data, max_value)
 }
