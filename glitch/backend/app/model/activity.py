@@ -14,7 +14,7 @@ class Activity(Base):
     rid_items       = Column(Integer, ForeignKey('items.rid'))
     rid_users       = Column(Integer, ForeignKey('users.rid'))
     activity        = Column(String, default='')
-    datetime_entry  = Column(String, default='')
+    datetime_entry  = Column(String, index=True, default='')
     datetime_update = Column(String, default='')
     is_deleted      = Column(Integer, index=True, default=0)
 

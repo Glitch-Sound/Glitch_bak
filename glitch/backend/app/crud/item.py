@@ -572,10 +572,7 @@ def _extructItem(db: Session, params: ItemParam):
                 cte_extruct = db.query(
                     Tree.rid_ancestor.label('rid')
                 )\
-                .filter(
-                    Tree.rid_descendant == params.rid_items,
-                    Tree.rid_ancestor   != params.rid_items
-                )
+                .filter(Tree.rid_descendant == params.rid_items)
 
         return cte_extruct.cte(name='targets')
 
