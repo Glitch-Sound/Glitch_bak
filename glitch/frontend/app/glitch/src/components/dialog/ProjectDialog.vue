@@ -45,7 +45,7 @@ const handleSubmit = async (id_project: number) => {
 </script>
 
 <template>
-  <v-dialog v-model="dialog" persistent>
+  <v-dialog v-model="dialog">
     <v-card class="dialog-card">
       <v-card-title>
         <span class="text-h5">Project</span>
