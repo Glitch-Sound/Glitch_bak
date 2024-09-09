@@ -1,19 +1,16 @@
-from sqlalchemy import select, distinct, desc, and_, or_    # type: ignore
-from sqlalchemy.orm import Session, aliased                 # type: ignore
-from sqlalchemy.sql import func                             # type: ignore
-
-from enum import Enum
+from sqlalchemy import select, distinct, and_, or_      # type: ignore
+from sqlalchemy.orm import Session, aliased             # type: ignore
+from sqlalchemy.sql import func                         # type: ignore
 
 import sys
 sys.path.append('~/app')
 
-from crud.common import getCurrentDate, getCurrentDatetime, getPreviousDate
+from crud.common import getCurrentDatetime, ItemType, ItemState, ExtractType
+from crud.summary import createSummaryItem, createSummaryUser
+
 from schema import item as schema_item
 from model.item import Item
 from model.tree import Tree
-from model.summary_item import SummaryItem
-from model.summary_user import SummaryUser
-
 from model.project import Project
 from model.event import Event
 from model.feature import Feature
@@ -31,33 +28,6 @@ RISK_5 = 0b00010000
 RISK_6 = 0b00100000
 RISK_7 = 0b01000000
 RISK_8 = 0b10000000
-
-
-class ItemType(Enum):
-    PROJECT = 1
-    EVENT   = 2
-    FEATURE = 3
-    STORY   = 4
-    TASK    = 5
-    BUG     = 6
-
-class ItemState(Enum):
-    IDLE     = 1
-    RUN      = 2
-    ALERT    = 3
-    REVIEW   = 4
-    COMPLETE = 5
-
-class ExtractType(Enum):
-    ALL          =  1
-    INCOMPLETE   =  2
-    HIGH_RISK    =  3
-    ALERT        =  4
-    ASSIGNMENT   =  5
-    RELATION     =  6
-    SEARCH       =  7
-    PARENT       = 11
-    SUMMARY_USER = 21
 
 
 class ItemParam():
@@ -103,329 +73,6 @@ def _createTree(db: Session, type_create: ItemType, rid_parent: int, rid: int):
 
     except Exception as e:
         raise e
-
-
-def _getSummary(list_sum: any, list_count: any):
-    result_sum = {
-        'task_workload'         : 0,
-        'task_number_completed' : 0,
-        'task_number_total'     : 0,
-        'bug_workload'          : 0
-    }
-
-    if list_sum[0].task_workload:
-        result_sum['task_workload'] = list_sum[0].task_workload
-
-    if list_sum[0].task_number_completed:
-        result_sum['task_number_completed'] = list_sum[0].task_number_completed
-
-    if list_sum[0].task_number_total:
-        result_sum['task_number_total'] = list_sum[0].task_number_total
-
-    if list_sum[0].bug_workload:
-        result_sum['bug_workload'] = list_sum[0].bug_workload
-
-    result_count = {
-        'task_count_idle'     : 0,
-        'task_count_run'      : 0,
-        'task_count_alert'    : 0,
-        'task_count_review'   : 0,
-        'task_count_complete' : 0,
-        'task_count_total'    : 0,
-        'bug_count_idle'      : 0,
-        'bug_count_run'       : 0,
-        'bug_count_alert'     : 0,
-        'bug_count_review'    : 0,
-        'bug_count_complete'  : 0,
-        'bug_count_total'     : 0
-    }
-
-    sum_task = 0
-    sum_bug  = 0
-    for target in list_count:
-        if   target.type == ItemType.TASK.value:
-            match target.state:
-                case ItemState.IDLE.value:
-                    result_count['task_count_idle'] = target.count
-                    sum_task += target.count
-                case ItemState.RUN.value:
-                    result_count['task_count_run'] = target.count
-                    sum_task += target.count
-                case ItemState.ALERT.value:
-                    result_count['task_count_alert'] = target.count
-                    sum_task += target.count
-                case ItemState.REVIEW.value:
-                    result_count['task_count_review'] = target.count
-                    sum_task += target.count
-                case ItemState.COMPLETE.value:
-                    result_count['task_count_complete'] = target.count
-                    sum_task += target.count
-
-        elif target.type == ItemType.BUG.value:
-            match target.state:
-                case ItemState.IDLE.value:
-                    result_count['bug_count_idle'] = target.count
-                    sum_bug += target.count
-                case ItemState.RUN.value:
-                    result_count['bug_count_run'] = target.count
-                    sum_bug += target.count
-                case ItemState.ALERT.value:
-                    result_count['bug_count_alert'] = target.count
-                    sum_bug += target.count
-                case ItemState.REVIEW.value:
-                    result_count['bug_count_review'] = target.count
-                    sum_bug += target.count
-                case ItemState.COMPLETE.value:
-                    result_count['bug_count_complete'] = target.count
-                    sum_bug += target.count
-
-    result_count['task_count_total'] = sum_task
-    result_count['bug_count_total']  = sum_bug
-
-    return result_sum, result_count
-
-
-def _createSummaryItem(db: Session, rid_target: int):
-    try:
-        trees = db.query(Tree).filter(Tree.rid_descendant == rid_target).order_by(desc(Tree.rid_ancestor)).all()
-        if not trees:
-            raise
-
-        for tree in trees:
-            if tree.rid_ancestor == tree.rid_descendant:
-                continue
-
-            list_sum = db.query(
-                func.sum(Task.workload).label('task_workload'),
-                func.sum(Task.number_completed).label('task_number_completed'),
-                func.sum(Task.number_total).label('task_number_total'),
-                func.sum(Bug.workload).label('bug_workload')
-            )\
-            .select_from(Tree)\
-            .outerjoin(Task, Tree.rid_descendant == Task.rid_items)\
-            .outerjoin(Bug,  Tree.rid_descendant == Bug.rid_items)\
-            .filter(Tree.rid_ancestor   == tree.rid_ancestor)\
-            .filter(Tree.rid_descendant != tree.rid_ancestor)\
-            .all()
- 
-            list_count = db.query(
-                Item.type,
-                Item.state,
-                func.count(Item.rid).label('count')
-            )\
-            .select_from(Tree)\
-            .join(Item, Tree.rid_descendant == Item.rid)\
-            .filter(Tree.rid_ancestor   == tree.rid_ancestor)\
-            .filter(Tree.rid_descendant != tree.rid_ancestor)\
-            .group_by(Item.type, Item.state)\
-            .all()
-
-            result_sum, result_count = _getSummary(list_sum, list_count)
-
-            summary_item = db.query(SummaryItem).filter(
-                SummaryItem.rid_items == tree.rid_ancestor,
-            ).all()
-
-            if not summary_item:
-                date_previous = getPreviousDate()
-                summary = SummaryItem(
-                    rid_items=tree.rid_ancestor,
-                    task_count_idle=0,
-                    task_count_run=0,
-                    task_count_alert=0,
-                    task_count_review=0,
-                    task_count_complete=0,
-                    task_count_total=0,
-                    task_workload_total=0,
-                    task_number_completed=0,
-                    task_number_total=0,
-                    bug_count_idle=0,
-                    bug_count_run=0,
-                    bug_count_alert=0,
-                    bug_count_review=0,
-                    bug_count_complete=0,
-                    bug_count_total=0,
-                    bug_workload_total=0,
-                    date_entry=date_previous
-                )
-                db.add(summary)
-
-            date_current = getCurrentDate()
-            summary_item = db.query(SummaryItem).filter(
-                SummaryItem.rid_items  == tree.rid_ancestor,
-                SummaryItem.date_entry == date_current
-            ).all()
-
-            if not summary_item:
-                summary = SummaryItem(
-                    rid_items=tree.rid_ancestor,
-                    task_count_idle=result_count['task_count_idle'],
-                    task_count_run=result_count['task_count_run'],
-                    task_count_alert=result_count['task_count_alert'],
-                    task_count_review=result_count['task_count_review'],
-                    task_count_complete=result_count['task_count_complete'],
-                    task_count_total=result_count['task_count_total'],
-                    task_workload_total=result_sum['task_workload'],
-                    task_number_completed=result_sum['task_number_completed'],
-                    task_number_total=result_sum['task_number_total'],
-                    bug_count_idle=result_count['bug_count_idle'],
-                    bug_count_run=result_count['bug_count_run'],
-                    bug_count_alert=result_count['bug_count_alert'],
-                    bug_count_review=result_count['bug_count_review'],
-                    bug_count_complete=result_count['bug_count_complete'],
-                    bug_count_total=result_count['bug_count_total'],
-                    bug_workload_total=result_sum['bug_workload'],
-                    date_entry=date_current
-                )
-                db.add(summary)
-
-            else:
-                summary = db.query(SummaryItem).filter(
-                    SummaryItem.rid_items  == tree.rid_ancestor,
-                    SummaryItem.date_entry == date_current
-                )
-                summary.update({
-                    SummaryItem.task_count_idle: result_count['task_count_idle'],
-                    SummaryItem.task_count_run: result_count['task_count_run'],
-                    SummaryItem.task_count_alert: result_count['task_count_alert'],
-                    SummaryItem.task_count_review: result_count['task_count_review'],
-                    SummaryItem.task_count_complete: result_count['task_count_complete'],
-                    SummaryItem.task_count_total: result_count['task_count_total'],
-                    SummaryItem.task_workload_total: result_sum['task_workload'],
-                    SummaryItem.task_number_completed: result_sum['task_number_completed'],
-                    SummaryItem.task_number_total: result_sum['task_number_total'],
-                    SummaryItem.bug_count_idle: result_count['bug_count_idle'],
-                    SummaryItem.bug_count_run: result_count['bug_count_run'],
-                    SummaryItem.bug_count_alert: result_count['bug_count_alert'],
-                    SummaryItem.bug_count_review: result_count['bug_count_review'],
-                    SummaryItem.bug_count_complete: result_count['bug_count_complete'],
-                    SummaryItem.bug_count_total: result_count['bug_count_total'],
-                    SummaryItem.bug_workload_total: result_sum['bug_workload']
-                })
-
-    except Exception as e:
-        raise e
-
-
-def _createSummaryUser(db: Session, id_project: int, rid_users: int):
-    try:
-        list_sum = db.query(
-            func.sum(Task.workload).label('task_workload'),
-            func.sum(Task.number_completed).label('task_number_completed'),
-            func.sum(Task.number_total).label('task_number_total'),
-            func.sum(Bug.workload).label('bug_workload')
-        )\
-        .select_from(Item)\
-        .outerjoin(Task, Item.rid == Task.rid_items)\
-        .outerjoin(Bug,  Item.rid == Bug.rid_items)\
-        .filter(Item.id_project == id_project)\
-        .filter(Item.rid_users  == rid_users)\
-        .filter(Item.type.in_([ItemType.TASK.value, ItemType.BUG.value]))\
-        .all()
-
-        list_count = db.query(
-            Item.type,
-            Item.state,
-            func.count(Item.rid).label('count')
-        )\
-        .select_from(Item)\
-        .filter(Item.id_project == id_project)\
-        .filter(Item.rid_users  == rid_users)\
-        .filter(Item.type.in_([ItemType.TASK.value, ItemType.BUG.value]))\
-        .group_by(Item.type, Item.state)\
-        .all()
-
-        result_sum, result_count = _getSummary(list_sum, list_count)
-
-        summary_user = db.query(SummaryUser).filter(
-            SummaryUser.rid_users  == rid_users,
-            SummaryUser.id_project == id_project
-        ).all()
-
-        if not summary_user:
-            date_previous = getPreviousDate()
-            summary = SummaryUser(
-                rid_users=rid_users,
-                id_project=id_project,
-                task_count_idle=0,
-                task_count_run=0,
-                task_count_alert=0,
-                task_count_review=0,
-                task_count_complete=0,
-                task_count_total=0,
-                task_workload_total=0,
-                task_number_completed=0,
-                task_number_total=0,
-                bug_count_idle=0,
-                bug_count_run=0,
-                bug_count_alert=0,
-                bug_count_review=0,
-                bug_count_complete=0,
-                bug_count_total=0,
-                bug_workload_total=0,
-                date_entry=date_previous
-            )
-            db.add(summary)
-
-        date_current = getCurrentDate()
-        summary_user = db.query(SummaryUser).filter(
-            SummaryUser.rid_users  == rid_users,
-            SummaryUser.id_project == id_project,
-            SummaryUser.date_entry == date_current
-        ).all()
-
-        if not summary_user:
-            summary = SummaryUser(
-                rid_users=rid_users,
-                id_project=id_project,
-                task_count_idle=result_count['task_count_idle'],
-                task_count_run=result_count['task_count_run'],
-                task_count_alert=result_count['task_count_alert'],
-                task_count_review=result_count['task_count_review'],
-                task_count_complete=result_count['task_count_complete'],
-                task_count_total=result_count['task_count_total'],
-                task_workload_total=result_sum['task_workload'],
-                task_number_completed=result_sum['task_number_completed'],
-                task_number_total=result_sum['task_number_total'],
-                bug_count_idle=result_count['bug_count_idle'],
-                bug_count_run=result_count['bug_count_run'],
-                bug_count_alert=result_count['bug_count_alert'],
-                bug_count_review=result_count['bug_count_review'],
-                bug_count_complete=result_count['bug_count_complete'],
-                bug_count_total=result_count['bug_count_total'],
-                bug_workload_total=result_sum['bug_workload'],
-                date_entry=date_current
-            )
-            db.add(summary)
-
-        else:
-            summary = db.query(SummaryUser).filter(
-                SummaryUser.rid_users  == rid_users,
-                SummaryUser.id_project == id_project,
-                SummaryUser.date_entry == date_current
-            )
-            summary.update({
-                SummaryUser.task_count_idle: result_count['task_count_idle'],
-                SummaryUser.task_count_run: result_count['task_count_run'],
-                SummaryUser.task_count_alert: result_count['task_count_alert'],
-                SummaryUser.task_count_review: result_count['task_count_review'],
-                SummaryUser.task_count_complete: result_count['task_count_complete'],
-                SummaryUser.task_count_total: result_count['task_count_total'],
-                SummaryUser.task_workload_total: result_sum['task_workload'],
-                SummaryUser.task_number_completed: result_sum['task_number_completed'],
-                SummaryUser.task_number_total: result_sum['task_number_total'],
-                SummaryUser.bug_count_idle: result_count['bug_count_idle'],
-                SummaryUser.bug_count_run: result_count['bug_count_run'],
-                SummaryUser.bug_count_alert: result_count['bug_count_alert'],
-                SummaryUser.bug_count_review: result_count['bug_count_review'],
-                SummaryUser.bug_count_complete: result_count['bug_count_complete'],
-                SummaryUser.bug_count_total: result_count['bug_count_total'],
-                SummaryUser.bug_workload_total: result_sum['bug_workload']
-            })
-
-    except Exception as e:
-        raise e
-
 
 
 def _createSortPathRoot(id_project: int):
@@ -1021,8 +668,8 @@ def createTask(db: Session, target:schema_item.TaskCreate):
         _createTree(db, ItemType.TASK, target.rid_items, item.rid)
         db.flush()
 
-        _createSummaryItem(db, item.rid)
-        _createSummaryUser(db, target.id_project, target.rid_users)
+        createSummaryItem(db, item.rid)
+        createSummaryUser(db, target.id_project, target.rid_users)
         db.commit()
 
         db.refresh(item)
@@ -1058,8 +705,8 @@ def updateTask(db: Session, target:schema_item.TaskUpdate):
 
         id_project = db.query(Item.id_project).filter(Item.rid == target.rid)
 
-        _createSummaryItem(db, item.rid)
-        _createSummaryUser(db, id_project, target.rid_users)
+        createSummaryItem(db, item.rid)
+        createSummaryUser(db, id_project, target.rid_users)
         db.commit()
 
         db.refresh(item)
@@ -1125,8 +772,8 @@ def createBug(db: Session, target:schema_item.BugCreate):
         _createTree(db, ItemType.BUG, target.rid_items, item.rid)
         db.flush()
 
-        _createSummaryItem(db, item.rid)
-        _createSummaryUser(db, target.id_project, target.rid_users)
+        createSummaryItem(db, item.rid)
+        createSummaryUser(db, target.id_project, target.rid_users)
         db.commit()
 
         db.refresh(item)
@@ -1159,8 +806,8 @@ def updateBug(db: Session, target:schema_item.BugUpdate):
 
         id_project = db.query(Item.id_project).filter(Item.rid == target.rid)
 
-        _createSummaryItem(db, item.rid)
-        _createSummaryUser(db, id_project, target.rid_users)
+        createSummaryItem(db, item.rid)
+        createSummaryUser(db, id_project, target.rid_users)
         db.commit()
 
         db.refresh(item)
