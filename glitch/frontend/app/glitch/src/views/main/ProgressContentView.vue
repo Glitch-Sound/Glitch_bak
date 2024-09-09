@@ -4,7 +4,8 @@ import { onMounted, watch } from 'vue'
 import { ItemType } from '@/types/Item'
 import useProjectStore from '@/stores/ProjectStore'
 import useProgressStore from '@/stores/ProgressStore'
-import SummaryUser from '@/components/progress/SummaryUser.vue'
+import SummaryUserTask from '@/components/progress/SummaryUserTask.vue'
+import SummaryUserBug from '@/components/progress/SummaryUserBug.vue'
 import PanelEvent from '@/components/panel/PanelEvent.vue'
 import PanelFeature from '@/components/panel/PanelFeature.vue'
 import PanelStory from '@/components/panel/PanelStory.vue'
@@ -40,10 +41,13 @@ const common = async (rid_users: number) => {
 <template>
   <v-main>
     <v-sheet class="ma-1 py-1 rounded-lg">
-      <div class="title">Summary</div>
-      <SummaryUser :rid_users="store_progress.rid_users" />
+      <div class="title">Summary Item</div>
+      <SummaryUserTask :rid_users="store_progress.rid_users" />
 
-      <div class="title">Item</div>
+      <div class="title">Summary Bug & Alert</div>
+      <SummaryUserBug :rid_users="store_progress.rid_users" />
+
+      <div class="title">Assignment</div>
       <template v-for="item in store_progress.items" :key="item.rid">
         <PanelEvent v-if="item.type == ItemType.EVENT" :item="item" />
         <PanelFeature v-if="item.type == ItemType.FEATURE" :item="item" />

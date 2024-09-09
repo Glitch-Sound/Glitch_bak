@@ -13,17 +13,19 @@ const props = defineProps<{
 
 const store_progress = useProgressStore()
 
+const is_enable_workload = ref(false)
+const is_enable_bug = ref(false)
+const is_enable_alert = ref(false)
+
 const value_workload = ref(0)
-const value_number = ref(0)
 const value_bug = ref(0)
-const value_risk_alert = ref(0)
+const value_alert = ref(0)
 
 enum SummaryType {
   NONE = 0,
   WORKLOAD,
-  NUMBER,
   BUG,
-  RISK_ALERT
+  RISK
 }
 
 watch(
@@ -39,35 +41,40 @@ function createChart() {
     return
   }
 
-  const max_value = d3.max(list_data, (d: SummaryItem) =>
-    Math.max(d.task_count_complete + d.bug_count_complete, d.task_count_total + d.bug_count_total)
+  const max_value_workload = d3.max(list_data, (d: SummaryItem) =>
+    Math.max(d.task_workload_total, d.bug_workload_total)
   ) as number
-  const max_value_number = d3.max(list_data, (d: SummaryItem) =>
-    Math.max(d.task_number_total)
+  const max_value_bug = d3.max(list_data, (d: SummaryItem) => Math.max(d.bug_count_total)) as number
+  const max_value_alert = d3.max(
+    list_data,
+    (d: SummaryItem) => Math.max(d.task_count_alert) + Math.max(d.bug_count_alert)
   ) as number
 
-  if (max_value == 0 && max_value_number == 0) {
-    return
+  if (max_value_workload != 0) {
+    is_enable_workload.value = true
+  }
+  if (max_value_bug != 0) {
+    is_enable_bug.value = true
+  }
+  if (max_value_alert != 0) {
+    is_enable_alert.value = true
   }
 
-  d3.select(`#graph-workload`).selectAll('svg').remove()
-  d3.select(`#graph-number`).selectAll('svg').remove()
+  d3.select(`#graph-bug-workload`).selectAll('svg').remove()
   d3.select(`#graph-bug`).selectAll('svg').remove()
-  d3.select(`#graph-risk-alert`).selectAll('svg').remove()
+  d3.select(`#graph-alert`).selectAll('svg').remove()
 
   const latest = list_data[list_data.length - 1]
-  value_workload.value = Math.floor((latest.task_count_complete / latest.task_count_total) * 100)
-  value_number.value = Math.floor((latest.task_number_completed / latest.task_number_total) * 100)
+  value_workload.value = latest.bug_workload_total
   value_bug.value = Math.floor((latest.bug_count_complete / latest.bug_count_total) * 100)
-  value_risk_alert.value = latest.task_count_alert + latest.bug_count_alert
+  value_alert.value = latest.task_count_alert + latest.bug_count_alert
 
-  createChartTypeWorkload(SummaryType.WORKLOAD, list_data, max_value)
-  createChartTypeWorkload(SummaryType.NUMBER, list_data, max_value_number)
-  createChartTypeWorkload(SummaryType.BUG, list_data, max_value)
-  createChartTypeWorkload(SummaryType.RISK_ALERT, list_data, max_value)
+  createChartDetail(SummaryType.WORKLOAD, list_data, max_value_workload)
+  createChartDetail(SummaryType.BUG, list_data, max_value_bug)
+  createChartDetail(SummaryType.RISK, list_data, max_value_alert)
 }
 
-function createChartTypeWorkload(type: SummaryType, data: SummaryItem[], max_value: number) {
+function createChartDetail(type: SummaryType, data: SummaryItem[], max_value: number) {
   const date_end = d3.max(data, (d: any) => new Date(d.date_entry)) as Date
   const date_start = new Date(date_end)
   date_start.setDate(date_end.getDate() - 21)
@@ -87,37 +94,13 @@ function createChartTypeWorkload(type: SummaryType, data: SummaryItem[], max_val
 
   switch (type) {
     case SummaryType.WORKLOAD:
-      svg = d3.select(`#graph-workload`).append('svg')
+      svg = d3.select(`#graph-bug-workload`).append('svg')
       list_area = [
         {
           name: 'Total',
-          value: (d: SummaryItem) => d.task_count_total,
-          color_line: 'rgba(116, 119, 176, 0.9)',
-          color_area: 'rgba(116, 119, 176, 0.2)'
-        },
-        {
-          name: 'Complete',
-          value: (d: SummaryItem) => d.task_count_complete,
-          color_line: 'rgba(90, 90, 90, 0.9)',
-          color_area: 'rgba(90, 90, 90, 0.7)'
-        }
-      ]
-      break
-
-    case SummaryType.NUMBER:
-      svg = d3.select(`#graph-number`).append('svg')
-      list_area = [
-        {
-          name: 'Total',
-          value: (d: SummaryItem) => d.task_number_total,
-          color_line: 'rgba(98, 163, 136, 0.9)',
-          color_area: 'rgba(98, 163, 136, 0.2)'
-        },
-        {
-          name: 'Complete',
-          value: (d: SummaryItem) => d.task_number_completed,
-          color_line: 'rgba(90, 90, 90, 0.9)',
-          color_area: 'rgba(90, 90, 90, 0.7)'
+          value: (d: SummaryItem) => d.bug_workload_total,
+          color_line: 'rgba(180, 180, 180, 0.9)',
+          color_area: 'rgba(180, 180, 180, 0.2)'
         }
       ]
       break
@@ -140,8 +123,8 @@ function createChartTypeWorkload(type: SummaryType, data: SummaryItem[], max_val
       ]
       break
 
-    case SummaryType.RISK_ALERT:
-      svg = d3.select(`#graph-risk-alert`).append('svg')
+    case SummaryType.RISK:
+      svg = d3.select(`#graph-alert`).append('svg')
       list_area = [
         {
           name: 'Risk',
@@ -205,27 +188,13 @@ function createChartTypeWorkload(type: SummaryType, data: SummaryItem[], max_val
       <v-col cols="auto" class="d-flex summary-block">
         <v-card class="flex-grow-1">
           <v-card-text>
-            <div class="title-sub">completed rate</div>
+            <div class="title-sub">progress</div>
             <div class="title">
-              <span>Type : Workload</span>
-              <span class="value" v-if="!isNaN(value_workload)">{{ value_workload }} %</span>
+              <span>Workload</span>
+              <span class="value" v-if="is_enable_workload">{{ value_workload }} pt</span>
               <span class="value" v-else>-</span>
             </div>
-            <div class="graph" :id="`graph-workload`"></div>
-          </v-card-text>
-        </v-card>
-      </v-col>
-
-      <v-col cols="auto" class="d-flex summary-block">
-        <v-card class="flex-grow-1">
-          <v-card-text>
-            <div class="title-sub">completed rate</div>
-            <div class="title">
-              <span>Type : Number</span>
-              <span class="value" v-if="!isNaN(value_number)">{{ value_number }} %</span>
-              <span class="value" v-else>-</span>
-            </div>
-            <div class="graph" :id="`graph-number`"></div>
+            <div class="graph" :id="`graph-bug-workload`"></div>
           </v-card-text>
         </v-card>
       </v-col>
@@ -236,7 +205,7 @@ function createChartTypeWorkload(type: SummaryType, data: SummaryItem[], max_val
             <div class="title-sub">completed rate</div>
             <div class="title">
               <span>Bug</span>
-              <span class="value" v-if="!isNaN(value_bug)">{{ value_bug }} %</span>
+              <span class="value" v-if="is_enable_bug">{{ value_bug }} %</span>
               <span class="value" v-else>-</span>
             </div>
             <div class="graph" :id="`graph-bug`"></div>
@@ -249,13 +218,11 @@ function createChartTypeWorkload(type: SummaryType, data: SummaryItem[], max_val
           <v-card-text>
             <div class="title-sub">caution</div>
             <div class="title">
-              <span>Risk & Alert</span>
-              <span class="value" v-if="!isNaN(value_risk_alert)">
-                {{ value_risk_alert }} alert
-              </span>
+              <span>Alert</span>
+              <span class="value" v-if="is_enable_alert"> {{ value_alert }} alert </span>
               <span class="value" v-else>-</span>
             </div>
-            <div class="graph" :id="`graph-risk-alert`"></div>
+            <div class="graph" :id="`graph-alert`"></div>
           </v-card-text>
         </v-card>
       </v-col>
@@ -265,7 +232,7 @@ function createChartTypeWorkload(type: SummaryType, data: SummaryItem[], max_val
 
 <style scoped>
 .summary {
-  margin: 0 0 30px 60px;
+  margin: 0 0 40px 60px;
   padding: 0;
 }
 
