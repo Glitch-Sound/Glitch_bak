@@ -75,7 +75,6 @@ const handleWorkloadSelect = (workload: number) => {
           <v-text-field
             v-if="data_form.type == TaskType.NUMBER"
             v-model="data_form.number_completed"
-            :rules="[rules.required]"
             label="Number completed"
           />
 

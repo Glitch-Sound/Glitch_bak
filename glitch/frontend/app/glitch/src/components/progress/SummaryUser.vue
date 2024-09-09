@@ -167,7 +167,7 @@ function createChartTypeWorkload(type: SummaryType, data: SummaryItem[], max_val
       .x((d: any) => x(new Date(d.date_entry)))
       .y0(y(0))
       .y1((d: any) => y(area.value(d)))
-      .curve(d3.curveMonotoneX)
+      .curve(d3.curveLinear)
 
     svg.append('path').datum(data).attr('fill', area.color_area).attr('d', areaPath)
 
@@ -175,7 +175,7 @@ function createChartTypeWorkload(type: SummaryType, data: SummaryItem[], max_val
       .line<SummaryItem>()
       .x((d: any) => x(new Date(d.date_entry)))
       .y((d: any) => y(area.value(d)))
-      .curve(d3.curveMonotoneX)
+      .curve(d3.curveLinear)
 
     svg
       .append('path')
