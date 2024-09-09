@@ -223,7 +223,7 @@ def _createSummaryItem(db: Session, rid_target: int):
             result_sum, result_count = _getSummary(list_sum, list_count)
 
             summary_item = db.query(SummaryItem).filter(
-                SummaryItem.rid_items  == tree.rid_ancestor,
+                SummaryItem.rid_items == tree.rid_ancestor,
             ).all()
 
             if not summary_item:
@@ -337,11 +337,9 @@ def _createSummaryUser(db: Session, id_project: int, rid_users: int):
 
         result_sum, result_count = _getSummary(list_sum, list_count)
 
-        date_current = getCurrentDate()
         summary_user = db.query(SummaryUser).filter(
             SummaryUser.rid_users  == rid_users,
-            SummaryUser.id_project == id_project,
-            SummaryUser.date_entry == date_current
+            SummaryUser.id_project == id_project
         ).all()
 
         if not summary_user:
@@ -369,6 +367,14 @@ def _createSummaryUser(db: Session, id_project: int, rid_users: int):
             )
             db.add(summary)
 
+        date_current = getCurrentDate()
+        summary_user = db.query(SummaryUser).filter(
+            SummaryUser.rid_users  == rid_users,
+            SummaryUser.id_project == id_project,
+            SummaryUser.date_entry == date_current
+        ).all()
+
+        if not summary_user:
             summary = SummaryUser(
                 rid_users=rid_users,
                 id_project=id_project,
