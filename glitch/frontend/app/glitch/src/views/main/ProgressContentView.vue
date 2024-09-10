@@ -4,6 +4,7 @@ import { onMounted, watch } from 'vue'
 import { ItemType } from '@/types/Item'
 import useProjectStore from '@/stores/ProjectStore'
 import useProgressStore from '@/stores/ProgressStore'
+import SummaryHierarchy from '@/components/progress/SummaryHierarchy.vue'
 import SummaryUserTask from '@/components/progress/SummaryUserTask.vue'
 import SummaryUserBug from '@/components/progress/SummaryUserBug.vue'
 import PanelEvent from '@/components/panel/PanelEvent.vue'
@@ -41,11 +42,21 @@ const common = async (rid_users: number) => {
 <template>
   <v-main>
     <v-sheet class="ma-1 py-1 rounded-lg">
-      <div class="title">Summary Item</div>
-      <SummaryUserTask :rid_users="store_progress.rid_users" />
+      <v-row>
+        <v-col cols="auto" class="d-flex align-center justify-center">
+          <SummaryHierarchy
+            :id_project="store_project.selected_id_project"
+            :rid_users="store_progress.rid_users"
+          />
+        </v-col>
+        <v-col cols="auto">
+          <div class="title">Summary Item</div>
+          <SummaryUserTask :rid_users="store_progress.rid_users" />
 
-      <div class="title">Summary Bug & Alert</div>
-      <SummaryUserBug :rid_users="store_progress.rid_users" />
+          <div class="title">Summary Bug & Alert</div>
+          <SummaryUserBug :rid_users="store_progress.rid_users" />
+        </v-col>
+      </v-row>
 
       <div class="title">Assignment</div>
       <template v-for="item in store_progress.items" :key="item.rid">

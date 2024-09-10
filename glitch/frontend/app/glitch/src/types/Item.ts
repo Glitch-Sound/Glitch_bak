@@ -233,3 +233,14 @@ export interface BugPriorityUpdate {
   rid: number
   priority: number
 }
+
+export interface ItemHierarchy {
+  rid: number
+  rid_users: number
+  name: string
+  title: string
+  task_type?: number
+  workload_task?: number
+  workload_bug?: number
+  children?: ItemHierarchy[]
+}
