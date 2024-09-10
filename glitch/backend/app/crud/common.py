@@ -30,6 +30,10 @@ class ExtractType(Enum):
     PARENT       = 11
     SUMMARY_USER = 21
 
+class TaskType(Enum):
+    WORKLOAD = 1
+    NUMBER   = 2
+
 
 def getPreviousDate():
     current_utc_time = datetime.now(pytz.timezone('Asia/Tokyo'))

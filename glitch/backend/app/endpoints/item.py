@@ -350,3 +350,14 @@ def update_task(target:schema_item.BugPriorityUpdate, db: Session = Depends(get_
     except Exception as e:
         print(traceback.format_exc())
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
+
+
+@router.get("/items/hierarchy/{id_project}", response_model=schema_item.ItemHierarchy)
+def get_hierarchy(id_project: int, db: Session = Depends(get_db)):
+    try:
+        result = crud_item.getHierarchy(db, id_project)
+        return result
+
+    except Exception as e:
+        print(traceback.format_exc())
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')

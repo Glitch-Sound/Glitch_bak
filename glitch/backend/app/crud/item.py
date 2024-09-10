@@ -1,11 +1,11 @@
-from sqlalchemy import select, distinct, and_, or_      # type: ignore
-from sqlalchemy.orm import Session, aliased             # type: ignore
-from sqlalchemy.sql import func                         # type: ignore
+from sqlalchemy import select, distinct, and_, or_, case    # type: ignore
+from sqlalchemy.orm import Session, aliased                 # type: ignore
+from sqlalchemy.sql import func                             # type: ignore
 
 import sys
 sys.path.append('~/app')
 
-from crud.common import getCurrentDatetime, ItemType, ItemState, ExtractType
+from crud.common import getCurrentDatetime, ItemType, ItemState, ExtractType, TaskType
 from crud.summary import createSummaryItem, createSummaryUser
 
 from schema import item as schema_item
@@ -842,3 +842,66 @@ def updateBugPriority(db: Session, target:schema_item.BugPriorityUpdate):
     except Exception as e:
         db.rollback()
         raise e
+
+
+def getHierarchy(db: Session, id_project: int, visited=None):
+    if visited is None:
+        visited = set()
+
+    if id_project in visited:
+        return {}
+
+    visited.add(id_project)
+
+    UserAlias = aliased(User)
+
+    ancestor = db.query(
+        Item.rid,
+        Item.type,
+        Item.title,
+        UserAlias.rid.label('rid_users'),
+        UserAlias.name.label('name'),
+        case(
+            (Task.type == TaskType.WORKLOAD.value, Task.workload),
+            (Task.type == TaskType.NUMBER.value,   35)
+        ).label('task_workload'),
+        Bug.workload.label('bug_workload')
+    )\
+    .select_from(Item)\
+    .outerjoin(UserAlias,  UserAlias.rid == Item.rid_users)\
+    .outerjoin(Task, Task.rid_items == Item.rid)\
+    .outerjoin(Bug, Bug.rid_items == Item.rid)\
+    .filter(Item.rid == id_project).first()
+
+    descendants = db.query(
+        Item.rid,
+        Item.type,
+        Item.title,
+        UserAlias.rid.label('rid_users'),
+        UserAlias.name.label('name'),
+        case(
+            (Task.type == TaskType.WORKLOAD.value, Task.workload),
+            (Task.type == TaskType.NUMBER.value,   35)
+        ).label('task_workload'),
+        Bug.workload.label('bug_workload')
+    )\
+    .select_from(Item)\
+    .join(Tree, Item.rid == Tree.rid_descendant)\
+    .outerjoin(UserAlias,  UserAlias.rid == Item.rid_users)\
+    .outerjoin(Task, Task.rid_items == Item.rid)\
+    .outerjoin(Bug, Bug.rid_items == Item.rid)\
+    .filter(Tree.rid_ancestor == id_project)\
+    .all()
+
+    children = [getHierarchy(db, desc.rid, visited) for desc in descendants]
+    
+    return {
+        "rid": ancestor.rid,
+        "rid_users": ancestor.rid_users,
+        "name": ancestor.name,
+        "type": ancestor.type,
+        "title": ancestor.title,
+        "workload_task": ancestor.task_workload,
+        "workload_bug": ancestor.bug_workload,
+        "children": [child for child in children if child]
+    }

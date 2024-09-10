@@ -1,5 +1,5 @@
 from pydantic import BaseModel  # type: ignore
-from typing import Optional
+from typing import List, Optional
 
 
 class Item(BaseModel):
@@ -230,3 +230,17 @@ class BugPriorityUpdate(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class ItemHierarchy(BaseModel):
+    rid: int
+    rid_users: int
+    name: str
+    type: int
+    title: str
+    workload_task: Optional[int] = None
+    workload_bug: Optional[int] = None
+    children: Optional[List['ItemHierarchy']] = None
+
+    class Config:
+        orm_mode = True 
