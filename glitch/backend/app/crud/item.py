@@ -1,6 +1,6 @@
-from sqlalchemy import select, distinct, and_, or_, case    # type: ignore
-from sqlalchemy.orm import Session, aliased                 # type: ignore
-from sqlalchemy.sql import func                             # type: ignore
+from sqlalchemy import select, distinct, and_, or_, case   # type: ignore
+from sqlalchemy.orm import Session, aliased                     # type: ignore
+from sqlalchemy.sql import func                                 # type: ignore
 
 import sys
 sys.path.append('~/app')
@@ -296,6 +296,47 @@ def getItems(db: Session, params: ItemParam):
         .outerjoin(Bug, Bug.rid_items == Item.rid)\
         .where(Item.is_deleted == 0)\
         .order_by(Item.path_sort)
+
+        result = query.all()
+        return result
+
+    except Exception as e:
+        raise e
+
+
+def getProjectSummary(db: Session, id_project: int):
+    try:
+        query = db.query(
+            Item.rid,
+            Item.type,
+            Item.state,
+            Item.title,
+            case(
+                (Item.type == ItemType.PROJECT.value, Project.datetime_start),
+                (Item.type == ItemType.EVENT.value, Event.datetime_end),
+                (Item.type == ItemType.STORY.value, Story.datetime_start),
+                else_=''
+            ).label('datetime_start'),
+            case(
+                (Item.type == ItemType.PROJECT.value, Project.datetime_end),
+                (Item.type == ItemType.EVENT.value, Event.datetime_end),
+                (Item.type == ItemType.STORY.value, Story.datetime_end),
+                else_=''
+            ).label('datetime_end')
+        )\
+        .outerjoin(Project, Project.rid_items == Item.rid)\
+        .outerjoin(Event, Event.rid_items == Item.rid)\
+        .outerjoin(Feature, Feature.rid_items == Item.rid)\
+        .outerjoin(Story, Story.rid_items == Item.rid)\
+        .filter(
+            Item.is_deleted == 0,
+            Item.type.in_([
+                ItemType.PROJECT.value,
+                ItemType.EVENT.value,
+                ItemType.STORY.value
+            ])
+        )\
+        .order_by(Item.path_sort, Item.rid)
 
         result = query.all()
         return result

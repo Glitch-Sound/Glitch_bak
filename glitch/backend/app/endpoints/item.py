@@ -121,6 +121,17 @@ def get_items_search(id_project: int, target: int, db: Session = Depends(get_db)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
+@router.get('/items/summary-project/{id_project}', response_model=list[schema_item.SummaryProject])
+def get_items_search(id_project: int, db: Session = Depends(get_db)):
+    try:
+        result = crud_item.getProjectSummary(db, id_project)
+        return result
+
+    except Exception as e:
+        print(traceback.format_exc())
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
+
+
 @router.get('/projects/', response_model=list[schema_item.Project])
 def get_items(db: Session = Depends(get_db)):
     try:

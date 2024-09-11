@@ -244,3 +244,14 @@ class ItemHierarchy(BaseModel):
 
     class Config:
         orm_mode = True 
+
+class SummaryProject(BaseModel):
+    rid: int
+    type: int
+    state: int
+    title: str
+    datetime_start: str
+    datetime_end: str
+
+    class Config:
+        orm_mode = True 
