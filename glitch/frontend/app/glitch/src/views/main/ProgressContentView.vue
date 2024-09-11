@@ -58,6 +58,7 @@ const common = async (rid_users: number) => {
             :rid_users="store_progress.rid_users"
           />
         </v-col>
+
         <v-col cols="auto">
           <div class="title">Summary Item</div>
           <SummaryUserTask :rid_users="store_progress.rid_users" />
@@ -68,13 +69,15 @@ const common = async (rid_users: number) => {
       </v-row>
 
       <div class="title">Assignment</div>
-      <template v-for="item in store_progress.items" :key="item.rid">
-        <PanelEvent v-if="item.type == ItemType.EVENT" :item="item" />
-        <PanelFeature v-if="item.type == ItemType.FEATURE" :item="item" />
-        <PanelStory v-if="item.type == ItemType.STORY" :item="item" />
-        <PanelTask v-if="item.type == ItemType.TASK" :item="item" />
-        <PanelBug v-if="item.type == ItemType.BUG" :item="item" />
-      </template>
+      <div class="mx-5">
+        <template v-for="item in store_progress.items" :key="item.rid">
+          <PanelEvent v-if="item.type == ItemType.EVENT" :item="item" />
+          <PanelFeature v-if="item.type == ItemType.FEATURE" :item="item" />
+          <PanelStory v-if="item.type == ItemType.STORY" :item="item" />
+          <PanelTask v-if="item.type == ItemType.TASK" :item="item" />
+          <PanelBug v-if="item.type == ItemType.BUG" :item="item" />
+        </template>
+      </div>
     </v-sheet>
   </v-main>
 </template>

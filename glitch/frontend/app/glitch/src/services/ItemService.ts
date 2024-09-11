@@ -18,7 +18,8 @@ import type {
   BugCreate,
   BugUpdate,
   BugPriorityUpdate,
-  ItemHierarchy
+  ItemHierarchy,
+  SummaryProject
 } from '@/types/Item'
 
 class ItemService {
@@ -355,6 +356,15 @@ class ItemService {
   public async getHierarchy(id_project: number | null): Promise<ItemHierarchy> {
     try {
       const response = await http.get<ItemHierarchy>(`/api/items/hierarchy/${id_project}`)
+      return response.data
+    } catch (error) {
+      throw new Error('error: ${error}')
+    }
+  }
+
+  public async getProjectSummary(id_project: number | null): Promise<SummaryProject[]> {
+    try {
+      const response = await http.get<SummaryProject[]>(`/api/items/summary-project/${id_project}`)
       return response.data
     } catch (error) {
       throw new Error('error: ${error}')

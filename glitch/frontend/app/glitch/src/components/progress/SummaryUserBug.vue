@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref, defineProps, watch } from 'vue'
 
-import type { SummaryItem } from '@/types/Summary'
-import useProgressStore from '@/stores/ProgressStore'
-
 // @ts-ignore
 import * as d3 from 'd3'
+
+import type { SummaryItem } from '@/types/Summary'
+import useProgressStore from '@/stores/ProgressStore'
 
 const props = defineProps<{
   rid_users: number

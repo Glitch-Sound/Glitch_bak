@@ -239,8 +239,16 @@ export interface ItemHierarchy {
   rid_users: number
   name: string
   title: string
-  task_type?: number
   workload_task?: number
   workload_bug?: number
   children?: ItemHierarchy[]
+}
+
+export interface SummaryProject {
+  rid: number
+  type: number
+  state: number
+  title: string
+  datetime_start: string
+  datetime_end: string
 }
