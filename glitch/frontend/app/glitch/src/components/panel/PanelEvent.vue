@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, defineProps } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 
 import type { Item, FeatureCreate } from '@/types/Item'
 import useUserStore from '@/stores/UserStore'
@@ -18,7 +18,6 @@ const props = defineProps<{
 }>()
 
 const route = useRoute()
-const router = useRouter()
 const store_user = useUserStore()
 const store_item = useItemStore()
 
@@ -41,7 +40,7 @@ const handleSubmit = async (data: FeatureCreate) => {
   try {
     const service_item = new ItemService()
     await service_item.createFeature(data)
-    store_item.fetchItems(router)
+    store_item.update()
     dialog.value = false
   } catch (err) {
     console.error('Error:', err)

@@ -4,7 +4,6 @@ import { onMounted, watch } from 'vue'
 // @ts-ignore
 import * as d3 from 'd3'
 
-import useItemStore from '@/stores/ItemStore'
 import useProgressStore from '@/stores/ProgressStore'
 
 const props = defineProps<{
@@ -12,11 +11,10 @@ const props = defineProps<{
   rid_users: number | null
 }>()
 
-const store_item = useItemStore()
 const store_progress = useProgressStore()
 
 onMounted(async () => {
-  await store_item.fetchHierarchy(props.id_project)
+  await store_progress.fetchHierarchy(props.id_project)
   createSunburstChart(props.rid_users)
 })
 
@@ -30,12 +28,12 @@ watch(
 
 function createSunburstChart(rid_users: number | null) {
   const width = 350
-  const radius = 160
+  const radius = 150
   const radius_ratio_inncer = 0.6
   const partition = d3.partition().size([2 * Math.PI, radius * (1 - radius_ratio_inncer)])
 
   const root = d3
-    .hierarchy(store_item.hierarchy)
+    .hierarchy(store_progress.hierarchy)
     .sum((d: any) => d.workload_task + d.workload_bug)
     .sort((a: any, b: any) => b.value - a.value)
 

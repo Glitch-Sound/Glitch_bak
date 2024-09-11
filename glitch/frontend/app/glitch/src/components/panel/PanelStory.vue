@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, defineProps } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 
 import type { Item, TaskCreate, BugCreate } from '@/types/Item'
 import useUserStore from '@/stores/UserStore'
@@ -20,7 +20,6 @@ const props = defineProps<{
 }>()
 
 const route = useRoute()
-const router = useRouter()
 const store_user = useUserStore()
 const store_item = useItemStore()
 const store_summary = useSummaryStore()
@@ -62,7 +61,7 @@ const handleTaskSubmit = async (data: TaskCreate) => {
   try {
     const service_item = new ItemService()
     const result = await service_item.createTask(data)
-    store_item.fetchItems(router)
+    store_item.update()
     store_summary.updateTaskBug(result.rid)
     dialogTask.value = false
   } catch (err) {
@@ -74,7 +73,7 @@ const handleBugSubmit = async (data: BugCreate) => {
   try {
     const service_item = new ItemService()
     const result = await service_item.createBug(data)
-    store_item.fetchItems(router)
+    store_item.update()
     store_summary.updateTaskBug(result.rid)
     dialogBug.value = false
   } catch (err) {

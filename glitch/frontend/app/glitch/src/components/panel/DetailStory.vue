@@ -51,7 +51,7 @@ const handleSubmit = async (data: StoryUpdate) => {
   try {
     const service_item = new ItemService()
     await service_item.updateStory(data)
-    store_item.fetchItems(router)
+    store_item.update()
     dialog.value = false
   } catch (err) {
     console.error('Error:', err)
@@ -62,7 +62,7 @@ const handleDelete = async () => {
   try {
     const service_item = new ItemService()
     await service_item.deleteStory(props.item.rid)
-    store_item.fetchItems(router)
+    store_item.update()
     dialog.value = false
   } catch (err) {
     console.error('Error:', err)

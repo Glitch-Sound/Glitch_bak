@@ -30,7 +30,7 @@ watch(dialog, (value_new) => {
 
 const search = async () => {
   store_item.setExtractSearch(target.value)
-  store_item.fetchItems(router)
+  store_item.update()
   dialog.value = false
 }
 </script>

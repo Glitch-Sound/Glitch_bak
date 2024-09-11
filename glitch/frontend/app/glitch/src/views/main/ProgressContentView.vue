@@ -3,6 +3,7 @@ import { onMounted, watch } from 'vue'
 
 import { ItemType } from '@/types/Item'
 import useProjectStore from '@/stores/ProjectStore'
+import useItemStore from '@/stores/ItemStore'
 import useProgressStore from '@/stores/ProgressStore'
 import SummaryHierarchy from '@/components/progress/SummaryHierarchy.vue'
 import SummaryUserTask from '@/components/progress/SummaryUserTask.vue'
@@ -14,6 +15,7 @@ import PanelTask from '@/components/panel/PanelTask.vue'
 import PanelBug from '@/components/panel/PanelBug.vue'
 
 const store_project = useProjectStore()
+const store_item = useItemStore()
 const store_progress = useProgressStore()
 
 onMounted(async () => {
@@ -23,17 +25,24 @@ onMounted(async () => {
 })
 
 watch(
-  () => store_progress.rid_users,
+  () => store_item.is_update,
   async (value_new) => {
     if (value_new) {
-      common(value_new)
+      common(store_progress.rid_users)
     }
   }
 )
 
+watch(
+  () => store_progress.rid_users,
+  async (value_new) => {
+    common(value_new)
+  }
+)
+
 const common = async (rid_users: number) => {
-  if (rid_users && store_project.selected_id_project) {
-    await store_progress.fetchSummariesUser(store_project.selected_id_project, rid_users)
+  if (store_project.selected_id_project && rid_users) {
+    store_progress.fetchSummariesUser(store_project.selected_id_project, rid_users)
     store_progress.fetchItems(store_project.selected_id_project, rid_users)
   }
 }
@@ -73,6 +82,7 @@ const common = async (rid_users: number) => {
 <style scoped>
 .title {
   margin: 10px 20px 5px;
+  color: #dfdfdf;
   font-size: 20px;
   font-weight: bold;
 }

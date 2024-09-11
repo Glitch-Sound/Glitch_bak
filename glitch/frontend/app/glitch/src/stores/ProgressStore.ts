@@ -1,20 +1,37 @@
 import { defineStore } from 'pinia'
 
 import type { User } from '@/types/User'
-import { type Item } from '@/types/Item'
+import type { Item, ItemHierarchy } from '@/types/Item'
 import type { SummaryUser } from '@/types/Summary'
 import ItemService from '@/services/ItemService'
 import UserService from '@/services/UserService'
 import SummaryService from '@/services/SummaryService'
+import useItemStore from '@/stores/ItemStore'
 
 const useProgressStore = defineStore('progress', {
   state: () => ({
+    items: [] as Array<Item>,
+    hierarchy: null as ItemHierarchy | null,
     users: [] as Array<User>,
     rid_users: 0 as number,
-    summaries_user: new Map<number, Array<SummaryUser>>(),
-    items: [] as Array<Item>
+    summaries_user: new Map<number, Array<SummaryUser>>()
   }),
   actions: {
+    async fetchItems(id_project: number, rid_users: number) {
+      const store_item = useItemStore()
+      store_item.updated()
+
+      const service_item = new ItemService()
+      this.items = await service_item.getItemsSummaryUser(id_project, rid_users)
+    },
+    async fetchHierarchy(id_project: number | null) {
+      try {
+        const service_item = new ItemService()
+        this.hierarchy = await service_item.getHierarchy(id_project)
+      } catch (error) {
+        console.error('Error fetching hierarchy:', error)
+      }
+    },
     async fetchUsers(id_project: number) {
       try {
         const service_user = new UserService()
@@ -34,11 +51,6 @@ const useProgressStore = defineStore('progress', {
       } catch (error) {
         console.error('Error:', error)
       }
-    },
-
-    async fetchItems(id_project: number, rid_users: number) {
-      const service_item = new ItemService()
-      this.items = await service_item.getItemsSummaryUser(id_project, rid_users)
     },
     setTarget(rid_users: number) {
       this.rid_users = rid_users

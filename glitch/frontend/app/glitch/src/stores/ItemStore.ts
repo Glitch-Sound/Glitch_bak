@@ -1,22 +1,30 @@
 import { defineStore } from 'pinia'
 
-import { ItemType, ExtractType, type Item, type ItemHierarchy } from '@/types/Item'
+import { ItemType, ExtractType, type Item } from '@/types/Item'
 import ItemService from '@/services/ItemService'
 import useUserStore from '@/stores/UserStore'
 import useProjectStore from '@/stores/ProjectStore'
 
 const useItemStore = defineStore('item', {
   state: () => ({
+    is_update: false as boolean,
     items: [] as Array<Item>,
     type_extract: ExtractType.INCOMPLETE as ExtractType,
     type_enabled: ItemType.BUG as ItemType,
     extract_rid_item: 0 as number,
-    extract_search_target: '' as string,
-    hierarchy: null as ItemHierarchy | null
+    extract_search_target: '' as string
   }),
   actions: {
+    update() {
+      this.is_update = true
+    },
+    updated() {
+      this.is_update = false
+    },
     async fetchItems(router: any) {
       try {
+        this.updated()
+
         const service_item = new ItemService()
         const store_user = useUserStore()
         const store_project = useProjectStore()
@@ -125,14 +133,6 @@ const useItemStore = defineStore('item', {
     },
     setEnabledType(type: ItemType) {
       this.type_enabled = type
-    },
-    async fetchHierarchy(id_project: number | null) {
-      try {
-        const service_item = new ItemService()
-        this.hierarchy = await service_item.getHierarchy(id_project)
-      } catch (error) {
-        console.error('Error fetching hierarchy:', error)
-      }
     }
   }
 })

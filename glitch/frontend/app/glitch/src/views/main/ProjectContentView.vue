@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { onMounted, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 import { ItemType } from '@/types/Item'
 import useProjectStore from '@/stores/ProjectStore'
@@ -12,12 +12,27 @@ import PanelTask from '@/components/panel/PanelTask.vue'
 import PanelBug from '@/components/panel/PanelBug.vue'
 
 const route = useRoute()
+const router = useRouter()
 const store_project = useProjectStore()
 const store_item = useItemStore()
 
 onMounted(() => {
   store_project.setSelectedProjectID(Number(route.params.id_project))
+  common()
 })
+
+watch(
+  () => store_item.is_update,
+  async (value_new) => {
+    if (value_new) {
+      common()
+    }
+  }
+)
+
+const common = () => {
+  store_item.fetchItems(router)
+}
 </script>
 
 <template>

@@ -27,7 +27,7 @@ const dialog_form_data = ref<EventCreate>({
 watch(
   () => store_item.type_extract,
   () => {
-    store_item.fetchItems(router)
+    store_item.update()
   }
 )
 
@@ -43,7 +43,7 @@ const handleSubmit = async (data: EventCreate) => {
   try {
     const service_item = new ItemService()
     await service_item.createEvent(data)
-    store_item.fetchItems(router)
+    store_item.update()
     dialog.value = false
   } catch (err) {
     console.error('Error:', err)

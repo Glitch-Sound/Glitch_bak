@@ -81,7 +81,7 @@ const common = () => {
         break
     }
 
-    store_item.fetchItems(router)
+    store_item.update()
   }
 }
 </script>

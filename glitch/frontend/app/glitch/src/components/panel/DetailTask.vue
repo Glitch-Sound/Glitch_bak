@@ -56,7 +56,7 @@ const handleSubmit = async (data: TaskUpdate) => {
   try {
     const service_item = new ItemService()
     await service_item.updateTask(data)
-    store_item.fetchItems(router)
+    store_item.update()
     store_summary.updateTaskBug(props.item.rid)
     dialog.value = false
   } catch (err) {
@@ -68,7 +68,7 @@ const handleDelete = async () => {
   try {
     const service_item = new ItemService()
     await service_item.deleteTask(props.item.rid)
-    store_item.fetchItems(router)
+    store_item.update()
     dialog.value = false
   } catch (err) {
     console.error('Error:', err)
