@@ -31,8 +31,8 @@ watch(
 function createSunburstChart(rid_users: number | null) {
   const width = 350
   const radius = 160
-
-  const partition = d3.partition().size([2 * Math.PI, radius])
+  const radius_ratio_inncer = 0.6
+  const partition = d3.partition().size([2 * Math.PI, radius * (1 - radius_ratio_inncer)])
 
   const root = d3
     .hierarchy(store_item.hierarchy)
@@ -53,17 +53,16 @@ function createSunburstChart(rid_users: number | null) {
     .arc()
     .startAngle((d: any) => d.x0)
     .endAngle((d: any) => d.x1)
-    .innerRadius((d: any) => d.y0)
-    .outerRadius((d: any) => d.y1)
+    .innerRadius((d: any) => (d.depth === 0 ? 0 : radius * radius_ratio_inncer + d.y0))
+    .outerRadius((d: any) => radius * radius_ratio_inncer + d.y1)
 
-  const color = d3
-    .scaleOrdinal()
-    .domain(root.descendants().map((d: any) => d.depth))
-    .range(d3.schemeCategory10)
+  const colors = ['#efbf4d', '#9c357c', '#028c06']
+  const color_task = '#4169e1'
+  const color_bug = '#cd0000'
 
   const max_depth = Math.max(...root.descendants().map((d: any) => d.depth))
 
-  const path = svg
+  svg
     .selectAll('path')
     .data(root.descendants())
     .enter()
@@ -71,61 +70,20 @@ function createSunburstChart(rid_users: number | null) {
     .attr('d', arc as any)
     .style('fill', (d: any) => {
       if (d.depth === 0) {
-        return 'black'
-      } else if (d.depth === max_depth) {
-        return color(d.depth)
+        return '#000000'
+      } else if (d.depth === 4) {
+        if (0 < d.data.workload_task) {
+          return color_task
+        } else {
+          return color_bug
+        }
+      } else if (d.depth <= max_depth && d.depth < 4) {
+        return colors[d.depth - 1]
       }
-      return color(d.depth)
+      return '#000000'
     })
     .style('stroke', '#000000')
-    .style('fill-opacity', (d: any) => {
-      if (d.depth === max_depth) {
-        return d.data.rid_users === rid_users ? 1 : 0.1
-      }
-      return 1
-    })
-
-  const label = svg
-    .append('text')
-    .attr('text-anchor', 'middle')
-    .attr('fill', '#cdcdcd')
-    .style('visibility', 'hidden')
-
-  label
-    .append('tspan')
-    .attr('class', 'percentage')
-    .attr('x', 0)
-    .attr('y', 0)
-    .attr('dy', '0.35em')
-    .attr('font-size', '2em')
-    .text('')
-
-  svg
-    .append('g')
-    .attr('fill', 'none')
-    .attr('pointer-events', 'all')
-    .on('mouseleave', () => {
-      path.attr('fill-opacity', 1)
-      label.style('visibility', 'hidden')
-    })
-    .selectAll('path')
-    .data(
-      root.descendants().filter((d: any) => {
-        return d.depth
-      })
-    )
-    .join('path')
-    .attr('d', arc)
-    .on('mouseenter', (event: any, d: any) => {
-      const sequence = d.ancestors().reverse().slice(1)
-      path.attr('fill-opacity', (node: any) => (sequence.indexOf(node) >= 0 ? 1.0 : 0.3))
-
-      const percentage = ((100 * d.value) / root.value).toPrecision(3)
-      label
-        .style('visibility', null)
-        .select('.percentage')
-        .text(percentage + ' %')
-    })
+    .style('fill-opacity', (d: any) => (d.data.rid_users === rid_users ? 0.9 : 0.3))
 }
 </script>
 
@@ -137,7 +95,7 @@ function createSunburstChart(rid_users: number | null) {
 
 <style scoped>
 .summary {
-  margin: 0 30px 0 60px;
+  margin: 0 40px 0 60px;
   padding: 0;
 }
 </style>
