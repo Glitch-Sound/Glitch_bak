@@ -35,6 +35,13 @@ class TaskType(Enum):
     NUMBER   = 2
 
 
+def getWeekAgoDate():
+    current_utc_time = datetime.now(pytz.timezone('Asia/Tokyo'))
+    week_date_time = current_utc_time - timedelta(days=7)
+    week_date = week_date_time.strftime('%Y-%m-%d')
+    return week_date
+
+
 def getPreviousDate():
     current_utc_time = datetime.now(pytz.timezone('Asia/Tokyo'))
     previous_date_time = current_utc_time - timedelta(days=1)

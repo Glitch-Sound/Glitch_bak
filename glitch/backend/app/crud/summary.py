@@ -109,7 +109,7 @@ def getAncestorsItem(db: Session, rid: int):
         raise e
 
 
-def _getSummary(list_sum: any, list_count: any):
+def _getSummary(list_sum_workload: any, list_sum_number: any, list_count: any):
     result_sum = {
         'task_workload'         : 0,
         'task_number_completed' : 0,
@@ -117,17 +117,17 @@ def _getSummary(list_sum: any, list_count: any):
         'bug_workload'          : 0
     }
 
-    if list_sum[0].task_workload:
-        result_sum['task_workload'] = list_sum[0].task_workload
+    if list_sum_workload[0].task_workload:
+        result_sum['task_workload'] = list_sum_workload[0].task_workload
 
-    if list_sum[0].task_number_completed:
-        result_sum['task_number_completed'] = list_sum[0].task_number_completed
+    if list_sum_workload[0].bug_workload:
+        result_sum['bug_workload'] = list_sum_workload[0].bug_workload
 
-    if list_sum[0].task_number_total:
-        result_sum['task_number_total'] = list_sum[0].task_number_total
+    if list_sum_number[0].task_number_completed:
+        result_sum['task_number_completed'] = list_sum_number[0].task_number_completed
 
-    if list_sum[0].bug_workload:
-        result_sum['bug_workload'] = list_sum[0].bug_workload
+    if list_sum_number[0].task_number_total:
+        result_sum['task_number_total'] = list_sum_number[0].task_number_total
 
     result_count = {
         'task_count_idle'     : 0,
@@ -199,17 +199,32 @@ def createSummaryItem(db: Session, rid_target: int):
             if tree.rid_ancestor == tree.rid_descendant:
                 continue
 
-            list_sum = db.query(
+            list_sum_workload = db.query(
                 func.sum(Task.workload).label('task_workload'),
-                func.sum(Task.number_completed).label('task_number_completed'),
-                func.sum(Task.number_total).label('task_number_total'),
                 func.sum(Bug.workload).label('bug_workload')
+            )\
+            .select_from(Tree)\
+            .join(Item, Tree.rid_descendant == Item.rid)\
+            .outerjoin(Task, Tree.rid_descendant == Task.rid_items)\
+            .outerjoin(Bug,  Tree.rid_descendant == Bug.rid_items)\
+            .filter(
+                Tree.rid_ancestor   == tree.rid_ancestor,
+                Tree.rid_descendant != tree.rid_ancestor,
+                Item.state != ItemState.IDLE.value
+            )\
+            .all()
+
+            list_sum_number = db.query(
+                func.sum(Task.number_completed).label('task_number_completed'),
+                func.sum(Task.number_total).label('task_number_total')
             )\
             .select_from(Tree)\
             .outerjoin(Task, Tree.rid_descendant == Task.rid_items)\
             .outerjoin(Bug,  Tree.rid_descendant == Bug.rid_items)\
-            .filter(Tree.rid_ancestor   == tree.rid_ancestor)\
-            .filter(Tree.rid_descendant != tree.rid_ancestor)\
+            .filter(
+                Tree.rid_ancestor   == tree.rid_ancestor,
+                Tree.rid_descendant != tree.rid_ancestor
+            )\
             .all()
  
             list_count = db.query(
@@ -219,12 +234,14 @@ def createSummaryItem(db: Session, rid_target: int):
             )\
             .select_from(Tree)\
             .join(Item, Tree.rid_descendant == Item.rid)\
-            .filter(Tree.rid_ancestor   == tree.rid_ancestor)\
-            .filter(Tree.rid_descendant != tree.rid_ancestor)\
+            .filter(
+                Tree.rid_ancestor   == tree.rid_ancestor,
+                Tree.rid_descendant != tree.rid_ancestor
+            )\
             .group_by(Item.type, Item.state)\
             .all()
 
-            result_sum, result_count = _getSummary(list_sum, list_count)
+            result_sum, result_count = _getSummary(list_sum_workload, list_sum_number, list_count)
 
             summary_item = db.query(SummaryItem).filter(
                 SummaryItem.rid_items == tree.rid_ancestor,
@@ -313,18 +330,33 @@ def createSummaryItem(db: Session, rid_target: int):
 
 def createSummaryUser(db: Session, id_project: int, rid_users: int):
     try:
-        list_sum = db.query(
+        list_sum_workload = db.query(
             func.sum(Task.workload).label('task_workload'),
-            func.sum(Task.number_completed).label('task_number_completed'),
-            func.sum(Task.number_total).label('task_number_total'),
             func.sum(Bug.workload).label('bug_workload')
         )\
         .select_from(Item)\
         .outerjoin(Task, Item.rid == Task.rid_items)\
         .outerjoin(Bug,  Item.rid == Bug.rid_items)\
-        .filter(Item.id_project == id_project)\
-        .filter(Item.rid_users  == rid_users)\
-        .filter(Item.type.in_([ItemType.TASK.value, ItemType.BUG.value]))\
+        .filter(
+            Item.id_project == id_project,
+            Item.rid_users  == rid_users,
+            Item.type.in_([ItemType.TASK.value, ItemType.BUG.value]),
+            Item.state != ItemState.IDLE.value
+        )\
+        .all()
+
+        list_sum_number = db.query(
+            func.sum(Task.number_completed).label('task_number_completed'),
+            func.sum(Task.number_total).label('task_number_total')
+        )\
+        .select_from(Item)\
+        .outerjoin(Task, Item.rid == Task.rid_items)\
+        .outerjoin(Bug,  Item.rid == Bug.rid_items)\
+        .filter(
+            Item.id_project == id_project,
+            Item.rid_users  == rid_users,
+            Item.type.in_([ItemType.TASK.value, ItemType.BUG.value])
+        )\
         .all()
 
         list_count = db.query(
@@ -333,13 +365,15 @@ def createSummaryUser(db: Session, id_project: int, rid_users: int):
             func.count(Item.rid).label('count')
         )\
         .select_from(Item)\
-        .filter(Item.id_project == id_project)\
-        .filter(Item.rid_users  == rid_users)\
-        .filter(Item.type.in_([ItemType.TASK.value, ItemType.BUG.value]))\
+        .filter(
+            Item.id_project == id_project,
+            Item.rid_users  == rid_users,
+            Item.type.in_([ItemType.TASK.value, ItemType.BUG.value])
+        )\
         .group_by(Item.type, Item.state)\
         .all()
 
-        result_sum, result_count = _getSummary(list_sum, list_count)
+        result_sum, result_count = _getSummary(list_sum_workload, list_sum_number, list_count)
 
         summary_user = db.query(SummaryUser).filter(
             SummaryUser.rid_users  == rid_users,

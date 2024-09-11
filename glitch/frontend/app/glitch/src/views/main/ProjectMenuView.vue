@@ -55,7 +55,7 @@ const handleSubmit = async (data: EventCreate) => {
   <v-navigation-drawer color="background" class="no-border">
     <v-sheet color="#101010" class="rounded-lg mt-1 ml-1 py-3">
       <v-list-item>
-        <v-btn width="250px" color="#9D0B28" prepend-icon="mdi-plus-circle" @click="openDialog()">
+        <v-btn width="250px" color="#950531" prepend-icon="mdi-plus-circle" @click="openDialog()">
           Event
         </v-btn>
       </v-list-item>

@@ -5,7 +5,7 @@ from sqlalchemy.sql import func                             # type: ignore
 import sys
 sys.path.append('~/app')
 
-from crud.common import getCurrentDatetime, ItemType, ItemState, ExtractType, TaskType
+from crud.common import getWeekAgoDate, getCurrentDatetime, ItemType, ItemState, ExtractType, TaskType
 from crud.summary import createSummaryItem, createSummaryUser
 
 from schema import item as schema_item
@@ -229,9 +229,14 @@ def _extructItem(db: Session, params: ItemParam):
                 .filter(Tree.rid_descendant == params.rid_items)
 
             case ExtractType.SUMMARY_USER.value:
+                datetime_week_ago = getWeekAgoDate()
+
                 subquery_target = (
                     select(Item.rid)
-                    .where(Item.rid_users == params.rid_users)
+                    .where(
+                        Item.rid_users == params.rid_users,
+                        datetime_week_ago <= Item.datetime_update
+                    )
                 ).subquery()
 
                 cte_extruct = db.query(
