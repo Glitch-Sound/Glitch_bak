@@ -53,6 +53,7 @@ function createSunburstChart(rid_users: number | null) {
     .endAngle((d: any) => d.x1)
     .innerRadius((d: any) => (d.depth === 0 ? 0 : radius * radius_ratio_inncer + d.y0))
     .outerRadius((d: any) => radius * radius_ratio_inncer + d.y1)
+    .cornerRadius(2)
 
   const colors = ['#efbf4d', '#9c357c', '#028c06']
   const color_task = '#4169e1'
@@ -80,7 +81,8 @@ function createSunburstChart(rid_users: number | null) {
       }
       return '#000000'
     })
-    .style('stroke', '#000000')
+    .style('stroke', '#101010')
+    .style('stroke-width', 1.5)
     .style('fill-opacity', (d: any) => {
       if (rid_users == null) {
         return 0.8
