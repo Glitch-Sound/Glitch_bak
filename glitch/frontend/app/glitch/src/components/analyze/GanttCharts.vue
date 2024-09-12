@@ -1,20 +1,21 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
 // @ts-ignore
 import * as d3 from 'd3'
 
 import useProjectStore from '@/stores/ProjectStore'
 
-const store_project = useProjectStore()
-
-const taskColors: { [key: number]: string } = {
+const colors_item: { [key: number]: string } = {
   1: 'rgba(176, 224, 230, 0.8)',
   2: 'rgba(132, 198, 155, 0.8)',
   3: 'rgba(233, 69, 96, 0.8)',
   4: 'rgba(222, 206, 156, 0.8)',
   5: 'rgba(169, 169, 169, 0.8)'
 }
+
+const store_project = useProjectStore()
+const date_select = ref('')
 
 onMounted(async () => {
   await store_project.fetchProjectSummary()
@@ -27,12 +28,19 @@ onMounted(async () => {
   createGanttChart()
 })
 
+watch(
+  () => date_select.value,
+  (value_new) => {
+    console.log(value_new)
+  }
+)
+
 function createGanttChart() {
-  const margin = { top: 20, right: 30, bottom: 40, left: 100 }
-  const taskBarHeight = 10
-  const minTaskBarWidth = 20
+  const margin = { top: 40, right: 0, bottom: 40, left: 50 }
+  const height_bar = 5
+  const width_bat_min = 13
   const width = 1500 - margin.left - margin.right
-  const height = store_project.summary_project.length * (taskBarHeight + 5)
+  const height = store_project.summary_project.length * (height_bar + 2)
 
   const svg = d3
     .select('#ganttChart')
@@ -54,17 +62,29 @@ function createGanttChart() {
     .scaleBand()
     .domain(store_project.summary_project.map((d) => d.rid + ':' + d.title))
     .range([0, height])
-    .padding(0.3)
+    .padding(0.5)
 
-  // svg.append('g').call(d3.axisLeft(y))
+  const currentDate = new Date()
+  const currentX = x(currentDate)
 
   svg
-    .append('text')
-    .attr('text-anchor', 'middle')
-    .attr('transform', `translate(-60,${height / 2})rotate(-90)`)
-    .attr('fill', 'black')
-    .attr('font-size', '50px')
-    .text('Task Titles')
+    .append('line')
+    .attr('x1', currentX)
+    .attr('y1', -3)
+    .attr('x2', currentX)
+    .attr('y2', height + 7)
+    .attr('stroke', 'red')
+    .attr('stroke-width', 1.5)
+    .style('opacity', 0.7)
+
+  const verticalLine = svg
+    .append('line')
+    .attr('stroke', '#909090')
+    .attr('stroke-width', 1.5)
+    .attr('y1', -3)
+    .attr('y2', height + 7)
+    .attr('stroke-width', 1.5)
+    .style('opacity', 0)
 
   svg
     .selectAll('rect')
@@ -73,19 +93,75 @@ function createGanttChart() {
     .append('rect')
     .attr('x', (d: any) => {
       const calculatedWidth = x(d.datetime_end) - x(d.datetime_start)
-      return calculatedWidth === 0 ? x(d.datetime_start) - minTaskBarWidth : x(d.datetime_start)
+      return calculatedWidth === 0 ? x(d.datetime_start) - width_bat_min : x(d.datetime_start)
     })
     .attr('y', (d: any) => y(d.rid + ':' + d.title))
     .attr('width', (d: any) => {
-      const calculatedWidth = x(d.datetime_end) - x(d.datetime_start)
-      return calculatedWidth === 0 ? minTaskBarWidth : Math.max(calculatedWidth, minTaskBarWidth)
+      const width = x(d.datetime_end) - x(d.datetime_start)
+      return width === 0 ? width_bat_min : Math.max(width, width_bat_min)
     })
-    .attr('height', taskBarHeight)
-    .attr('rx', 5)
-    .attr('ry', 5)
-    .attr('fill', (d: any) => taskColors[d.state])
+    .attr('height', height_bar)
+    .attr('rx', 3)
+    .attr('ry', 3)
+    .attr('fill', (d: any) => colors_item[d.state])
     .attr('stroke', 'black')
     .attr('stroke-width', 1)
+
+  const dateBackground = svg
+    .append('rect')
+    .attr('fill', 'rgba(0, 0, 0, 0.9)')
+    .attr('rx', 5)
+    .attr('ry', 5)
+    .style('opacity', 0)
+
+  const dateText = svg
+    .append('text')
+    .attr('fill', '#f0f0f0')
+    .attr('font-size', '14px')
+    .attr('text-anchor', 'start')
+    .style('opacity', 0)
+
+  svg
+    .append('rect')
+    .attr('width', width)
+    .attr('height', height)
+    .attr('fill', 'none')
+    .attr('pointer-events', 'all')
+    .on('mousemove', function (event: any) {
+      const [mouseX, mouseY] = d3.pointer(event)
+      const hoveredDate = x.invert(mouseX).toISOString().split('T')[0]
+
+      verticalLine
+        .attr('x1', mouseX)
+        .attr('y1', -3)
+        .attr('x2', mouseX)
+        .attr('y2', height + 7)
+        .attr('stroke-width', 1.5)
+        .style('opacity', 0.8)
+
+      const textWidth = hoveredDate.length * 7
+      dateBackground
+        .attr('x', mouseX + 10)
+        .attr('y', mouseY)
+        .attr('width', textWidth + 20)
+        .attr('height', 20)
+        .style('opacity', 0.9)
+
+      dateText
+        .attr('x', mouseX + 20)
+        .attr('y', mouseY + 15)
+        .text(hoveredDate)
+        .style('opacity', 0.9)
+    })
+    .on('mouseout', () => {
+      verticalLine.style('opacity', 0)
+      dateText.style('opacity', 0)
+      dateBackground.style('opacity', 0)
+    })
+    .on('click', function (event: any) {
+      const [mouseX] = d3.pointer(event)
+      date_select.value = x.invert(mouseX).toISOString().split('T')[0]
+    })
 }
 </script>
 

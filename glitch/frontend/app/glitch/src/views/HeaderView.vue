@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 
 import { ExtractType } from '@/types/Item'
 import useUserStore from '@/stores/UserStore'
@@ -11,7 +11,6 @@ import ProjectDialog from '@/components/dialog/ProjectDialog.vue'
 import SearchDialog from '@/components/dialog/SearchDialog.vue'
 
 const route = useRoute()
-const router = useRouter()
 const store_user = useUserStore()
 const store_project = useProjectStore()
 const store_item = useItemStore()

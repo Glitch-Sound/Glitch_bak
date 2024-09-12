@@ -82,7 +82,7 @@ function createChartDetail(type: SummaryType, data: SummaryItem[], max_value: nu
   date_start.setDate(date_end.getDate() - 21)
 
   const width = 270
-  const height = 100
+  const height = 80
 
   const x = d3.scaleTime().domain([date_start, date_end]).range([0, width])
   const y = d3
