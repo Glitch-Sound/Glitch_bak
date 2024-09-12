@@ -370,6 +370,15 @@ class ItemService {
       throw new Error('error: ${error}')
     }
   }
+
+  public async getHogehoge(id_project: number | null, select_date: string): Promise<Item[]> {
+    try {
+      const response = await http.get<Item[]>(`/api/items/hogehoge/${id_project}/${select_date}`)
+      return response.data
+    } catch (error) {
+      throw new Error('error: ${error}')
+    }
+  }
 }
 
 export default ItemService

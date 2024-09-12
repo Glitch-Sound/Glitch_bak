@@ -5,6 +5,7 @@ import { onMounted, ref, watch } from 'vue'
 import * as d3 from 'd3'
 
 import useProjectStore from '@/stores/ProjectStore'
+import useAnalyzeStore from '@/stores/AnalyzeStore'
 
 const colors_item: { [key: number]: string } = {
   1: 'rgba(176, 224, 230, 0.8)',
@@ -15,6 +16,8 @@ const colors_item: { [key: number]: string } = {
 }
 
 const store_project = useProjectStore()
+const store_analyze = useAnalyzeStore()
+
 const date_select = ref('')
 
 onMounted(async () => {
@@ -31,7 +34,7 @@ onMounted(async () => {
 watch(
   () => date_select.value,
   (value_new) => {
-    console.log(value_new)
+    store_analyze.setDate(value_new)
   }
 )
 

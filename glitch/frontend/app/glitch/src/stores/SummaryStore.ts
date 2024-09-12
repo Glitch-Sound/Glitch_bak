@@ -1,13 +1,24 @@
 import { defineStore } from 'pinia'
 
-import type { SummaryItem } from '@/types/Summary'
+import type { SummaryProject, SummaryItem } from '@/types/Summary'
 import SummaryService from '@/services/SummaryService'
 
 const useSummaryStore = defineStore('summary', {
   state: () => ({
+    summaries_project: [] as Array<SummaryProject>,
     summaries_item: new Map<number, Array<SummaryItem>>()
   }),
   actions: {
+    async fetchSummaryProject(id_project: number | null) {
+      try {
+        if (id_project) {
+          const service_summary = new SummaryService()
+          this.summaries_project = await service_summary.getSummariesProject(id_project)
+        }
+      } catch (error) {
+        console.error('Error:', error)
+      }
+    },
     async fetchSummaryItem(rid: number) {
       try {
         const service_summary = new SummaryService()

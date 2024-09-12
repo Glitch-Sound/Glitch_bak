@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, watch } from 'vue'
+import { onMounted } from 'vue'
 
 // @ts-ignore
 import * as d3 from 'd3'
@@ -8,25 +8,16 @@ import useProgressStore from '@/stores/ProgressStore'
 
 const props = defineProps<{
   id_project: number | null
-  rid_users: number
 }>()
 
 const store_progress = useProgressStore()
 
 onMounted(async () => {
   await store_progress.fetchHierarchy(props.id_project)
-  createSunburstChart(props.rid_users)
+  createSunburstChart()
 })
 
-watch(
-  () => store_progress.rid_users,
-  (value_new) => {
-    d3.select(`#sunburst`).selectAll('svg').remove()
-    createSunburstChart(value_new)
-  }
-)
-
-function createSunburstChart(rid_users: number) {
+function createSunburstChart() {
   const width = 350
   const radius = 150
   const radius_ratio_inncer = 0.6
@@ -83,7 +74,7 @@ function createSunburstChart(rid_users: number) {
     })
     .style('stroke', '#101010')
     .style('stroke-width', 1.5)
-    .style('fill-opacity', (d: any) => (d.data.rid_users === rid_users ? 0.9 : 0.3))
+    .style('fill-opacity', () => 0.8)
 }
 </script>
 
