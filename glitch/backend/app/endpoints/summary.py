@@ -12,6 +12,17 @@ from crud import summary as crud_summary
 
 router = APIRouter()
 
+@router.get('/summaries/project/{id_project}', response_model=list[schema_summary.SummaryProject])
+def get_summary_project(id_project: int, db: Session = Depends(get_db)):
+    try:
+        result = crud_summary.getSummariesProject(db, id_project)
+        return result
+
+    except Exception as e:
+        print(traceback.format_exc())
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
+
+
 @router.get('/summaries/item/{rid_items}', response_model=list[schema_summary.SummaryItem])
 def get_summary_item(rid_items: int, db: Session = Depends(get_db)):
     try:

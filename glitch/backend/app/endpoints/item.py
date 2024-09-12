@@ -372,3 +372,14 @@ def get_hierarchy(id_project: int, db: Session = Depends(get_db)):
     except Exception as e:
         print(traceback.format_exc())
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
+
+
+@router.get("/items/hogehoge/{id_project}/{select_date}", response_model=list[schema_item.Item])
+def get_hierarchy(id_project: int, select_date: str, db: Session = Depends(get_db)):
+    try:
+        result = crud_item.getHogehoge(db, id_project, select_date)
+        return result
+
+    except Exception as e:
+        print(traceback.format_exc())
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')

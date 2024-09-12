@@ -951,3 +951,80 @@ def getHierarchy(db: Session, id_project: int, visited=None):
         "workload_bug": ancestor.bug_workload,
         "children": [child for child in children if child]
     }
+
+
+def getHogehoge(db: Session, id_project, select_date):
+    try:
+        UserAlias1 = aliased(User)
+        UserAlias2 = aliased(User)
+
+        subquery_target = (
+            select(Item.rid)
+            .join(Story, Story.rid_items == Item.rid)\
+            .where(
+                and_(
+                    Item.id_project == id_project,
+                    Item.type == ItemType.STORY.value,
+                    Story.datetime_start <= select_date,
+                    select_date <= Story.datetime_end
+                )
+            )
+        ).subquery()
+
+        cte_extruct = db.query(
+            distinct(Tree.rid_ancestor).label('rid')
+        )\
+        .where(
+            or_(
+                Tree.rid_descendant.in_(subquery_target),
+                Tree.rid_ancestor.in_(subquery_target)
+            )\
+        )\
+        .cte(name='targets')
+
+
+        query = db.query(
+            Item.rid,
+            Item.id_project,
+            Item.type,
+            Item.state,
+            Item.risk,
+            Item.risk_factors,
+            Item.priority,
+            Item.title,
+            Item.detail,
+            Item.result,
+            Item.datetime_entry,
+            Item.datetime_update,
+            UserAlias1.rid.label('rid_users'),
+            UserAlias1.name.label('name'),
+            UserAlias2.rid.label('rid_users_review'),
+            UserAlias2.name.label('name_review'),
+            Project.datetime_start.label('project_datetime_start'),
+            Project.datetime_end.label('project_datetime_end'),
+            Event.datetime_end.label('event_datetime_end'),
+            Story.datetime_start.label('story_datetime_start'),
+            Story.datetime_end.label('story_datetime_end'),
+            Task.type.label('task_type'),
+            Task.workload.label('task_workload'),
+            Task.number_completed.label('task_number_completed'),
+            Task.number_total.label('task_number_total'),
+            Bug.workload.label('bug_workload'))\
+        .select_from(cte_extruct)\
+        .join(Item, Item.rid == cte_extruct.c.rid)\
+        .outerjoin(UserAlias1,  UserAlias1.rid == Item.rid_users)\
+        .outerjoin(UserAlias2,  UserAlias2.rid == Item.rid_users_review)\
+        .outerjoin(Project, Project.rid_items == Item.rid)\
+        .outerjoin(Event, Event.rid_items == Item.rid)\
+        .outerjoin(Feature, Feature.rid_items == Item.rid)\
+        .outerjoin(Story, Story.rid_items == Item.rid)\
+        .outerjoin(Task, Task.rid_items == Item.rid)\
+        .outerjoin(Bug, Bug.rid_items == Item.rid)\
+        .where(Item.is_deleted == 0)\
+        .order_by(Item.path_sort)
+
+        result = query.all()
+        return result
+
+    except Exception as e:
+        raise e

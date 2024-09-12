@@ -16,6 +16,39 @@ from model.task import Task
 from model.bug import Bug
 
 
+def getSummariesProject(db: Session, id_project: int):
+    try:
+        query = db.query(
+            SummaryItem.rid_items.label('rid'),
+            SummaryItem.task_risk,
+            SummaryItem.task_count_idle,
+            SummaryItem.task_count_run,
+            SummaryItem.task_count_alert,
+            SummaryItem.task_count_review,
+            SummaryItem.task_count_complete,
+            SummaryItem.task_count_total,
+            SummaryItem.task_workload_total,
+            SummaryItem.task_number_completed,
+            SummaryItem.task_number_total,
+            SummaryItem.bug_risk,
+            SummaryItem.bug_count_idle,
+            SummaryItem.bug_count_run,
+            SummaryItem.bug_count_alert,
+            SummaryItem.bug_count_review,
+            SummaryItem.bug_count_complete,
+            SummaryItem.bug_count_total,
+            SummaryItem.bug_workload_total,
+            SummaryItem.date_entry
+        )\
+        .filter(SummaryUser.id_project == id_project)\
+        .order_by(SummaryItem.date_entry)
+
+        result = query.all()
+        return result
+    except Exception as e:
+        raise e
+
+
 def getSummariesItem(db: Session, rid: int):
     try:
         query = db.query(
