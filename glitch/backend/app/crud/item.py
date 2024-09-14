@@ -1,4 +1,4 @@
-from sqlalchemy import select, distinct, and_, or_, case   # type: ignore
+from sqlalchemy import select, distinct, and_, or_, func, case  # type: ignore
 from sqlalchemy.orm import Session, aliased                     # type: ignore
 from sqlalchemy.sql import func                                 # type: ignore
 
@@ -1023,6 +1023,37 @@ def getHogehoge(db: Session, id_project, select_date):
         .where(Item.is_deleted == 0)\
         .order_by(Item.path_sort)
 
+        result = query.all()
+        return result
+
+    except Exception as e:
+        raise e
+
+
+def getFrequency(db: Session, id_project, select_date):
+    try:
+        query = db.query(
+            func.date(Item.datetime_entry).label('datetime_entry'),
+            func.sum(case((Item.type == 5, 1), else_=0)).label('task_count'),
+            func.sum(case((and_(Item.type == 5, Item.state == 1), 1), else_=0)).label('task_count_idle'),
+            func.sum(case((and_(Item.type == 5, Item.state == 2), 1), else_=0)).label('task_count_run'),
+            func.sum(case((and_(Item.type == 5, Item.state == 3), 1), else_=0)).label('task_count_alert'),
+            func.sum(case((and_(Item.type == 5, Item.state == 4), 1), else_=0)).label('task_count_review'),
+            func.sum(case((and_(Item.type == 5, Item.state == 5), 1), else_=0)).label('task_count_complete'),
+            func.sum(case((Item.type == 6, 1), else_=0)).label('bug_count'),
+            func.sum(case((and_(Item.type == 6, Item.state == 1), 1), else_=0)).label('bug_count_idle'),
+            func.sum(case((and_(Item.type == 6, Item.state == 2), 1), else_=0)).label('bug_count_run'),
+            func.sum(case((and_(Item.type == 6, Item.state == 3), 1), else_=0)).label('bug_count_alert'),
+            func.sum(case((and_(Item.type == 6, Item.state == 4), 1), else_=0)).label('bug_count_review'),
+            func.sum(case((and_(Item.type == 6, Item.state == 5), 1), else_=0)).label('bug_count_complete'),
+        )\
+        .filter(
+            Item.type.in_([5, 6]),
+            Item.datetime_entry <= select_date
+        )\
+        .group_by(func.date(Item.datetime_entry))\
+        .order_by(func.date(Item.datetime_entry))
+    
         result = query.all()
         return result
 

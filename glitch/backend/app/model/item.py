@@ -23,8 +23,8 @@ class Item(Base):
     title            = Column(String,  default='')
     detail           = Column(String,  default='')
     result           = Column(String,  default='')
-    datetime_entry   = Column(String,  default='')
-    datetime_update  = Column(String,  default='')
+    datetime_entry   = Column(String,  default='', index=True)
+    datetime_update  = Column(String,  default='', index=True)
     is_deleted       = Column(Integer, default=0)
 
     ancestors    = relationship('Tree', foreign_keys='Tree.rid_descendant', back_populates='descendant', cascade="all, delete-orphan")

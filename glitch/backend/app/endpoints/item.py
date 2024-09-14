@@ -383,3 +383,14 @@ def get_hierarchy(id_project: int, select_date: str, db: Session = Depends(get_d
     except Exception as e:
         print(traceback.format_exc())
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
+
+
+@router.get("/items/frequency/{id_project}/{select_date}", response_model=list[schema_item.ItemFrequency])
+def get_item_frequency(id_project: int, select_date: str, db: Session = Depends(get_db)):
+    try:
+        result = crud_item.getFrequency(db, id_project, select_date)
+        return result
+
+    except Exception as e:
+        print(traceback.format_exc())
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
