@@ -252,3 +252,19 @@ export interface SummaryProject {
   datetime_start: string
   datetime_end: string
 }
+
+export interface ItemFrequency {
+  datetime_entry: string
+  task_count: number
+  task_count_idle: number
+  task_count_run: number
+  task_count_alert: number
+  task_count_review: number
+  task_count_complete: number
+  bug_count: number
+  bug_count_idle: number
+  bug_count_run: number
+  bug_count_alert: number
+  bug_count_review: number
+  bug_count_complete: number
+}

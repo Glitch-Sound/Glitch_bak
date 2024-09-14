@@ -9,6 +9,7 @@ import GanttCharts from '@/components/analyze/GanttCharts.vue'
 import ProjectHierarchy from '@/components/analyze/ProjectHierarchy.vue'
 import ProjectTask from '@/components/analyze/ProjectTask.vue'
 import ProjectBug from '@/components/analyze/ProjectBug.vue'
+import ItemFrequency from '@/components/analyze/ItemFrequency.vue'
 
 import PanelEvent from '@/components/panel/PanelEvent.vue'
 import PanelFeature from '@/components/panel/PanelFeature.vue'
@@ -51,6 +52,9 @@ watch(
 
       <div class="title">Gantt Chart</div>
       <GanttCharts />
+
+      <div class="title">Frequency</div>
+      <ItemFrequency :id_project="store_project.selected_id_project" />
 
       <div class="title">Item</div>
       <div class="mx-5">

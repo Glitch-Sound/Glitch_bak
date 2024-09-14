@@ -86,7 +86,7 @@ function createSunburstChart() {
 
 <style scoped>
 .summary {
-  margin: 0 40px 0 60px;
+  margin: 0 25px 0 50px;
   padding: 0;
 }
 </style>

@@ -19,7 +19,8 @@ import type {
   BugUpdate,
   BugPriorityUpdate,
   ItemHierarchy,
-  SummaryProject
+  SummaryProject,
+  ItemFrequency
 } from '@/types/Item'
 
 class ItemService {
@@ -374,6 +375,20 @@ class ItemService {
   public async getHogehoge(id_project: number | null, select_date: string): Promise<Item[]> {
     try {
       const response = await http.get<Item[]>(`/api/items/hogehoge/${id_project}/${select_date}`)
+      return response.data
+    } catch (error) {
+      throw new Error('error: ${error}')
+    }
+  }
+
+  public async getFrequency(
+    id_project: number | null,
+    select_date: string
+  ): Promise<ItemFrequency[]> {
+    try {
+      const response = await http.get<ItemFrequency[]>(
+        `/api/items/frequency/${id_project}/${select_date}`
+      )
       return response.data
     } catch (error) {
       throw new Error('error: ${error}')

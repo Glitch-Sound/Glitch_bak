@@ -81,13 +81,13 @@ function createChartDetail(type: SummaryType, data: SummaryItem[], max_value: nu
   const date_start = new Date(date_end)
   date_start.setDate(date_end.getDate() - 21)
 
-  const width = 270
+  const width = 260
   const height = 80
 
   const x = d3.scaleTime().domain([date_start, date_end]).range([0, width])
   const y = d3
     .scaleLinear()
-    .domain([0, max_value + 2])
+    .domain([0, max_value + 5])
     .nice()
     .range([height, 0])
 
