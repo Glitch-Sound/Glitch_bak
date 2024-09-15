@@ -1,5 +1,5 @@
-import bcrypt                                   # type: ignore
-from sqlalchemy.orm import Session, aliased     # type: ignore
+import bcrypt
+from sqlalchemy.orm import Session, aliased
 
 from enum import Enum
 
@@ -59,7 +59,9 @@ def getUsersProject(db: Session, id_project: int):
         )
 
         query = (
-            db.query(UserAlias)
+            db.query(
+                UserAlias
+            )\
             .join(cte_target, UserAlias.rid == cte_target.c.rid_users)
             .filter(UserAlias.is_deleted == 0) 
             .order_by(UserAlias.rid)
@@ -111,7 +113,11 @@ def createUser(db: Session, target: schema_user.UserCreate):
 def updateUser(db: Session, target: schema_user.UserUpdate):
     try:
         db.begin()
-        user = db.query(User).filter(User.rid == target.rid)
+        user = db.query(
+            User
+        )\
+        .filter(User.rid == target.rid)
+
         user.update({
             User.user: target.user,
             User.password: _createHashPassword(target.password),
@@ -132,7 +138,11 @@ def updateUser(db: Session, target: schema_user.UserUpdate):
 def deleteUser(db: Session, rid: int):
     try:
         db.begin()
-        user = db.query(User).filter(User.rid == rid)
+        user = db.query(
+            User
+        )\
+        .filter(User.rid == rid)
+
         user.update({
             User.is_deleted: 1
         })
@@ -145,7 +155,12 @@ def deleteUser(db: Session, rid: int):
 
 def login(db: Session, target: schema_user.Login):
     try:
-        user = db.query(User).filter(User.user == target.user).first()
+        user = db.query(
+            User
+        )\
+        .filter(User.user == target.user)\
+        .first()
+
         if user is None:
             return None
         

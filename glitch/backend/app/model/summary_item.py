@@ -1,5 +1,5 @@
-from sqlalchemy import Column, ForeignKey, String, Integer, Index   # type: ignore
-from sqlalchemy.orm import relationship                             # type: ignore
+from sqlalchemy import Column, ForeignKey, String, Integer, Index
+from sqlalchemy.orm import relationship
 
 import sys
 sys.path.append('~/app')

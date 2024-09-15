@@ -1,6 +1,6 @@
 import traceback
-from fastapi import Depends, APIRouter, HTTPException, status   # type: ignore
-from sqlalchemy.orm import Session                              # type: ignore
+from fastapi import Depends, APIRouter, HTTPException, status
+from sqlalchemy.orm import Session
 
 import sys
 sys.path.append('~/app')
@@ -12,7 +12,7 @@ from crud import user as crud_user
 
 router = APIRouter()
 
-@router.get('/users/', response_model=list[schema_user.User])
+@router.get('/user/', response_model=list[schema_user.User])
 def get_users(db: Session = Depends(get_db)):
     try:
         result = crud_user.getUsers(db)
@@ -23,7 +23,7 @@ def get_users(db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
-@router.get('/users/project/{id_project}', response_model=list[schema_user.User])
+@router.get('/user/project/{id_project}', response_model=list[schema_user.User])
 def get_users(id_project: int, db: Session = Depends(get_db)):
     try:
         result = crud_user.getUsersProject(db, id_project)

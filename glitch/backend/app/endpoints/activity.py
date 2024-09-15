@@ -1,6 +1,6 @@
 import traceback
-from fastapi import Depends, APIRouter, HTTPException, status   # type: ignore
-from sqlalchemy.orm import Session                              # type: ignore
+from fastapi import Depends, APIRouter, HTTPException, status
+from sqlalchemy.orm import Session
 
 import sys
 sys.path.append('~/app')
@@ -12,7 +12,7 @@ from crud import activity as crud_activity
 
 router = APIRouter()
 
-@router.get('/activities/{rid_items}', response_model=list[schema_activity.Activity])
+@router.get('/activity/{rid_items}', response_model=list[schema_activity.Activity])
 def get_items(rid_items: int, db: Session = Depends(get_db)):
     try:
         result = crud_activity.getActivities(db, rid_items=rid_items)

@@ -1,6 +1,6 @@
-from sqlalchemy import select, distinct, and_, or_, func, case  # type: ignore
-from sqlalchemy.orm import Session, aliased                     # type: ignore
-from sqlalchemy.sql import func                                 # type: ignore
+from sqlalchemy import select, distinct, and_, or_, func, case
+from sqlalchemy.orm import Session, aliased
+from sqlalchemy.sql import func
 
 import sys
 sys.path.append('~/app')
@@ -52,7 +52,12 @@ class ItemUpdateCommon():
 
 def _createTree(db: Session, type_create: ItemType, rid_parent: int, rid: int):
     try:
-        trees = db.query(Tree.rid_ancestor).filter(Tree.rid_descendant == rid_parent).order_by(Tree.rid_ancestor).all()
+        trees = db.query(
+            Tree.rid_ancestor
+        )\
+        .filter(Tree.rid_descendant == rid_parent)\
+        .order_by(Tree.rid_ancestor).all()
+
         if not trees:
             raise
 
@@ -81,8 +86,17 @@ def _createSortPathRoot(id_project: int):
 
 def _createSortPath(db: Session, type: ItemType, rid_parent: int):
     try:
-        path_sort_parent      = db.query(Item.path_sort).filter(Item.rid == rid_parent).scalar()
-        count_rid_descendants = db.query(Tree.rid_descendant).filter(Tree.rid_ancestor == rid_parent).count()
+        path_sort_parent      = db.query(
+            Item.path_sort
+        )\
+        .filter(Item.rid == rid_parent)\
+        .scalar()
+
+        count_rid_descendants = db.query(
+            Tree.rid_descendant
+        )\
+        .filter(Tree.rid_ancestor == rid_parent)\
+        .count()
 
         path_sort = path_sort_parent
         match type:
@@ -108,7 +122,11 @@ def _updateItem(db: Session, target: ItemUpdateCommon):
     try:
         datetime_current = getCurrentDatetime()
 
-        item = db.query(Item).filter(Item.rid == target.rid)
+        item = db.query(
+            Item
+        )\
+        .filter(Item.rid == target.rid)
+
         item.update({
             Item.state: target.state,
             Item.rid_users: target.rid_users,
@@ -131,7 +149,11 @@ def _deleteItem(db: Session, rid: int):
         datetime_current = getCurrentDatetime()
 
         db.begin()
-        item = db.query(Item).filter(Item.rid == rid)
+        item = db.query(
+            Item
+        )\
+        .filter(Item.rid == rid)
+
         item.update({
             Item.is_deleted: 1,
             Item.datetime_update: datetime_current
@@ -222,7 +244,7 @@ def _extructItem(db: Session, params: ItemParam):
                 )\
                 .where(Tree.rid_descendant.in_(subquery_target))
 
-            case ExtractType.PARENT.value:
+            case ExtractType.ANCESTOR.value:
                 cte_extruct = db.query(
                     Tree.rid_ancestor.label('rid')
                 )\
@@ -304,7 +326,7 @@ def getItems(db: Session, params: ItemParam):
         raise e
 
 
-def getProjectSummary(db: Session, id_project: int):
+def getItemRange(db: Session, id_project: int):
     try:
         query = db.query(
             Item.rid,
@@ -384,7 +406,11 @@ def createProject(db: Session, target: schema_item.ProjectCreate):
         datetime_current = getCurrentDatetime()
 
         db.begin()
-        max_id_project = db.query(func.max(Item.id_project)).scalar()
+        max_id_project = db.query(
+            func.max(Item.id_project)
+        )\
+        .scalar()
+
         if max_id_project is None:
             max_id_project = 0
         max_id_project += 1
@@ -441,7 +467,11 @@ def updateProject(db: Session, target:schema_item.ProjectUpdate):
         db.begin()
         item = _updateItem(db, param_item)
 
-        addition = db.query(Project).filter(Project.rid_items == target.rid)
+        addition = db.query(
+            Project
+        )\
+        .filter(Project.rid_items == target.rid)
+
         addition.update({
             Project.datetime_start: target.datetime_start,
             Project.datetime_end: target.datetime_end
@@ -516,7 +546,11 @@ def updateEvent(db: Session, target:schema_item.EventUpdate):
         db.begin()
         item = _updateItem(db, param_item)
 
-        addition = db.query(Event).filter(Event.rid_items == target.rid)
+        addition = db.query(
+            Event
+        )\
+        .filter(Event.rid_items == target.rid)
+
         addition.update({
             Event.datetime_end: target.datetime_end
         })
@@ -659,7 +693,11 @@ def updateStory(db: Session, target:schema_item.StoryUpdate):
         db.begin()
         item = _updateItem(db, param_item)
 
-        addition = db.query(Story).filter(Story.rid_items == target.rid)
+        addition = db.query(
+            Story
+        )\
+        .filter(Story.rid_items == target.rid)
+
         addition.update({
             Story.datetime_start: target.datetime_start,
             Story.datetime_end: target.datetime_end
@@ -741,7 +779,11 @@ def updateTask(db: Session, target:schema_item.TaskUpdate):
         db.begin()
         item = _updateItem(db, param_item)
 
-        addition = db.query(Task).filter(Task.rid_items == target.rid)
+        addition = db.query(
+            Task
+        )\
+        .filter(Task.rid_items == target.rid)
+
         addition.update({
             Task.type: target.type,
             Task.workload: target.workload,
@@ -749,7 +791,10 @@ def updateTask(db: Session, target:schema_item.TaskUpdate):
             Task.number_total: target.number_total
         })
 
-        id_project = db.query(Item.id_project).filter(Item.rid == target.rid)
+        id_project = db.query(
+            Item.id_project
+        )\
+        .filter(Item.rid == target.rid)
 
         createSummaryItem(db, item.rid)
         createSummaryUser(db, id_project, target.rid_users)
@@ -774,7 +819,11 @@ def deleteTask(db: Session, rid: int):
 def updateTaskPriority(db: Session, target:schema_item.TaskPriorityUpdate):
     try:
         db.begin()
-        item = db.query(Item).filter(Item.rid == target.rid)
+        item = db.query(
+            Item
+        )\
+        .filter(Item.rid == target.rid)
+
         item.update({
             Item.priority: target.priority
         })
@@ -845,12 +894,19 @@ def updateBug(db: Session, target:schema_item.BugUpdate):
         db.begin()
         item = _updateItem(db, param_item)
 
-        addition = db.query(Bug).filter(Bug.rid_items == target.rid)
+        addition = db.query(
+            Bug
+        )\
+        .filter(Bug.rid_items == target.rid)
+
         addition.update({
             Bug.workload: target.workload
         })
 
-        id_project = db.query(Item.id_project).filter(Item.rid == target.rid)
+        id_project = db.query(
+            Item.id_project
+        )\
+        .filter(Item.rid == target.rid)
 
         createSummaryItem(db, item.rid)
         createSummaryUser(db, id_project, target.rid_users)
@@ -875,7 +931,11 @@ def deleteBug(db: Session, rid: int):
 def updateBugPriority(db: Session, target:schema_item.BugPriorityUpdate):
     try:
         db.begin()
-        item = db.query(Item).filter(Item.rid == target.rid)
+        item = db.query(
+            Item
+        )\
+        .filter(Item.rid == target.rid)
+
         item.update({
             Item.priority: target.priority
         })
@@ -887,6 +947,22 @@ def updateBugPriority(db: Session, target:schema_item.BugPriorityUpdate):
 
     except Exception as e:
         db.rollback()
+        raise e
+
+
+def getAncestorsItemsRID(db: Session, rid: int):
+    try:
+        query = db.query(
+            Tree.rid_ancestor.label('rid')
+        )\
+        .filter(Tree.rid_descendant == rid)\
+        .filter(Tree.rid_descendant != Tree.rid_ancestor)\
+        .order_by(Tree.rid_ancestor)
+
+        result = query.all()
+        return result
+
+    except Exception as e:
         raise e
 
 
@@ -953,7 +1029,7 @@ def getHierarchy(db: Session, id_project: int, visited=None):
     }
 
 
-def getHogehoge(db: Session, id_project, select_date):
+def getItemsNotice(db: Session, id_project, select_date):
     try:
         UserAlias1 = aliased(User)
         UserAlias2 = aliased(User)
@@ -981,7 +1057,6 @@ def getHogehoge(db: Session, id_project, select_date):
             )\
         )\
         .cte(name='targets')
-
 
         query = db.query(
             Item.rid,
@@ -1035,17 +1110,7 @@ def getFrequency(db: Session, id_project, select_date):
         query = db.query(
             func.date(Item.datetime_entry).label('datetime_entry'),
             func.sum(case((Item.type == 5, 1), else_=0)).label('task_count'),
-            func.sum(case((and_(Item.type == 5, Item.state == 1), 1), else_=0)).label('task_count_idle'),
-            func.sum(case((and_(Item.type == 5, Item.state == 2), 1), else_=0)).label('task_count_run'),
-            func.sum(case((and_(Item.type == 5, Item.state == 3), 1), else_=0)).label('task_count_alert'),
-            func.sum(case((and_(Item.type == 5, Item.state == 4), 1), else_=0)).label('task_count_review'),
-            func.sum(case((and_(Item.type == 5, Item.state == 5), 1), else_=0)).label('task_count_complete'),
             func.sum(case((Item.type == 6, 1), else_=0)).label('bug_count'),
-            func.sum(case((and_(Item.type == 6, Item.state == 1), 1), else_=0)).label('bug_count_idle'),
-            func.sum(case((and_(Item.type == 6, Item.state == 2), 1), else_=0)).label('bug_count_run'),
-            func.sum(case((and_(Item.type == 6, Item.state == 3), 1), else_=0)).label('bug_count_alert'),
-            func.sum(case((and_(Item.type == 6, Item.state == 4), 1), else_=0)).label('bug_count_review'),
-            func.sum(case((and_(Item.type == 6, Item.state == 5), 1), else_=0)).label('bug_count_complete'),
         )\
         .filter(
             Item.type.in_([5, 6]),

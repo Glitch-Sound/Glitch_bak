@@ -1,4 +1,4 @@
-import pytz                                     # type: ignore
+import pytz
 from datetime import datetime, timedelta
 
 from enum import Enum
@@ -27,7 +27,7 @@ class ExtractType(Enum):
     ASSIGNMENT   =  5
     RELATION     =  6
     SEARCH       =  7
-    PARENT       = 11
+    ANCESTOR     = 11
     SUMMARY_USER = 21
 
 class TaskType(Enum):

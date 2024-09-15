@@ -1,6 +1,6 @@
-from sqlalchemy import desc                     # type: ignore
-from sqlalchemy.orm import Session, aliased     # type: ignore
-from sqlalchemy.sql import func                 # type: ignore
+from sqlalchemy import desc
+from sqlalchemy.orm import Session, aliased
+from sqlalchemy.sql import func
 
 import sys
 sys.path.append('~/app')
@@ -114,7 +114,7 @@ def getSummariesUser(db: Session, id_project: int, rid_users: int):
         )\
         .join(UserAlias,  UserAlias.rid == SummaryUser.rid_users)\
         .filter(
-            SummaryUser.rid_users == rid_users,
+            SummaryUser.rid_users  == rid_users,
             SummaryUser.id_project == id_project
         )\
         .order_by(SummaryUser.date_entry)
@@ -126,20 +126,6 @@ def getSummariesUser(db: Session, id_project: int, rid_users: int):
         raise e
 
 
-def getAncestorsItem(db: Session, rid: int):
-    try:
-        query = db.query(
-            Tree.rid_ancestor.label('rid')
-        )\
-        .filter(Tree.rid_descendant == rid)\
-        .filter(Tree.rid_descendant != Tree.rid_ancestor)\
-        .order_by(Tree.rid_ancestor)
-
-        result = query.all()
-        return result
-
-    except Exception as e:
-        raise e
 
 
 def _getSummary(list_sum_workload: any, list_sum_number: any, list_count: any):
@@ -224,7 +210,13 @@ def _getSummary(list_sum_workload: any, list_sum_number: any, list_count: any):
 
 def createSummaryItem(db: Session, rid_target: int):
     try:
-        trees = db.query(Tree).filter(Tree.rid_descendant == rid_target).order_by(desc(Tree.rid_ancestor)).all()
+        trees = db.query(
+            Tree
+        )\
+        .filter(Tree.rid_descendant == rid_target)\
+        .order_by(desc(Tree.rid_ancestor))\
+        .all()
+
         if not trees:
             raise
 
@@ -305,7 +297,10 @@ def createSummaryItem(db: Session, rid_target: int):
                 db.add(summary)
 
             date_current = getCurrentDate()
-            summary_item = db.query(SummaryItem).filter(
+            summary_item = db.query(
+                SummaryItem
+            )\
+            .filter(
                 SummaryItem.rid_items  == tree.rid_ancestor,
                 SummaryItem.date_entry == date_current
             ).all()
@@ -334,10 +329,14 @@ def createSummaryItem(db: Session, rid_target: int):
                 db.add(summary)
 
             else:
-                summary = db.query(SummaryItem).filter(
+                summary = db.query(
+                    SummaryItem
+                )\
+                .filter(
                     SummaryItem.rid_items  == tree.rid_ancestor,
                     SummaryItem.date_entry == date_current
                 )
+
                 summary.update({
                     SummaryItem.task_count_idle: result_count['task_count_idle'],
                     SummaryItem.task_count_run: result_count['task_count_run'],
@@ -408,7 +407,10 @@ def createSummaryUser(db: Session, id_project: int, rid_users: int):
 
         result_sum, result_count = _getSummary(list_sum_workload, list_sum_number, list_count)
 
-        summary_user = db.query(SummaryUser).filter(
+        summary_user = db.query(
+            SummaryUser
+        )\
+        .filter(
             SummaryUser.rid_users  == rid_users,
             SummaryUser.id_project == id_project
         ).all()
@@ -439,7 +441,11 @@ def createSummaryUser(db: Session, id_project: int, rid_users: int):
             db.add(summary)
 
         date_current = getCurrentDate()
-        summary_user = db.query(SummaryUser).filter(
+
+        summary_user = db.query(
+            SummaryUser
+        )\
+        .filter(
             SummaryUser.rid_users  == rid_users,
             SummaryUser.id_project == id_project,
             SummaryUser.date_entry == date_current
@@ -470,11 +476,15 @@ def createSummaryUser(db: Session, id_project: int, rid_users: int):
             db.add(summary)
 
         else:
-            summary = db.query(SummaryUser).filter(
+            summary = db.query(
+                SummaryUser
+            )\
+            .filter(
                 SummaryUser.rid_users  == rid_users,
                 SummaryUser.id_project == id_project,
                 SummaryUser.date_entry == date_current
             )
+
             summary.update({
                 SummaryUser.task_count_idle: result_count['task_count_idle'],
                 SummaryUser.task_count_run: result_count['task_count_run'],

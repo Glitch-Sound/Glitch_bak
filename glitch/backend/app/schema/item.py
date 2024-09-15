@@ -1,5 +1,12 @@
-from pydantic import BaseModel  # type: ignore
+from pydantic import BaseModel
 from typing import List, Optional
+
+
+class RID(BaseModel):
+    rid: int
+
+    class Config:
+        orm_mode = True
 
 
 class Item(BaseModel):
@@ -232,6 +239,18 @@ class BugPriorityUpdate(BaseModel):
         orm_mode = True
 
 
+class ItemRange(BaseModel):
+    rid: int
+    type: int
+    state: int
+    title: str
+    datetime_start: str
+    datetime_end: str
+
+    class Config:
+        orm_mode = True 
+
+
 class ItemHierarchy(BaseModel):
     rid: int
     rid_users: int
@@ -246,32 +265,10 @@ class ItemHierarchy(BaseModel):
         orm_mode = True 
 
 
-class SummaryProject(BaseModel):
-    rid: int
-    type: int
-    state: int
-    title: str
-    datetime_start: str
-    datetime_end: str
-
-    class Config:
-        orm_mode = True 
-
-
 class ItemFrequency(BaseModel):
     datetime_entry: str
     task_count: int
-    task_count_idle: int
-    task_count_run: int
-    task_count_alert: int
-    task_count_review: int
-    task_count_complete: int
     bug_count: int
-    bug_count_idle: int
-    bug_count_run: int
-    bug_count_alert: int
-    bug_count_review: int
-    bug_count_complete: int
 
     class Config:
         orm_mode = True 

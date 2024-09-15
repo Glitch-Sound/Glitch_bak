@@ -1,6 +1,6 @@
 import traceback
-from fastapi import Query, Depends, APIRouter, HTTPException, status    # type: ignore
-from sqlalchemy.orm import Session                                      # type: ignore
+from fastapi import Query, Depends, APIRouter, HTTPException, status
+from sqlalchemy.orm import Session
 
 import sys
 sys.path.append('~/app')
@@ -13,10 +13,10 @@ from crud.item import ItemParam, ExtractType
 
 router = APIRouter()
 
-@router.get('/items/parent/{target}', response_model=list[schema_item.Item])
+@router.get('/item/ancestor/{target}', response_model=list[schema_item.Item])
 def get_items_relation(target: int, db: Session = Depends(get_db)):
     try:
-        params = ItemParam(type_extract=ExtractType.PARENT.value, id_project=0, rid_items=target)
+        params = ItemParam(type_extract=ExtractType.ANCESTOR.value, id_project=0, rid_items=target)
         result = crud_item.getItems(db, params)
         return result
 
@@ -25,7 +25,7 @@ def get_items_relation(target: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
-@router.get('/items/all/{id_project}', response_model=list[schema_item.Item])
+@router.get('/item/all/{id_project}', response_model=list[schema_item.Item])
 def get_items_all(id_project: int, db: Session = Depends(get_db)):
     try:
         params = ItemParam(type_extract=ExtractType.ALL.value, id_project=id_project)
@@ -37,7 +37,7 @@ def get_items_all(id_project: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
-@router.get('/items/incomplete/{id_project}', response_model=list[schema_item.Item])
+@router.get('/item/incomplete/{id_project}', response_model=list[schema_item.Item])
 def get_items_incomplete(id_project: int, db: Session = Depends(get_db)):
     try:
         params = ItemParam(type_extract=ExtractType.INCOMPLETE.value, id_project=id_project)
@@ -49,7 +49,7 @@ def get_items_incomplete(id_project: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
-@router.get('/items/high-risk/{id_project}', response_model=list[schema_item.Item])
+@router.get('/item/high-risk/{id_project}', response_model=list[schema_item.Item])
 def get_items_high_risk(id_project: int, db: Session = Depends(get_db)):
     try:
         params = ItemParam(type_extract=ExtractType.HIGH_RISK.value, id_project=id_project)
@@ -61,7 +61,7 @@ def get_items_high_risk(id_project: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
-@router.get('/items/alert/{id_project}', response_model=list[schema_item.Item])
+@router.get('/item/alert/{id_project}', response_model=list[schema_item.Item])
 def get_items_alert(id_project: int, db: Session = Depends(get_db)):
     try:
         params = ItemParam(type_extract=ExtractType.ALERT.value, id_project=id_project)
@@ -73,7 +73,7 @@ def get_items_alert(id_project: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
-@router.get('/items/assignment/{id_project}/{target}', response_model=list[schema_item.Item])
+@router.get('/item/assignment/{id_project}/{target}', response_model=list[schema_item.Item])
 def get_items_assignment(id_project: int, target: int, db: Session = Depends(get_db)):
     try:
         params = ItemParam(type_extract=ExtractType.ASSIGNMENT.value, id_project=id_project, rid_users=target)
@@ -85,7 +85,7 @@ def get_items_assignment(id_project: int, target: int, db: Session = Depends(get
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
-@router.get('/items/relation/{id_project}/{target}', response_model=list[schema_item.Item])
+@router.get('/item/relation/{id_project}/{target}', response_model=list[schema_item.Item])
 def get_items_relation(id_project: int, target: int, db: Session = Depends(get_db)):
     try:
         params = ItemParam(type_extract=ExtractType.RELATION.value, id_project=id_project, rid_items=target)
@@ -97,7 +97,7 @@ def get_items_relation(id_project: int, target: int, db: Session = Depends(get_d
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
-@router.get('/items/search/{id_project}/{target}', response_model=list[schema_item.Item])
+@router.get('/item/search/{id_project}/{target}', response_model=list[schema_item.Item])
 def get_items_search(id_project: int, target: str, db: Session = Depends(get_db)):
     try:
         params = ItemParam(type_extract=ExtractType.SEARCH.value, id_project=id_project, search=target)
@@ -109,7 +109,7 @@ def get_items_search(id_project: int, target: str, db: Session = Depends(get_db)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
-@router.get('/items/summary-user/{id_project}/{target}', response_model=list[schema_item.Item])
+@router.get('/item/summary-user/{id_project}/{target}', response_model=list[schema_item.Item])
 def get_items_search(id_project: int, target: int, db: Session = Depends(get_db)):
     try:
         params = ItemParam(type_extract=ExtractType.SUMMARY_USER.value, id_project=id_project, rid_users=target)
@@ -121,10 +121,10 @@ def get_items_search(id_project: int, target: int, db: Session = Depends(get_db)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
-@router.get('/items/summary-project/{id_project}', response_model=list[schema_item.SummaryProject])
+@router.get('/item/summary-project/{id_project}', response_model=list[schema_item.ItemRange])
 def get_items_search(id_project: int, db: Session = Depends(get_db)):
     try:
-        result = crud_item.getProjectSummary(db, id_project)
+        result = crud_item.getItemRange(db, id_project)
         return result
 
     except Exception as e:
@@ -363,7 +363,18 @@ def update_task(target:schema_item.BugPriorityUpdate, db: Session = Depends(get_
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
-@router.get("/items/hierarchy/{id_project}", response_model=schema_item.ItemHierarchy)
+@router.get('/item/ancestors/{rid}', response_model=list[schema_item.RID])
+def get_items_rid_ancestor(rid: int, db: Session = Depends(get_db)):
+    try:
+        result = crud_item.getAncestorsItemsRID(db, rid)
+        return result
+
+    except Exception as e:
+        print(traceback.format_exc())
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
+
+
+@router.get("/item/hierarchy/{id_project}", response_model=schema_item.ItemHierarchy)
 def get_hierarchy(id_project: int, db: Session = Depends(get_db)):
     try:
         result = crud_item.getHierarchy(db, id_project)
@@ -374,10 +385,10 @@ def get_hierarchy(id_project: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
-@router.get("/items/hogehoge/{id_project}/{select_date}", response_model=list[schema_item.Item])
+@router.get("/item/notice/{id_project}/{select_date}", response_model=list[schema_item.Item])
 def get_hierarchy(id_project: int, select_date: str, db: Session = Depends(get_db)):
     try:
-        result = crud_item.getHogehoge(db, id_project, select_date)
+        result = crud_item.getItemsNotice(db, id_project, select_date)
         return result
 
     except Exception as e:
@@ -385,7 +396,7 @@ def get_hierarchy(id_project: int, select_date: str, db: Session = Depends(get_d
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
-@router.get("/items/frequency/{id_project}/{select_date}", response_model=list[schema_item.ItemFrequency])
+@router.get("/item/frequency/{id_project}/{select_date}", response_model=list[schema_item.ItemFrequency])
 def get_item_frequency(id_project: int, select_date: str, db: Session = Depends(get_db)):
     try:
         result = crud_item.getFrequency(db, id_project, select_date)

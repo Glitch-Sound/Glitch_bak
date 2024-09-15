@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session      # type: ignore
+from sqlalchemy.orm import Session
 
 import sys
 sys.path.append('~/app')
@@ -59,7 +59,11 @@ def updateActivity(db: Session, target:schema_activity.ActivityUpdate):
     try:
         current_datetime = getCurrentDatetime()
 
-        activity = db.query(Activity).filter(Activity.rid == target.rid)
+        activity = db.query(
+            Activity
+        )\
+        .filter(Activity.rid == target.rid)
+
         activity.update({
             Activity.activity: target.activity
         })
@@ -77,7 +81,11 @@ def deleteActivity(db: Session, rid: int):
         current_datetime = getCurrentDatetime()
 
         db.begin()
-        item = db.query(Activity).filter(Activity.rid == rid)
+        item = db.query(
+            Activity
+        )\
+        .filter(Activity.rid == rid)
+
         item.update({
             Activity.is_deleted: 1,
             Activity.datetime_update: current_datetime

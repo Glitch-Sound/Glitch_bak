@@ -1,6 +1,6 @@
 
-from fastapi import FastAPI                             # type: ignore
-from starlette.middleware.cors import CORSMiddleware    # type: ignore
+from fastapi import FastAPI
+from starlette.middleware.cors import CORSMiddleware
 
 import sys
 sys.path.append('~/app')
