@@ -27,9 +27,9 @@ const { dialog, valid, data_form, ref_form, rules, submitData } = useDialog(prop
 </script>
 
 <template>
-  <v-dialog v-model="dialog" max-width="600px">
+  <v-dialog v-model="dialog" max-width="600px" :persistent="props.is_startup">
     <v-card>
-      <v-card-title v-if="props.is_startup == true">
+      <v-card-title v-if="props.is_startup">
         <span class="text-h5">Add Administrator</span>
       </v-card-title>
       <v-card-title v-else>
