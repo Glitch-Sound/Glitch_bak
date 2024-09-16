@@ -3,7 +3,6 @@ import { ref, onMounted } from 'vue'
 
 import type { UserCreate } from '@/types/User'
 import useUserStore from '@/stores/UserStore'
-import UserService from '@/services/UserService'
 import CreateUserDialog from '@/components/dialog/CreateUserDialog.vue'
 
 const store_user = useUserStore()
@@ -24,16 +23,9 @@ onMounted(async () => {
   }
 })
 
-const handleEntry = async (data: UserCreate) => {
-  try {
-    const service_user = new UserService()
-    const login_user = await service_user.createUser(data)
-    store_user.setLoginUser(login_user)
-    store_user.fetchUsers()
-    dialog.value = false
-  } catch (err) {
-    console.error('Error:', err)
-  }
+const handleEntry = (data: UserCreate) => {
+  store_user.createUser(data, true)
+  dialog.value = false
 }
 </script>
 

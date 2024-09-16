@@ -5,7 +5,7 @@ import type { User, UserCreate, UserUpdate, Login } from '@/types/User'
 class UserService {
   public async getUsers(): Promise<User[]> {
     try {
-      const response = await http.get<User[]>('/api/users')
+      const response = await http.get<User[]>('/api/user')
       return response.data
     } catch (error) {
       throw new Error('error: ${error}')
@@ -14,7 +14,7 @@ class UserService {
 
   public async getUsersProject(id_project: number | null): Promise<User[]> {
     try {
-      const response = await http.get<User[]>(`/api/users/project/${id_project}`)
+      const response = await http.get<User[]>(`/api/user/project/${id_project}`)
       return response.data
     } catch (error) {
       throw new Error('error: ${error}')

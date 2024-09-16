@@ -1,16 +1,11 @@
 import { defineStore } from 'pinia'
 
-import type { User } from '@/types/User'
-import type { Item, ItemHierarchy, ItemFrequency } from '@/types/Item'
-import type { SummaryUser } from '@/types/Summary'
+import type { Item, ItemFrequency } from '@/types/Item'
 import ItemService from '@/services/ItemService'
-import UserService from '@/services/UserService'
-import SummaryService from '@/services/SummaryService'
-import useItemStore from '@/stores/ItemStore'
 
 const useAnalyzeStore = defineStore('analyze', {
   state: () => ({
-    items: [] as Array<Item>,
+    items_notice: [] as Array<Item>,
     items_frequency: [] as Array<ItemFrequency>,
     select_date: '' as string
   }),
@@ -19,7 +14,7 @@ const useAnalyzeStore = defineStore('analyze', {
       this.setDate(this.select_date)
 
       const service_item = new ItemService()
-      this.items = await service_item.getHogehoge(id_project, this.select_date)
+      this.items_notice = await service_item.getItemsNotice(id_project, this.select_date)
     },
     async fetchItemsFrequency(id_project: number | null) {
       this.setDate(this.select_date)

@@ -1,7 +1,10 @@
 import { defineStore } from 'pinia'
 
-import type { User } from '@/types/User'
+import type { User, UserCreate, UserUpdate, Login } from '@/types/User'
 import UserService from '@/services/UserService'
+import useProgressStore from '@/stores/ProgressStore'
+
+const service_user = new UserService()
 
 const useUserStore = defineStore('user', {
   state: () => ({
@@ -10,15 +13,29 @@ const useUserStore = defineStore('user', {
   }),
   actions: {
     async fetchUsers() {
-      try {
-        const service_user = new UserService()
-        this.users = await service_user.getUsers()
-      } catch (error) {
-        console.error('Error:', error)
-      }
+      this.users = await service_user.getUsers()
     },
-    setLoginUser(user: User | null) {
-      this.login_user = user
+    async createUser(user: UserCreate, is_admin: boolean = false): Promise<User> {
+      const result = await service_user.createUser(user)
+      if (is_admin) {
+        this.login_user = result
+      }
+      await this.fetchUsers()
+      return result
+    },
+    async updateUser(user: UserUpdate): Promise<User> {
+      return service_user.updateUser(user)
+    },
+    async deleteUser(rid: number): Promise<void> {
+      return service_user.deleteUser(rid)
+    },
+    async login(user: Login): Promise<User> {
+      const result = await service_user.login(user)
+      this.login_user = result
+
+      const store_progress = useProgressStore()
+      store_progress.setUser(result.rid)
+      return result
     }
   }
 })

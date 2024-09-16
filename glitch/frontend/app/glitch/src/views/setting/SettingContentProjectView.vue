@@ -5,7 +5,6 @@ import { useRoute } from 'vue-router'
 import type { ProjectCreate, ProjectUpdate } from '@/types/Item'
 import useUserStore from '@/stores/UserStore'
 import useProjectStore from '@/stores/ProjectStore'
-import ItemService from '@/services/ItemService'
 import StateLabel from '@/components/common/StateLabel.vue'
 import MarkedText from '@/components/common/MarkedText.vue'
 import CreateProjectDialog from '@/components/dialog/CreateProjectDialog.vue'
@@ -79,36 +78,18 @@ const openUpdateDialog = (rid: number) => {
 }
 
 const handleEntry = async (data: ProjectCreate) => {
-  try {
-    const service_item = new ItemService()
-    await service_item.createProject(data)
-    store_project.fetchProjects()
-    dialog_entry.value = false
-  } catch (err) {
-    console.error('Error:', err)
-  }
+  await store_project.createProject(data)
+  dialog_entry.value = false
 }
 
 const handleUpdate = async (data: ProjectUpdate) => {
-  try {
-    const service_item = new ItemService()
-    await service_item.updateProject(data)
-    store_project.fetchProjects()
-    dialog_update.value = false
-  } catch (err) {
-    console.error('Error:', err)
-  }
+  await store_project.updateProject(data)
+  dialog_update.value = false
 }
 
 const handleDelete = async () => {
-  try {
-    const service_item = new ItemService()
-    await service_item.deleteProject(target_delete.value)
-    store_project.fetchProjects()
-    dialog_update.value = false
-  } catch (err) {
-    console.error('Error:', err)
-  }
+  await store_project.deleteProject(target_delete.value)
+  dialog_update.value = false
 }
 </script>
 

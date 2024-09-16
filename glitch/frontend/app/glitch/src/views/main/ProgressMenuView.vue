@@ -14,7 +14,7 @@ onMounted(() => {
 })
 
 const changeTarget = (rid_users: number) => {
-  store_progress.setTarget(rid_users)
+  store_progress.setUser(rid_users)
 }
 </script>
 

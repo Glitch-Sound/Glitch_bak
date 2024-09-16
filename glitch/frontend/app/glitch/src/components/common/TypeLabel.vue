@@ -1,15 +1,9 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 
-import {
-  ItemType,
-  ExtractType,
-  type Item,
-  type TaskPriorityUpdate,
-  type BugPriorityUpdate
-} from '@/types/Item'
+import { ItemType, ExtractType } from '@/types/Item'
+import type { Item, TaskPriorityUpdate, BugPriorityUpdate } from '@/types/Item'
 import useItemStore from '@/stores/ItemStore'
-import ItemService from '@/services/ItemService'
 
 const props = defineProps<{
   item: Item
@@ -26,27 +20,22 @@ const copyLink = () => {
 
 const jumpRelation = () => {
   store_item.setExtractItem(props.item.rid)
-  store_item.update()
 }
 
-const setTaskPriorityHigh = async () => {
+const setTaskPriorityHigh = () => {
   const data: TaskPriorityUpdate = {
     rid: props.item.rid,
     priority: 1
   }
-  const service_item = new ItemService()
-  await service_item.updatePriorityTask(data)
-  store_item.update()
+  store_item.updatePriorityTask(data)
 }
 
-const setTaskPriorityLow = async () => {
+const setTaskPriorityLow = () => {
   const data: TaskPriorityUpdate = {
     rid: props.item.rid,
     priority: 0
   }
-  const service_item = new ItemService()
-  await service_item.updatePriorityTask(data)
-  store_item.update()
+  store_item.updatePriorityTask(data)
 }
 
 const setBugPriorityHigh = async () => {
@@ -54,9 +43,7 @@ const setBugPriorityHigh = async () => {
     rid: props.item.rid,
     priority: 1
   }
-  const service_item = new ItemService()
-  await service_item.updatePriorityBug(data)
-  store_item.update()
+  store_item.updatePriorityBug(data)
 }
 
 const setBugPriorityLow = async () => {
@@ -64,9 +51,7 @@ const setBugPriorityLow = async () => {
     rid: props.item.rid,
     priority: 0
   }
-  const service_item = new ItemService()
-  await service_item.updatePriorityBug(data)
-  store_item.update()
+  store_item.updatePriorityBug(data)
 }
 </script>
 

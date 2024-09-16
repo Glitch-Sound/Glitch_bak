@@ -3,7 +3,6 @@ import { ref, onMounted, computed } from 'vue'
 
 import type { UserCreate, UserUpdate } from '@/types/User'
 import useUserStore from '@/stores/UserStore'
-import UserService from '@/services/UserService'
 import CreateUserDialog from '@/components/dialog/CreateUserDialog.vue'
 import UpdateUserDialog from '@/components/dialog/UpdateUserDialog.vue'
 
@@ -70,36 +69,18 @@ const openUpdateDialog = (rid: number) => {
 }
 
 const handleEntry = async (data: UserCreate) => {
-  try {
-    const service_user = new UserService()
-    await service_user.createUser(data)
-    store_user.fetchUsers()
-    dialog_entry.value = false
-  } catch (err) {
-    console.error('Error:', err)
-  }
+  await store_user.createUser(data)
+  dialog_entry.value = false
 }
 
 const handleUpdate = async (data: UserUpdate) => {
-  try {
-    const service_user = new UserService()
-    await service_user.updateUser(data)
-    store_user.fetchUsers()
-    dialog_update.value = false
-  } catch (err) {
-    console.error('Error:', err)
-  }
+  await store_user.updateUser(data)
+  dialog_update.value = false
 }
 
 const handleDelete = async () => {
-  try {
-    const service_user = new UserService()
-    await service_user.deleteUser(target_delete.value)
-    store_user.fetchUsers()
-    dialog_update.value = false
-  } catch (err) {
-    console.error('Error:', err)
-  }
+  await store_user.deleteUser(target_delete.value)
+  dialog_update.value = false
 }
 </script>
 

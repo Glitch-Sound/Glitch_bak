@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref, defineProps, watch, onMounted } from 'vue'
 
-import useUserStore from '@/stores/UserStore'
 import type { Item } from '@/types/Item'
 import type { Activity } from '@/types/Activity'
 import type { EmitDialog } from '@/components/common/events'
-import ActivityService from '@/services/ActivityService'
+import useUserStore from '@/stores/UserStore'
+import useItemStore from '@/stores/ItemStore'
 import MarkedText from '@/components/common/MarkedText.vue'
 
 const props = defineProps<{
@@ -14,6 +14,7 @@ const props = defineProps<{
 }>()
 
 const store_user = useUserStore()
+const store_item = useItemStore()
 
 const emits = defineEmits<EmitDialog>()
 
@@ -22,8 +23,7 @@ const comment = ref('')
 const activities = ref<Activity[]>([])
 
 onMounted(async () => {
-  const service_activity = new ActivityService()
-  activities.value = await service_activity.getActivities(props.item.rid)
+  activities.value = await store_item.getActivities(props.item.rid)
 })
 
 watch(
@@ -40,14 +40,13 @@ watch(dialog, (value_new) => {
 
 const addData = async () => {
   if (store_user.login_user && comment.value.trim()) {
-    const service_activity = new ActivityService()
-    await service_activity.createActivity({
+    await store_item.createActivity({
       rid_items: props.item.rid,
       rid_users: store_user.login_user.rid,
       activity: comment.value
     })
 
-    activities.value = await service_activity.getActivities(props.item.rid)
+    activities.value = await store_item.getActivities(props.item.rid)
     comment.value = ''
   }
 }

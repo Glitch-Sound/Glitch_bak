@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { ref, defineProps } from 'vue'
-import { useRouter } from 'vue-router'
 
 import type { Item, FeatureUpdate } from '@/types/Item'
 import useItemStore from '@/stores/ItemStore'
-import ItemService from '@/services/ItemService'
 import SummaryItem from '@/components/panel/SummaryItem.vue'
 import UpdateFeatureDialog from '@/components/dialog/UpdateFeatureDialog.vue'
 
@@ -15,7 +13,6 @@ const props = defineProps<{
   item: Item
 }>()
 
-const router = useRouter()
 const store_item = useItemStore()
 
 const dialog = ref(false)
@@ -43,26 +40,14 @@ const openDialog = () => {
   dialog.value = true
 }
 
-const handleSubmit = async (data: FeatureUpdate) => {
-  try {
-    const service_item = new ItemService()
-    await service_item.updateFeature(data)
-    store_item.update()
-    dialog.value = false
-  } catch (err) {
-    console.error('Error:', err)
-  }
+const handleSubmit = (data: FeatureUpdate) => {
+  store_item.updateFeature(data)
+  dialog.value = false
 }
 
 const handleDelete = async () => {
-  try {
-    const service_item = new ItemService()
-    await service_item.deleteFeature(props.item.rid)
-    store_item.update()
-    dialog.value = false
-  } catch (err) {
-    console.error('Error:', err)
-  }
+  store_item.deleteFeature(props.item.rid)
+  dialog.value = false
 }
 </script>
 

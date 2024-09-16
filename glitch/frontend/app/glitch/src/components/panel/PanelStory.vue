@@ -6,7 +6,6 @@ import type { Item, TaskCreate, BugCreate } from '@/types/Item'
 import useUserStore from '@/stores/UserStore'
 import useItemStore from '@/stores/ItemStore'
 import useSummaryStore from '@/stores/SummaryStore'
-import ItemService from '@/services/ItemService'
 import CreateTaskDialog from '@/components/dialog/CreateTaskDialog.vue'
 import CreateBugDialog from '@/components/dialog/CreateBugDialog.vue'
 import TypeLabel from '@/components/common/TypeLabel.vue'
@@ -58,27 +57,15 @@ const openBugDialog = () => {
 }
 
 const handleTaskSubmit = async (data: TaskCreate) => {
-  try {
-    const service_item = new ItemService()
-    const result = await service_item.createTask(data)
-    store_item.update()
-    store_summary.updateTaskBug(result.rid)
-    dialogTask.value = false
-  } catch (err) {
-    console.error('Error:', err)
-  }
+  const result = await store_item.createTask(data)
+  store_summary.updateTaskBug(result.rid)
+  dialogTask.value = false
 }
 
 const handleBugSubmit = async (data: BugCreate) => {
-  try {
-    const service_item = new ItemService()
-    const result = await service_item.createBug(data)
-    store_item.update()
-    store_summary.updateTaskBug(result.rid)
-    dialogBug.value = false
-  } catch (err) {
-    console.error('Error:', err)
-  }
+  const result = await store_item.createBug(data)
+  store_summary.updateTaskBug(result.rid)
+  dialogBug.value = false
 }
 </script>
 

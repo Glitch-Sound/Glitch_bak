@@ -79,8 +79,6 @@ const common = () => {
         store_item.setExtractSearch(String(route.query.target))
         break
     }
-
-    store_item.update()
   }
 }
 </script>

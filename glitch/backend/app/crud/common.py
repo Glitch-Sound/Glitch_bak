@@ -20,8 +20,8 @@ class ItemState(Enum):
     COMPLETE = 5
 
 class ExtractType(Enum):
-    ALL          =  1
-    INCOMPLETE   =  2
+    INCOMPLETE   =  1
+    ALL          =  2
     HIGH_RISK    =  3
     ALERT        =  4
     ASSIGNMENT   =  5

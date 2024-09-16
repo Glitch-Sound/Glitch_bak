@@ -45,5 +45,5 @@ class Item(Base):
 
     __table_args__ = (
         Index('idx_items_01', 'is_deleted', 'type', 'rid'),
-        Index('idx_items_02', 'is_deleted', 'rid', 'path_sort'),
+        Index('idx_items_02', 'is_deleted', 'rid', 'path_sort', 'priority'),
     )

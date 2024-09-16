@@ -25,10 +25,10 @@ def get_items_relation(target: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
-@router.get('/item/all/{id_project}', response_model=list[schema_item.Item])
-def get_items_all(id_project: int, db: Session = Depends(get_db)):
+@router.get('/item/incomplete/{id_project}', response_model=list[schema_item.Item])
+def get_items_incomplete(id_project: int, db: Session = Depends(get_db)):
     try:
-        params = ItemParam(type_extract=ExtractType.ALL.value, id_project=id_project)
+        params = ItemParam(type_extract=ExtractType.INCOMPLETE.value, id_project=id_project)
         result = crud_item.getItems(db, params)
         return result
 
@@ -37,10 +37,10 @@ def get_items_all(id_project: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f'error: {str(e)}')
 
 
-@router.get('/item/incomplete/{id_project}', response_model=list[schema_item.Item])
-def get_items_incomplete(id_project: int, db: Session = Depends(get_db)):
+@router.get('/item/all/{id_project}', response_model=list[schema_item.Item])
+def get_items_all(id_project: int, db: Session = Depends(get_db)):
     try:
-        params = ItemParam(type_extract=ExtractType.INCOMPLETE.value, id_project=id_project)
+        params = ItemParam(type_extract=ExtractType.ALL.value, id_project=id_project)
         result = crud_item.getItems(db, params)
         return result
 

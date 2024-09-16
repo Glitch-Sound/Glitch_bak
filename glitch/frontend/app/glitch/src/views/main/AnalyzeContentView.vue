@@ -3,7 +3,6 @@ import { onMounted, watch } from 'vue'
 
 import { ItemType } from '@/types/Item'
 import useProjectStore from '@/stores/ProjectStore'
-import useItemStore from '@/stores/ItemStore'
 import useAnalyzeStore from '@/stores/AnalyzeStore'
 import GanttCharts from '@/components/analyze/GanttCharts.vue'
 import ProjectHierarchy from '@/components/analyze/ProjectHierarchy.vue'
@@ -18,7 +17,6 @@ import PanelTask from '@/components/panel/PanelTask.vue'
 import PanelBug from '@/components/panel/PanelBug.vue'
 
 const store_project = useProjectStore()
-const store_item = useItemStore()
 const store_analyze = useAnalyzeStore()
 
 onMounted(async () => {
@@ -58,7 +56,7 @@ watch(
 
       <div class="title">Item</div>
       <div class="mx-5">
-        <template v-for="item in store_analyze.items" :key="item.rid">
+        <template v-for="item in store_analyze.items_notice" :key="item.rid">
           <PanelEvent v-if="item.type == ItemType.EVENT" :item="item" />
           <PanelFeature v-if="item.type == ItemType.FEATURE" :item="item" />
           <PanelStory v-if="item.type == ItemType.STORY" :item="item" />

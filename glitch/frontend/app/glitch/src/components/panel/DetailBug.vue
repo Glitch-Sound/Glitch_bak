@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { ref, defineProps } from 'vue'
-import { useRouter } from 'vue-router'
 
 import type { Item, BugUpdate } from '@/types/Item'
 import useItemStore from '@/stores/ItemStore'
 import useSummaryStore from '@/stores/SummaryStore'
-import ItemService from '@/services/ItemService'
 import UpdateBugDialog from '@/components/dialog/UpdateBugDialog.vue'
 
 import MarkedText from '@/components/common/MarkedText.vue'
@@ -15,7 +13,6 @@ const props = defineProps<{
   item: Item
 }>()
 
-const router = useRouter()
 const store_item = useItemStore()
 const store_summary = useSummaryStore()
 
@@ -46,27 +43,15 @@ const openDialog = () => {
   dialog.value = true
 }
 
-const handleSubmit = async (data: BugUpdate) => {
-  try {
-    const service_item = new ItemService()
-    await service_item.updateBug(data)
-    store_item.update()
-    store_summary.updateTaskBug(props.item.rid)
-    dialog.value = false
-  } catch (err) {
-    console.error('Error:', err)
-  }
+const handleSubmit = (data: BugUpdate) => {
+  store_item.updateBug(data)
+  store_summary.updateTaskBug(props.item.rid)
+  dialog.value = false
 }
 
-const handleDelete = async () => {
-  try {
-    const service_item = new ItemService()
-    await service_item.deleteBug(props.item.rid)
-    store_item.update()
-    dialog.value = false
-  } catch (err) {
-    console.error('Error:', err)
-  }
+const handleDelete = () => {
+  store_item.deleteBug(props.item.rid)
+  dialog.value = false
 }
 </script>
 

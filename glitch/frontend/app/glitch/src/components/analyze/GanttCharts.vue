@@ -21,9 +21,9 @@ const store_analyze = useAnalyzeStore()
 const date_select = ref('')
 
 onMounted(async () => {
-  await store_project.fetchProjectSummary()
+  await store_project.fetchItemRange()
 
-  store_project.summary_project.forEach((d: any) => {
+  store_project.items_range.forEach((d: any) => {
     d.datetime_start = new Date(d.datetime_start)
     d.datetime_end = new Date(d.datetime_end)
   })
@@ -43,7 +43,7 @@ function createGanttChart() {
   const height_bar = 5
   const width_bat_min = 13
   const width = 1500 - margin.left - margin.right
-  const height = store_project.summary_project.length * (height_bar + 2)
+  const height = store_project.items_range.length * (height_bar + 2)
 
   const svg = d3
     .select('#ganttChart')
@@ -56,14 +56,14 @@ function createGanttChart() {
   const x = d3
     .scaleTime()
     .domain([
-      d3.min(store_project.summary_project, (d: any) => d.datetime_start),
-      d3.max(store_project.summary_project, (d: any) => d.datetime_end)
+      d3.min(store_project.items_range, (d: any) => d.datetime_start),
+      d3.max(store_project.items_range, (d: any) => d.datetime_end)
     ])
     .range([0, width])
 
   const y = d3
     .scaleBand()
-    .domain(store_project.summary_project.map((d) => d.rid + ':' + d.title))
+    .domain(store_project.items_range.map((d) => d.rid + ':' + d.title))
     .range([0, height])
     .padding(0.5)
 
@@ -91,7 +91,7 @@ function createGanttChart() {
 
   svg
     .selectAll('rect')
-    .data(store_project.summary_project)
+    .data(store_project.items_range)
     .enter()
     .append('rect')
     .attr('x', (d: any) => {

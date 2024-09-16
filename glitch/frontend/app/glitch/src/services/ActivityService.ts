@@ -5,7 +5,7 @@ import type { Activity, ActivityCreate, ActivityUpdate } from '@/types/Activity'
 class ActivityService {
   public async getActivities(rid_items: number): Promise<Activity[]> {
     try {
-      const response = await http.get<Activity[]>(`/api/activities/${rid_items}`)
+      const response = await http.get<Activity[]>(`/api/activity/${rid_items}`)
       return response.data
     } catch (error) {
       throw new Error('error: ${error}')

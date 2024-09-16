@@ -1,15 +1,13 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { ref } from 'vue'
+import { useRoute } from 'vue-router'
 
 import { ItemType, type EventCreate } from '@/types/Item'
 import useUserStore from '@/stores/UserStore'
 import useItemStore from '@/stores/ItemStore'
-import ItemService from '@/services/ItemService'
 import CreateEventDialog from '@/components/dialog/CreateEventDialog.vue'
 
 const route = useRoute()
-const router = useRouter()
 const store_user = useUserStore()
 const store_item = useItemStore()
 
@@ -24,13 +22,6 @@ const dialog_form_data = ref<EventCreate>({
   datetime_end: ''
 })
 
-watch(
-  () => store_item.type_extract,
-  () => {
-    store_item.update()
-  }
-)
-
 const openDialog = () => {
   dialog.value = true
 }
@@ -40,14 +31,8 @@ const setEnabledType = (type: ItemType) => {
 }
 
 const handleSubmit = async (data: EventCreate) => {
-  try {
-    const service_item = new ItemService()
-    await service_item.createEvent(data)
-    store_item.update()
-    dialog.value = false
-  } catch (err) {
-    console.error('Error:', err)
-  }
+  await store_item.createEvent(data)
+  dialog.value = false
 }
 </script>
 

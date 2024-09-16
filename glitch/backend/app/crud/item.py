@@ -317,7 +317,7 @@ def getItems(db: Session, params: ItemParam):
         .outerjoin(Task, Task.rid_items == Item.rid)\
         .outerjoin(Bug, Bug.rid_items == Item.rid)\
         .where(Item.is_deleted == 0)\
-        .order_by(Item.path_sort)
+        .order_by(Item.path_sort, Item.priority.desc())
 
         result = query.all()
         return result

@@ -5,7 +5,6 @@ import { useRoute } from 'vue-router'
 import type { Item, StoryCreate } from '@/types/Item'
 import useUserStore from '@/stores/UserStore'
 import useItemStore from '@/stores/ItemStore'
-import ItemService from '@/services/ItemService'
 import CreateStoryDialog from '@/components/dialog/CreateStoryDialog.vue'
 import TypeLabel from '@/components/common/TypeLabel.vue'
 import StateLabel from '@/components/common/StateLabel.vue'
@@ -38,15 +37,9 @@ const openDialog = () => {
   dialog.value = true
 }
 
-const handleSubmit = async (data: StoryCreate) => {
-  try {
-    const service_item = new ItemService()
-    await service_item.createStory(data)
-    store_item.update()
-    dialog.value = false
-  } catch (err) {
-    console.error('Error:', err)
-  }
+const handleSubmit = (data: StoryCreate) => {
+  store_item.createStory(data)
+  dialog.value = false
 }
 </script>
 

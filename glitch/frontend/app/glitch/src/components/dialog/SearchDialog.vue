@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, defineProps, watch } from 'vue'
-import { useRouter } from 'vue-router'
 
 import useItemStore from '@/stores/ItemStore'
 import type { EmitDialog } from '@/components/common/events'
@@ -9,7 +8,6 @@ const props = defineProps<{
   dialog_show: boolean
 }>()
 
-const router = useRouter()
 const store_item = useItemStore()
 
 const emits = defineEmits<EmitDialog>()
@@ -28,9 +26,8 @@ watch(dialog, (value_new) => {
   emits('update:showDialog', value_new)
 })
 
-const search = async () => {
+const search = () => {
   store_item.setExtractSearch(target.value)
-  store_item.update()
   dialog.value = false
 }
 </script>

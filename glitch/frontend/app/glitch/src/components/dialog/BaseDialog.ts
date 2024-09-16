@@ -1,7 +1,7 @@
 import { ref, watch } from 'vue'
 
 import { ItemType } from '@/types/Item'
-import ItemService from '@/services/ItemService'
+import useItemStore from '@/stores/ItemStore'
 
 export const useDialog = (props: any, emits: any) => {
   const dialog = ref(props.dialog_show)
@@ -63,19 +63,19 @@ export const getDateRange = async (type: ItemType, rid_parent: number) => {
     return null
   }
 
-  const service_item = new ItemService()
-  const parents = await service_item.getItemsParent(rid_parent)
-  if (parents.length == 0) {
+  const store_item = useItemStore()
+  const ancestors = await store_item.getItemsAncestor(rid_parent)
+  if (ancestors.length == 0) {
     return null
   }
 
   let result: [string, string] = ['', '']
   switch (type) {
     case ItemType.EVENT:
-      result = [parents[0].project_datetime_start, parents[0].project_datetime_end]
+      result = [ancestors[0].project_datetime_start, ancestors[0].project_datetime_end]
       break
     case ItemType.STORY:
-      result = [parents[0].project_datetime_start, parents[1].event_datetime_end]
+      result = [ancestors[0].project_datetime_start, ancestors[1].event_datetime_end]
       break
   }
   return result

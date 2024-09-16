@@ -53,6 +53,10 @@ export enum ExtractType {
   SEARCH
 }
 
+export interface RID {
+  rid: number
+}
+
 export interface Item {
   rid: number
   id_project: number
@@ -234,6 +238,15 @@ export interface BugPriorityUpdate {
   priority: number
 }
 
+export interface ItemRange {
+  rid: number
+  type: number
+  state: number
+  title: string
+  datetime_start: string
+  datetime_end: string
+}
+
 export interface ItemHierarchy {
   rid: number
   rid_users: number
@@ -244,27 +257,8 @@ export interface ItemHierarchy {
   children?: ItemHierarchy[]
 }
 
-export interface SummaryProject {
-  rid: number
-  type: number
-  state: number
-  title: string
-  datetime_start: string
-  datetime_end: string
-}
-
 export interface ItemFrequency {
   datetime_entry: string
   task_count: number
-  task_count_idle: number
-  task_count_run: number
-  task_count_alert: number
-  task_count_review: number
-  task_count_complete: number
   bug_count: number
-  bug_count_idle: number
-  bug_count_run: number
-  bug_count_alert: number
-  bug_count_review: number
-  bug_count_complete: number
 }
