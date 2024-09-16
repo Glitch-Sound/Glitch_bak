@@ -44,8 +44,8 @@ export enum WorkloadType {
 
 export enum ExtractType {
   NONE = 0,
-  ALL,
   INCOMPLETE,
+  ALL,
   HIGH_RISK,
   ALERT,
   ASSIGNMENT,

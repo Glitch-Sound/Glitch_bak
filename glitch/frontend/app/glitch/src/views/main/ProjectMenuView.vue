@@ -45,11 +45,11 @@ const handleSubmit = async (data: EventCreate) => {
         </v-btn>
       </v-list-item>
 
-      <v-list-item @click="store_item.setExtractAll()">
-        <v-icon icon="mdi-moon-full" />All
-      </v-list-item>
       <v-list-item @click="store_item.setExtractIncomplete()">
         <v-icon icon="mdi-moon-waning-crescent" />Incomplete
+      </v-list-item>
+      <v-list-item @click="store_item.setExtractAll()">
+        <v-icon icon="mdi-moon-full" />All
       </v-list-item>
       <v-list-item disabled @click="store_item.setExtractHighRisk()">
         <v-icon icon="mdi-fire" />High Risk
@@ -60,6 +60,8 @@ const handleSubmit = async (data: EventCreate) => {
       <v-list-item @click="store_item.setExtractAssignment()">
         <v-icon icon="mdi-account" />Assignment
       </v-list-item>
+      <v-list-item disabled> <v-icon icon="mdi-magnify" />Search </v-list-item>
+      <v-list-item disabled> <v-icon icon="mdi-relation-many-to-many" />Relation </v-list-item>
     </v-sheet>
 
     <v-sheet color="#101010" class="rounded-lg mt-1 ml-1 py-3">

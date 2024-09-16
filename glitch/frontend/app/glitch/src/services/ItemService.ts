@@ -33,18 +33,18 @@ class ItemService {
     }
   }
 
-  public async getItemsAll(id_project: number | null): Promise<Item[]> {
+  public async getItemsIncomplete(id_project: number | null): Promise<Item[]> {
     try {
-      const response = await http.get<Item[]>(`/api/item/all/${id_project}`)
+      const response = await http.get<Item[]>(`/api/item/incomplete/${id_project}`)
       return response.data
     } catch (error) {
       throw new Error('error: ${error}')
     }
   }
 
-  public async getItemsIncomplete(id_project: number | null): Promise<Item[]> {
+  public async getItemsAll(id_project: number | null): Promise<Item[]> {
     try {
-      const response = await http.get<Item[]>(`/api/item/incomplete/${id_project}`)
+      const response = await http.get<Item[]>(`/api/item/all/${id_project}`)
       return response.data
     } catch (error) {
       throw new Error('error: ${error}')

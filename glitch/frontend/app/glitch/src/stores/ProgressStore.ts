@@ -6,6 +6,7 @@ import type { SummaryUser } from '@/types/Summary'
 import ItemService from '@/services/ItemService'
 import UserService from '@/services/UserService'
 import SummaryService from '@/services/SummaryService'
+import useItemStore from '@/stores/ItemStore'
 
 const service_user = new UserService()
 const service_item = new ItemService()
@@ -23,6 +24,9 @@ const useProgressStore = defineStore('progress', {
     async fetchItems(id_project: number, rid_users: number) {
       const service_item = new ItemService()
       this.items = await service_item.getItemsSummaryUser(id_project, rid_users)
+
+      const store_item = useItemStore()
+      store_item.updated()
     },
     async fetchUsers(id_project: number) {
       this.users = await service_user.getUsersProject(id_project)

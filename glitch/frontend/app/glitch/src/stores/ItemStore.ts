@@ -35,6 +35,9 @@ const useItemStore = defineStore('item', {
     extract_search_target: '' as string
   }),
   actions: {
+    updated() {
+      this.is_update = false
+    },
     async fetchItems(router: any) {
       this.is_update = false
 
@@ -44,18 +47,18 @@ const useItemStore = defineStore('item', {
       const path = `/project/${store_project.selected_id_project}`
 
       switch (this.type_extract) {
-        case ExtractType.ALL:
+        case ExtractType.INCOMPLETE:
           {
-            this.items = await service_item.getItemsAll(store_project.selected_id_project)
+            this.items = await service_item.getItemsIncomplete(store_project.selected_id_project)
 
             const query = { extruct: this.type_extract }
             router.push({ path, query })
           }
           break
 
-        case ExtractType.INCOMPLETE:
+        case ExtractType.ALL:
           {
-            this.items = await service_item.getItemsIncomplete(store_project.selected_id_project)
+            this.items = await service_item.getItemsAll(store_project.selected_id_project)
 
             const query = { extruct: this.type_extract }
             router.push({ path, query })
@@ -117,12 +120,12 @@ const useItemStore = defineStore('item', {
           break
       }
     },
-    setExtractAll() {
-      this.type_extract = ExtractType.ALL
-      this.is_update = true
-    },
     setExtractIncomplete() {
       this.type_extract = ExtractType.INCOMPLETE
+      this.is_update = true
+    },
+    setExtractAll() {
+      this.type_extract = ExtractType.ALL
       this.is_update = true
     },
     setExtractHighRisk() {
@@ -183,12 +186,12 @@ const useItemStore = defineStore('item', {
       this.is_update = true
     },
     async createStory(story: StoryCreate): Promise<Item> {
-      const result = service_item.createStory(story)
+      const result = await service_item.createStory(story)
       this.is_update = true
       return result
     },
     async updateStory(story: StoryUpdate): Promise<Item> {
-      const result = service_item.updateStory(story)
+      const result = await service_item.updateStory(story)
       this.is_update = true
       return result
     },
@@ -197,12 +200,12 @@ const useItemStore = defineStore('item', {
       this.is_update = true
     },
     async createTask(task: TaskCreate): Promise<Item> {
-      const result = service_item.createTask(task)
+      const result = await service_item.createTask(task)
       this.is_update = true
       return result
     },
     async updateTask(task: TaskUpdate): Promise<Item> {
-      const result = service_item.updateTask(task)
+      const result = await service_item.updateTask(task)
       this.is_update = true
       return result
     },
@@ -211,17 +214,17 @@ const useItemStore = defineStore('item', {
       this.is_update = true
     },
     async updatePriorityTask(task_priority: TaskPriorityUpdate): Promise<Item> {
-      const result = service_item.updatePriorityTask(task_priority)
+      const result = await service_item.updatePriorityTask(task_priority)
       this.is_update = true
       return result
     },
     async createBug(bug: BugCreate): Promise<Item> {
-      const result = service_item.createBug(bug)
+      const result = await service_item.createBug(bug)
       this.is_update = true
       return result
     },
     async updateBug(bug: BugUpdate): Promise<Item> {
-      const result = service_item.updateBug(bug)
+      const result = await service_item.updateBug(bug)
       this.is_update = true
       return result
     },
@@ -230,21 +233,24 @@ const useItemStore = defineStore('item', {
       this.is_update = true
     },
     async updatePriorityBug(bug_priority: BugPriorityUpdate): Promise<Item> {
-      const result = service_item.updatePriorityBug(bug_priority)
+      const result = await service_item.updatePriorityBug(bug_priority)
       this.is_update = true
       return result
     },
     async getActivities(rid_items: number): Promise<Activity[]> {
-      return service_activity.getActivities(rid_items)
+      const result = await service_activity.getActivities(rid_items)
+      return result
     },
     async createActivity(activity: ActivityCreate): Promise<Activity> {
-      return service_activity.createActivity(activity)
+      const result = await service_activity.createActivity(activity)
+      return result
     },
     async updateActivity(activity: ActivityUpdate): Promise<Activity> {
-      return service_activity.updateActivity(activity)
+      const result = await service_activity.updateActivity(activity)
+      return result
     },
     async deleteActivity(rid: number): Promise<void> {
-      return service_activity.deleteActivity(rid)
+      await service_activity.deleteActivity(rid)
     }
   }
 })
