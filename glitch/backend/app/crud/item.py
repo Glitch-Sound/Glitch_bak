@@ -1034,29 +1034,29 @@ def getItemsNotice(db: Session, id_project, select_date):
         UserAlias1 = aliased(User)
         UserAlias2 = aliased(User)
 
-        subquery_target = (
-            select(Item.rid)
-            .join(Story, Story.rid_items == Item.rid)\
-            .where(
-                and_(
-                    Item.id_project == id_project,
-                    Item.type == ItemType.STORY.value,
-                    Story.datetime_start <= select_date,
-                    select_date <= Story.datetime_end
-                )
-            )
-        ).subquery()
-
-        cte_extruct = db.query(
-            distinct(Tree.rid_ancestor).label('rid')
+        cte_extruct_ancestor = db.query(
+            Tree.rid_ancestor.label('rid')
         )\
+        .join(Item, Item.rid == Tree.rid_descendant)\
         .where(
-            or_(
-                Tree.rid_descendant.in_(subquery_target),
-                Tree.rid_ancestor.in_(subquery_target)
-            )\
+            Item.id_project == id_project,
+            Item.type == ItemType.STORY.value,
+            Story.datetime_start <= select_date,
+            select_date <= Story.datetime_end
+        )
+
+        cte_extruct_descendant = db.query(
+            Tree.rid_descendant.label('rid')
         )\
-        .cte(name='targets')
+        .join(Item, Item.rid == Tree.rid_ancestor)\
+        .where(
+            Item.id_project == id_project,
+            Item.type == ItemType.STORY.value,
+            Story.datetime_start <= select_date,
+            select_date <= Story.datetime_end
+        )
+
+        cte_extruct = cte_extruct_ancestor.union(cte_extruct_descendant).cte(name='targets')
 
         query = db.query(
             Item.rid,
@@ -1095,8 +1095,24 @@ def getItemsNotice(db: Session, id_project, select_date):
         .outerjoin(Story, Story.rid_items == Item.rid)\
         .outerjoin(Task, Task.rid_items == Item.rid)\
         .outerjoin(Bug, Bug.rid_items == Item.rid)\
-        .where(Item.is_deleted == 0)\
+        .filter(
+            and_(
+                Item.is_deleted == 0,
+                or_(
+                    Item.type.in_([
+                        ItemType.PROJECT.value,
+                        ItemType.EVENT.value,
+                        ItemType.FEATURE.value,
+                        ItemType.STORY.value,
+                        ItemType.BUG.value
+                    ]),
+                    Item.state == ItemState.ALERT.value
+                )
+            )
+        )\
         .order_by(Item.path_sort)
+
+        print(query)
 
         result = query.all()
         return result
@@ -1105,7 +1121,7 @@ def getItemsNotice(db: Session, id_project, select_date):
         raise e
 
 
-def getFrequency(db: Session, id_project, select_date):
+def getFrequency(db: Session, id_project):
     try:
         query = db.query(
             func.date(Item.datetime_entry).label('datetime_entry'),
@@ -1113,8 +1129,9 @@ def getFrequency(db: Session, id_project, select_date):
             func.sum(case((Item.type == 6, 1), else_=0)).label('bug_count'),
         )\
         .filter(
-            Item.type.in_([5, 6]),
-            Item.datetime_entry <= select_date
+            Item.is_deleted == 0,
+            Item.id_project == id_project,
+            Item.type.in_([5, 6])
         )\
         .group_by(func.date(Item.datetime_entry))\
         .order_by(func.date(Item.datetime_entry))
