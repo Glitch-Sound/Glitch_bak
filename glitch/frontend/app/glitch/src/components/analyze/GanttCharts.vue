@@ -18,7 +18,8 @@ const colors_item: { [key: number]: string } = {
 const store_project = useProjectStore()
 const store_analyze = useAnalyzeStore()
 
-const date_select = ref('')
+const date_selected = ref('')
+const date_hovered = ref('')
 
 onMounted(async () => {
   await store_project.fetchItemRange()
@@ -32,14 +33,14 @@ onMounted(async () => {
 })
 
 watch(
-  () => date_select.value,
+  () => date_selected.value,
   (value_new) => {
     store_analyze.setDate(value_new)
   }
 )
 
 function createGanttChart() {
-  const margin = { top: 40, right: 0, bottom: 40, left: 50 }
+  const margin = { top: 15, right: 0, bottom: 30, left: 50 }
   const height_bar = 5
   const width_bat_min = 13
   const width = 1500 - margin.left - margin.right
@@ -53,7 +54,10 @@ function createGanttChart() {
     .append('g')
     .attr('transform', `translate(${margin.left},${margin.top})`)
 
-  const x = d3
+  let line_date_selected: any
+  let x: any
+
+  x = d3
     .scaleTime()
     .domain([
       d3.min(store_project.items_range, (d: any) => d.datetime_start),
@@ -68,25 +72,33 @@ function createGanttChart() {
     .padding(0.5)
 
   const currentDate = new Date()
-  const currentX = x(currentDate)
+  const x_current = x(currentDate)
 
   svg
     .append('line')
-    .attr('x1', currentX)
+    .attr('x1', x_current)
     .attr('y1', -3)
-    .attr('x2', currentX)
+    .attr('x2', x_current)
     .attr('y2', height + 7)
-    .attr('stroke', 'red')
+    .attr('stroke', '#cd0000')
     .attr('stroke-width', 1.5)
     .style('opacity', 0.7)
 
   const verticalLine = svg
     .append('line')
-    .attr('stroke', '#909090')
+    .attr('stroke', '#cdcdcd')
     .attr('stroke-width', 1.5)
     .attr('y1', -3)
     .attr('y2', height + 7)
     .attr('stroke-width', 1.5)
+    .style('opacity', 0)
+
+  line_date_selected = svg
+    .append('line')
+    .attr('stroke', '#cdcd00')
+    .attr('stroke-width', 1.5)
+    .attr('y1', -3)
+    .attr('y2', height + 7)
     .style('opacity', 0)
 
   svg
@@ -132,7 +144,7 @@ function createGanttChart() {
     .attr('pointer-events', 'all')
     .on('mousemove', function (event: any) {
       const [mouseX, mouseY] = d3.pointer(event)
-      const hoveredDate = x.invert(mouseX).toISOString().split('T')[0]
+      date_hovered.value = x.invert(mouseX).toISOString().split('T')[0]
 
       verticalLine
         .attr('x1', mouseX)
@@ -142,7 +154,7 @@ function createGanttChart() {
         .attr('stroke-width', 1.5)
         .style('opacity', 0.8)
 
-      const textWidth = hoveredDate.length * 7
+      const textWidth = date_hovered.value.length * 7
       dateBackground
         .attr('x', mouseX + 10)
         .attr('y', mouseY)
@@ -153,7 +165,7 @@ function createGanttChart() {
       dateText
         .attr('x', mouseX + 20)
         .attr('y', mouseY + 15)
-        .text(hoveredDate)
+        .text(date_hovered.value)
         .style('opacity', 0.9)
     })
     .on('mouseout', () => {
@@ -163,7 +175,9 @@ function createGanttChart() {
     })
     .on('click', function (event: any) {
       const [mouseX] = d3.pointer(event)
-      date_select.value = x.invert(mouseX).toISOString().split('T')[0]
+      date_selected.value = x.invert(mouseX).toISOString().split('T')[0]
+
+      line_date_selected.attr('x1', mouseX).attr('x2', mouseX).style('opacity', 0.8)
     })
 }
 </script>

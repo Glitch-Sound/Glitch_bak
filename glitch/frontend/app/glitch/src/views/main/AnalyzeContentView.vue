@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, watch } from 'vue'
+import { onMounted, watch, ref } from 'vue'
 
 import { ItemType } from '@/types/Item'
 import useProjectStore from '@/stores/ProjectStore'
@@ -19,22 +19,37 @@ import PanelBug from '@/components/panel/PanelBug.vue'
 const store_project = useProjectStore()
 const store_analyze = useAnalyzeStore()
 
-onMounted(async () => {
-  store_analyze.fetchItems(store_project.selected_id_project)
+const date_selected = ref('')
+
+onMounted(() => {
+  common()
 })
 
 watch(
-  () => store_analyze.select_date,
-  () => {
-    store_analyze.fetchItems(store_project.selected_id_project)
+  () => store_analyze.date_selected,
+  (value_new) => {
+    date_selected.value = value_new
+    common()
   }
 )
+
+const common = () => {
+  if (store_project.selected_id_project) {
+    // store_analyze.fetchItems(store_project.selected_id_project)
+  }
+}
 </script>
 
 <template>
   <v-main>
     <v-sheet class="ma-1 py-1 rounded-lg">
-      <v-row>
+      <div class="title">
+        Gantt Chart
+        <span v-if="date_selected"> : {{ date_selected }}</span>
+      </div>
+      <GanttCharts />
+
+      <!-- <v-row>
         <v-col cols="auto" class="d-flex align-center justify-center">
           <ProjectHierarchy :id_project="store_project.selected_id_project" />
         </v-col>
@@ -48,9 +63,6 @@ watch(
         </v-col>
       </v-row>
 
-      <div class="title">Gantt Chart</div>
-      <GanttCharts />
-
       <div class="title">Frequency</div>
       <ItemFrequency :id_project="store_project.selected_id_project" />
 
@@ -63,7 +75,7 @@ watch(
           <PanelTask v-if="item.type == ItemType.TASK" :item="item" />
           <PanelBug v-if="item.type == ItemType.BUG" :item="item" />
         </template>
-      </div>
+      </div> -->
     </v-sheet>
   </v-main>
 </template>

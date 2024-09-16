@@ -40,7 +40,7 @@ watch(
   }
 )
 
-const common = async (rid_users: number) => {
+const common = (rid_users: number) => {
   if (store_project.selected_id_project && rid_users) {
     store_progress.fetchSummariesUser(store_project.selected_id_project, rid_users)
     store_progress.fetchItems(store_project.selected_id_project, rid_users)

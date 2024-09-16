@@ -7,26 +7,26 @@ const useAnalyzeStore = defineStore('analyze', {
   state: () => ({
     items_notice: [] as Array<Item>,
     items_frequency: [] as Array<ItemFrequency>,
-    select_date: '' as string
+    date_selected: '' as string
   }),
   actions: {
     async fetchItems(id_project: number | null) {
-      this.setDate(this.select_date)
+      this.setDate(this.date_selected)
 
       const service_item = new ItemService()
-      this.items_notice = await service_item.getItemsNotice(id_project, this.select_date)
+      this.items_notice = await service_item.getItemsNotice(id_project, this.date_selected)
     },
     async fetchItemsFrequency(id_project: number | null) {
-      this.setDate(this.select_date)
+      this.setDate(this.date_selected)
 
       const service_item = new ItemService()
-      this.items_frequency = await service_item.getFrequency(id_project, this.select_date)
+      this.items_frequency = await service_item.getFrequency(id_project, this.date_selected)
     },
-    setDate(select_date: string) {
-      if (select_date) {
-        this.select_date = select_date
+    setDate(date_selected: string) {
+      if (date_selected != '') {
+        this.date_selected = date_selected
       } else {
-        this.select_date = new Date().toISOString().split('T')[0]
+        this.date_selected = new Date().toISOString().split('T')[0]
       }
     }
   }
