@@ -132,13 +132,13 @@ const { is_enable, value } = useSummaryChart(props.rid_users, chartConfigs)
 
 <style scoped>
 .summary {
-  margin: 0 0 40px 60px;
+  margin: 20px 0 20px 60px;
   padding: 0;
 }
 
 .summary-block {
   margin: 0 10px 0 0;
-  padding: 10px 0 0 0;
+  padding: 0;
 }
 
 .title-sub {

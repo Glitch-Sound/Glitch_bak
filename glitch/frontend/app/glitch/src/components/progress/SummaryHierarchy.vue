@@ -82,7 +82,7 @@ function createSunburstChart(rid_users: number) {
       return '#000000'
     })
     .style('stroke', '#101010')
-    .style('stroke-width', 1.5)
+    .style('stroke-width', 2.0)
     .style('fill-opacity', (d: any) => (d.data.rid_users === rid_users ? 0.9 : 0.3))
 }
 </script>

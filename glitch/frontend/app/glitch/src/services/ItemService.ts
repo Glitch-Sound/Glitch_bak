@@ -339,14 +339,9 @@ class ItemService {
     }
   }
 
-  public async getFrequency(
-    id_project: number | null,
-    select_date: string
-  ): Promise<ItemFrequency[]> {
+  public async getFrequency(id_project: number | null): Promise<ItemFrequency[]> {
     try {
-      const response = await http.get<ItemFrequency[]>(
-        `/api/items/frequency/${id_project}/${select_date}`
-      )
+      const response = await http.get<ItemFrequency[]>(`/api/item/frequency/${id_project}`)
       return response.data
     } catch (error) {
       throw new Error('error: ${error}')

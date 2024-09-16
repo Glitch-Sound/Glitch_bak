@@ -35,7 +35,7 @@ watch(
 
 const common = () => {
   if (store_project.selected_id_project) {
-    // store_analyze.fetchItems(store_project.selected_id_project)
+    store_analyze.fetchItems(store_project.selected_id_project)
   }
 }
 </script>
@@ -45,11 +45,11 @@ const common = () => {
     <v-sheet class="ma-1 py-1 rounded-lg">
       <div class="title">
         Gantt Chart
-        <span v-if="date_selected"> : {{ date_selected }}</span>
+        <span v-if="date_selected"> : {{ date_selected }} </span>
       </div>
       <GanttCharts />
 
-      <!-- <v-row>
+      <v-row>
         <v-col cols="auto" class="d-flex align-center justify-center">
           <ProjectHierarchy :id_project="store_project.selected_id_project" />
         </v-col>
@@ -67,7 +67,7 @@ const common = () => {
       <ItemFrequency :id_project="store_project.selected_id_project" />
 
       <div class="title">Item</div>
-      <div class="mx-5">
+      <div class="mx-5 mb-10">
         <template v-for="item in store_analyze.items_notice" :key="item.rid">
           <PanelEvent v-if="item.type == ItemType.EVENT" :item="item" />
           <PanelFeature v-if="item.type == ItemType.FEATURE" :item="item" />
@@ -75,7 +75,7 @@ const common = () => {
           <PanelTask v-if="item.type == ItemType.TASK" :item="item" />
           <PanelBug v-if="item.type == ItemType.BUG" :item="item" />
         </template>
-      </div> -->
+      </div>
     </v-sheet>
   </v-main>
 </template>

@@ -3,6 +3,8 @@ import { defineStore } from 'pinia'
 import type { Item, ItemFrequency } from '@/types/Item'
 import ItemService from '@/services/ItemService'
 
+const service_item = new ItemService()
+
 const useAnalyzeStore = defineStore('analyze', {
   state: () => ({
     items_notice: [] as Array<Item>,
@@ -11,18 +13,12 @@ const useAnalyzeStore = defineStore('analyze', {
   }),
   actions: {
     async fetchItems(id_project: number | null) {
-      this.setDate(this.date_selected)
-
-      const service_item = new ItemService()
       this.items_notice = await service_item.getItemsNotice(id_project, this.date_selected)
     },
     async fetchItemsFrequency(id_project: number | null) {
-      this.setDate(this.date_selected)
-
-      const service_item = new ItemService()
-      this.items_frequency = await service_item.getFrequency(id_project, this.date_selected)
+      this.items_frequency = await service_item.getFrequency(id_project)
     },
-    setDate(date_selected: string) {
+    setDateSelected(date_selected: string) {
       if (date_selected != '') {
         this.date_selected = date_selected
       } else {

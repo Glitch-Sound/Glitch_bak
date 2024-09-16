@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted } from 'vue'
+
+// @ts-ignore
 import * as d3 from 'd3'
 
+import type { ItemFrequency } from '@/types/Item'
 import useSummaryStore from '@/stores/SummaryStore'
 import useAnalyzeStore from '@/stores/AnalyzeStore'
 
@@ -12,26 +15,23 @@ const props = defineProps<{
 const store_analyze = useAnalyzeStore()
 const store_summary = useSummaryStore()
 
-const selectedData = ref('')
+let svg: any
+let format_time: any
 
 onMounted(async () => {
   await store_analyze.fetchItemsFrequency(props.id_project)
   await store_summary.fetchSummaryProject(props.id_project)
-  createCalendar()
 
-  if (d3.select('#chart').node()) {
-    createChart()
-    updateChart()
-  }
+  createCalendar()
 })
 
 function createCalendar() {
-  const cellSize = 17
+  const size_cell = 20
   const radius = 4
-  const width = 53 * cellSize
-  const height = 7 * cellSize
+  const width = 53 * size_cell
+  const height = 7 * size_cell
 
-  const svg = d3
+  svg = d3
     .select('#calendar')
     .append('svg')
     .attr('width', width)
@@ -39,63 +39,76 @@ function createCalendar() {
     .append('g')
     .attr('transform', `translate(20,20)`)
 
-  const timeFormat = d3.timeFormat('%Y-%m-%d')
+  format_time = d3.timeFormat('%Y-%m-%d')
 
-  const endDate = new Date(2024, 8, 30)
-  const startDate = new Date(endDate.getFullYear() - 1, endDate.getMonth(), 1)
-  const days = d3.timeDays(startDate, endDate)
+  const date_end = new Date(2024, 8, 30)
+  const date_start = new Date(date_end.getFullYear() - 1, date_end.getMonth(), 1)
+  const days = d3.timeDays(date_start, date_end)
 
-  const taskColors = ['rgba(0, 0, 255, 0.3)', 'rgba(0, 0, 255, 0.9)']
-  const bugColors = ['rgba(255, 0, 0, 0.3)', 'rgba(255, 0, 0, 0.9)']
+  const colors_task = ['rgba(0, 0, 255, 0.2)', 'rgba(0, 0, 255, 0.8)']
+  const colors_bug = ['rgba(255, 0, 0, 0.2)', 'rgba(255, 0, 0, 0.8)']
 
-  const maxTask = d3.max(store_analyze.items_frequency, (d) => d.task_count)
-  const maxBug = d3.max(store_analyze.items_frequency, (d) => d.bug_count)
+  const max_task = d3.max(store_analyze.items_frequency, (d: ItemFrequency) => d.task_count)
+  const max_bug = d3.max(store_analyze.items_frequency, (d: ItemFrequency) => d.bug_count)
 
-  const taskColorScale = d3
+  const color_scale_task = d3
     .scaleQuantize()
-    .domain([0, maxTask || 1])
-    .range(taskColors)
-  const bugColorScale = d3
+    .domain([0, max_task || 1])
+    .range(colors_task)
+  const color_scale_bug = d3
     .scaleQuantize()
-    .domain([0, maxBug || 1])
-    .range(bugColors)
+    .domain([0, max_bug || 1])
+    .range(colors_bug)
+
+  const tooltip = d3
+    .select('#calendar')
+    .append('div')
+    .attr('class', 'tooltip')
+    .style('opacity', 0)
+    .style('position', 'absolute')
+    .style('background', 'rgba(0, 0, 0, 0.7)')
+    .style('color', '#fff')
+    .style('margin', '10px')
+    .style('padding', '5px')
+    .style('border-radius', '5px')
+    .style('pointer-events', 'none')
 
   svg
     .selectAll('rect')
     .data(days)
     .enter()
     .append('rect')
-    .attr('width', cellSize)
-    .attr('height', cellSize)
-    .attr('x', (d) => {
-      const startDate = new Date(2023, 9, 1)
-      const weekCount = d3.timeWeek.count(startDate, d)
-      return weekCount * cellSize
+    .attr('width', size_cell)
+    .attr('height', size_cell)
+    .attr('x', (d: any) => {
+      const date_start = new Date(2023, 9, 1)
+      const count_week = d3.timeWeek.count(date_start, d)
+      return count_week * size_cell
     })
-    .attr('y', (d) => d.getDay() * cellSize)
+    .attr('y', (d: any) => d.getDay() * size_cell)
     .attr('rx', radius)
     .attr('ry', radius)
-    .attr('fill', (d) => {
-      const date = timeFormat(d)
+    .attr('fill', (d: any) => {
+      const date = format_time(d)
       const data = store_analyze.items_frequency.find((item) => {
-        const itemDate = item.datetime_entry.split(' ')[0]
-        return itemDate === date
+        const date_item = item.datetime_entry.split(' ')[0]
+        return date_item === date
       })
 
       if (data) {
         if (data.task_count > 0 && data.bug_count > 0) {
-          const taskColor = d3.color(taskColorScale(data.task_count))!.rgb()
-          const bugColor = d3.color(bugColorScale(data.bug_count))!.rgb()
-          const blendedColor = d3.rgb(
-            taskColor.r * 0.3 + bugColor.r * 0.7,
-            taskColor.g * 0.3 + bugColor.g * 0.7,
-            taskColor.b * 0.3 + bugColor.b * 0.7
+          const color_task = d3.color(color_scale_task(data.task_count))!.rgb()
+          const color_bug = d3.color(color_scale_bug(data.bug_count))!.rgb()
+          const color_blended = d3.rgb(
+            color_task.r * 0.4 + color_bug.r * 0.6,
+            color_task.g * 0.4 + color_bug.g * 0.6,
+            color_task.b * 0.4 + color_bug.b * 0.6
           )
-          return blendedColor.toString()
+          return color_blended.toString()
         } else if (data.bug_count > 0) {
-          return bugColorScale(data.bug_count)
+          return color_scale_bug(data.bug_count)
         } else if (data.task_count > 0) {
-          return taskColorScale(data.task_count)
+          return color_scale_task(data.task_count)
         }
       }
       return '#0f0f0f'
@@ -103,133 +116,45 @@ function createCalendar() {
     .attr('stroke', '#000000')
     .attr('stroke-width', 1.5)
     .style('opacity', 0.8)
-    .on('mouseover', (event, d) => {
-      const date = timeFormat(d)
-      selectedData.value = store_summary.summaries_project.find(
-        (summary) => summary.date_entry === date
-      )
+    .attr('data-date', (d: any) => format_time(d))
+    .on('mouseover', function (event: any, d: any) {
+      const date = format_time(d)
+      const data = store_analyze.items_frequency.find((item) => {
+        const date_item = item.datetime_entry.split(' ')[0]
+        return date_item === date
+      })
 
-      updateChart()
+      let tooltipContent = `<strong>${date}</strong><br/>`
+      if (data) {
+        tooltipContent += `Task:${data.task_count}, Bug:${data.bug_count}`
+      } else {
+        tooltipContent += `no data.`
+      }
+
+      tooltip
+        .html(tooltipContent)
+        .style('left', event.pageX + 10 + 'px')
+        .style('top', event.pageY - 28 + 'px')
+        .transition()
+        .duration(200)
+        .style('opacity', 0.8)
     })
-}
-
-function createChart() {
-  const width = 300
-  const height = 300
-  const innerRadius = 50
-  const outerRadius = 100
-
-  const svg = d3
-    .select('#chart')
-    .append('svg')
-    .attr('width', width)
-    .attr('height', height)
-    .append('g')
-    .attr('transform', `translate(${width / 2}, ${height / 2})`)
-
-  svg.append('g').attr('class', 'innerPie')
-  svg.append('g').attr('class', 'outerPie')
-
-  updateChart(svg, innerRadius, outerRadius)
-}
-
-function updateChart(svg = null, innerRadius = 50, outerRadius = 100) {
-  const data = selectedData.value
-
-  if (!data) {
-    d3.select('#chart').selectAll('path').remove()
-    d3.select('#chart')
-      .select('.innerPie')
-      .append('text')
-      .attr('text-anchor', 'middle')
-      .attr('fill', 'gray')
-    return
-  }
-
-  // 内側のデータ (task_count_total, bug_count_total)
-  const innerData = [
-    { label: 'Task', value: data.task_count_total },
-    { label: 'Bug', value: data.bug_count_total }
-  ]
-
-  // 外側のデータ (詳細ステータス)
-  const outerData = [
-    { label: 'Task Idle', value: data.task_count_idle },
-    { label: 'Task Run', value: data.task_count_run },
-    { label: 'Task Alert', value: data.task_count_alert },
-    { label: 'Task Review', value: data.task_count_review },
-    { label: 'Task Complete', value: data.task_count_complete },
-    { label: 'Bug Idle', value: data.bug_count_idle },
-    { label: 'Bug Run', value: data.bug_count_run },
-    { label: 'Bug Alert', value: data.bug_count_alert },
-    { label: 'Bug Review', value: data.bug_count_review },
-    { label: 'Bug Complete', value: data.bug_count_complete }
-  ]
-
-  // 色の定義
-  const innerColors = ['#1f77b4', '#ff7f0e'] // 内側：タスク（青）、バグ（オレンジ）
-  const outerColors = {
-    task: ['#aec7e8', '#ffbb78', '#2ca02c', '#d62728', '#9467bd'], // タスク詳細色
-    bug: ['#f28e2b', '#e15759', '#76b7b2', '#59a14f', '#edc949'] // バグ詳細色
-  }
-
-  // Pieのソートを無効化して定義順に表示
-  const pie = d3
-    .pie()
-    .value((d: any) => d.value)
-    .sort(null)
-
-  // 内側と外側のドーナツの半径設定
-  const innerArc = d3
-    .arc()
-    .innerRadius(innerRadius - 20)
-    .outerRadius(innerRadius) // 内側もドーナツ状に
-  const outerArc = d3
-    .arc()
-    .innerRadius(innerRadius + 10)
-    .outerRadius(outerRadius)
-
-  // 内側のドーナツチャート更新
-  d3.select('#chart')
-    .select('.innerPie')
-    .selectAll('path')
-    .data(pie(innerData))
-    .join('path')
-    .attr('d', innerArc)
-    .attr('fill', (d, i) => innerColors[i]) // タスクとバグの色を定義
-
-  // 外側のドーナツチャート更新
-  d3.select('#chart')
-    .select('.outerPie')
-    .selectAll('path')
-    .data(pie(outerData))
-    .join('path')
-    .attr('d', outerArc)
-    .attr('fill', (d, i) => {
-      // タスクの色かバグの色かを条件で判定
-      return i < 5 ? outerColors.task[i] : outerColors.bug[i - 5]
+    .on('mousemove', function (event: any) {
+      tooltip.style('left', event.pageX + 10 + 'px').style('top', event.pageY - 28 + 'px')
+    })
+    .on('mouseout', function () {
+      tooltip.transition().duration(500).style('opacity', 0)
     })
 }
 </script>
 
 <template>
-  <div class="container">
-    <div id="calendar"></div>
-    <div id="chart"></div>
-  </div>
+  <div id="calendar"></div>
 </template>
 
 <style scoped>
-.container {
-  display: flex; /* 横並びにする */
-  justify-content: space-between; /* 両側に余白を設定して分割 */
-  align-items: flex-start; /* 上側を揃える */
-}
-
-#calendar,
-#chart {
-  flex: 1; /* 横幅を同じ割合で分割 */
-  margin: 10px; /* 要素間に少し余白を追加 */
+#calendar {
+  margin: 0 0 30px 70px;
 }
 
 svg {
