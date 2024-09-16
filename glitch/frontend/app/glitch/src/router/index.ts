@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import useUserStore from '@/stores/UserStore'
-import MainView from '@/views/main/MainView.vue'
+import MainView from '@/views/MainView.vue'
 import ProjectView from '@/views/main/ProjectView.vue'
 import ProgressView from '@/views/main/ProgressView.vue'
 import AnalyzeView from '@/views/main/AnalyzeView.vue'
