@@ -22,21 +22,24 @@ const date_selected = ref('')
 const date_hovered = ref('')
 
 onMounted(async () => {
-  await store_project.fetchItemRange()
-
-  store_project.items_range.forEach((d: any) => {
-    d.datetime_start = new Date(d.datetime_start)
-    d.datetime_end = new Date(d.datetime_end)
-  })
-
-  createGanttChart()
+  store_project.fetchItemRange()
 })
+
+watch(
+  () => store_project.items_range,
+  () => {
+    store_project.items_range.forEach((d: any) => {
+      d.datetime_start = new Date(d.datetime_start)
+      d.datetime_end = new Date(d.datetime_end)
+    })
+    createGanttChart()
+  }
+)
 
 watch(
   () => date_selected.value,
   (value_new) => {
     store_analyze.setDateSelected(value_new)
-    store_project.fetchItemRange()
   }
 )
 
@@ -47,10 +50,10 @@ function createGanttChart() {
   const width = 1500 - margin.left - margin.right
   const height = store_project.items_range.length * (height_bar + 2)
 
-  d3.select('ganttChart').selectAll('svg').remove()
+  d3.select('#gantt-chart').selectAll('svg').remove()
 
   const svg = d3
-    .select('#ganttChart')
+    .select('#gantt-chart')
     .append('svg')
     .attr('width', width + margin.left + margin.right)
     .attr('height', height + margin.top + margin.bottom)
@@ -190,7 +193,7 @@ function createGanttChart() {
 </script>
 
 <template>
-  <div id="ganttChart"></div>
+  <div id="gantt-chart"></div>
 </template>
 
 <style scoped>
