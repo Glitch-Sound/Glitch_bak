@@ -5,9 +5,9 @@ import { ItemType } from '@/types/Item'
 import useProjectStore from '@/stores/ProjectStore'
 import useItemStore from '@/stores/ItemStore'
 import useProgressStore from '@/stores/ProgressStore'
-import SummaryHierarchy from '@/components/progress/SummaryHierarchy.vue'
-import SummaryUserTask from '@/components/progress/SummaryUserTask.vue'
-import SummaryUserBug from '@/components/progress/SummaryUserBug.vue'
+import UserHierarchy from '@/components/analyze/UserHierarchy.vue'
+import SummaryUserTask from '@/components/analyze/SummaryUserTask.vue'
+import SummaryUserBug from '@/components/analyze/SummaryUserBug.vue'
 import PanelEvent from '@/components/panel/PanelEvent.vue'
 import PanelFeature from '@/components/panel/PanelFeature.vue'
 import PanelStory from '@/components/panel/PanelStory.vue'
@@ -53,7 +53,7 @@ const common = (rid_users: number) => {
     <v-sheet class="ma-1 py-1 rounded-lg">
       <v-row>
         <v-col cols="auto" class="d-flex align-center justify-center">
-          <SummaryHierarchy
+          <UserHierarchy
             :id_project="store_project.selected_id_project"
             :rid_users="store_progress.rid_users"
           />

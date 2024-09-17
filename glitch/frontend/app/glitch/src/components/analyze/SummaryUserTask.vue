@@ -5,7 +5,7 @@ import { defineProps } from 'vue'
 import * as d3 from 'd3'
 
 import type { SummaryItem } from '@/types/Summary'
-import { useSummaryChart, SummaryType } from '@/components/progress/SummaryChart'
+import { useSummaryChart, SummaryType } from '@/components/analyze/SummaryChart'
 
 const props = defineProps<{
   rid_users: number
@@ -14,64 +14,66 @@ const props = defineProps<{
 const chartConfigs = [
   {
     type: SummaryType.WORKLOAD,
-    selector: '#graph-bug-workload',
+    selector: '#graph-item-workload',
     isEnableKey: 'workload',
     valueKey: 'workload',
     maxValueFunc: (data: SummaryItem[]) =>
       d3.max(data, (d: SummaryItem) => Math.max(d.task_workload_total, d.bug_workload_total)) || 0,
-    valueFunc: (latest: SummaryItem) => latest.bug_workload_total,
+    valueFunc: (latest: SummaryItem) => latest.task_workload_total,
     list_area: [
       {
         name: 'Total',
-        value: (d: SummaryItem) => d.bug_workload_total,
+        value: (d: SummaryItem) => d.task_workload_total,
         color_line: 'rgba(180, 180, 180, 0.9)',
         color_area: 'rgba(180, 180, 180, 0.2)'
       }
     ]
   },
   {
-    type: SummaryType.BUG,
-    selector: '#graph-bug',
-    isEnableKey: 'bug',
-    valueKey: 'bug',
-    maxValueFunc: (data: SummaryItem[]) => d3.max(data, (d: SummaryItem) => d.bug_count_total) || 0,
+    type: SummaryType.COUNT,
+    selector: '#graph-item-count',
+    isEnableKey: 'count',
+    valueKey: 'count',
+    maxValueFunc: (data: SummaryItem[]) =>
+      d3.max(data, (d: SummaryItem) => d.task_count_total) || 0,
     valueFunc: (latest: SummaryItem) =>
-      Math.floor((latest.bug_count_complete / latest.bug_count_total) * 100) || 0,
+      Math.floor((latest.task_count_complete / latest.task_count_total) * 100) || 0,
     list_area: [
       {
         name: 'Total',
-        value: (d: SummaryItem) => d.bug_count_total,
-        color_line: 'rgba(120, 92, 10, 0.9)',
-        color_area: 'rgba(120, 92, 10, 0.2)'
+        value: (d: SummaryItem) => d.task_count_total,
+        color_line: 'rgba(116, 119, 176, 0.9)',
+        color_area: 'rgba(116, 119, 176, 0.2)'
       },
       {
         name: 'Complete',
-        value: (d: SummaryItem) => d.bug_count_complete,
+        value: (d: SummaryItem) => d.task_count_complete,
         color_line: 'rgba(90, 90, 90, 0.9)',
         color_area: 'rgba(90, 90, 90, 0.7)'
       }
     ]
   },
   {
-    type: SummaryType.RISK,
-    selector: '#graph-alert',
-    isEnableKey: 'alert',
-    valueKey: 'alert',
+    type: SummaryType.NUMBER,
+    selector: '#graph-item-number',
+    isEnableKey: 'number',
+    valueKey: 'number',
     maxValueFunc: (data: SummaryItem[]) =>
-      d3.max(data, (d: SummaryItem) => d.task_count_alert + d.bug_count_alert) || 0,
-    valueFunc: (latest: SummaryItem) => latest.task_count_alert + latest.bug_count_alert,
+      d3.max(data, (d: SummaryItem) => d.task_number_total) || 0,
+    valueFunc: (latest: SummaryItem) =>
+      Math.floor((latest.task_number_completed / latest.task_number_total) * 100) || 0,
     list_area: [
       {
-        name: 'Risk',
-        value: (d: SummaryItem) => d.task_risk + d.bug_risk,
-        color_line: 'rgba(156, 145, 81, 0.9)',
-        color_area: 'rgba(156, 145, 81, 0.2)'
+        name: 'Total',
+        value: (d: SummaryItem) => d.task_number_total,
+        color_line: 'rgba(98, 163, 136, 0.9)',
+        color_area: 'rgba(98, 163, 136, 0.2)'
       },
       {
-        name: 'Alert',
-        value: (d: SummaryItem) => d.task_count_alert + d.bug_count_alert,
-        color_line: 'rgba(181, 48, 69, 0.9)',
-        color_area: 'rgba(181, 48, 69, 0.2)'
+        name: 'Complete',
+        value: (d: SummaryItem) => d.task_number_completed,
+        color_line: 'rgba(90, 90, 90, 0.9)',
+        color_area: 'rgba(90, 90, 90, 0.7)'
       }
     ]
   }
@@ -92,7 +94,7 @@ const { is_enable, value } = useSummaryChart(props.rid_users, chartConfigs)
               <span class="value" v-if="is_enable.workload">{{ value.workload }} pt</span>
               <span class="value" v-else>-</span>
             </div>
-            <div class="graph" id="graph-bug-workload"></div>
+            <div class="graph" id="graph-item-workload"></div>
           </v-card-text>
         </v-card>
       </v-col>
@@ -102,11 +104,11 @@ const { is_enable, value } = useSummaryChart(props.rid_users, chartConfigs)
           <v-card-text>
             <div class="title-sub">completed rate</div>
             <div class="title">
-              <span>Bug</span>
-              <span class="value" v-if="is_enable.bug">{{ value.bug }} %</span>
+              <span>Item : Workload</span>
+              <span class="value" v-if="is_enable.count">{{ value.count }} %</span>
               <span class="value" v-else>-</span>
             </div>
-            <div class="graph" id="graph-bug"></div>
+            <div class="graph" id="graph-item-count"></div>
           </v-card-text>
         </v-card>
       </v-col>
@@ -114,13 +116,13 @@ const { is_enable, value } = useSummaryChart(props.rid_users, chartConfigs)
       <v-col cols="auto" class="d-flex summary-block">
         <v-card class="flex-grow-1">
           <v-card-text>
-            <div class="title-sub">caution</div>
+            <div class="title-sub">completed rate</div>
             <div class="title">
-              <span>Alert</span>
-              <span class="value" v-if="is_enable.alert">{{ value.alert }} alert</span>
+              <span>Item : Number</span>
+              <span class="value" v-if="is_enable.number">{{ value.number }} %</span>
               <span class="value" v-else>-</span>
             </div>
-            <div class="graph" id="graph-alert"></div>
+            <div class="graph" id="graph-item-number"></div>
           </v-card-text>
         </v-card>
       </v-col>
@@ -129,38 +131,5 @@ const { is_enable, value } = useSummaryChart(props.rid_users, chartConfigs)
 </template>
 
 <style scoped>
-.summary {
-  margin: 20px 0 20px 60px;
-  padding: 0;
-}
-
-.summary-block {
-  margin: 0 10px 0 0;
-  padding: 0;
-}
-
-.title-sub {
-  font-size: 14px;
-  color: #797979;
-}
-
-.title {
-  font-size: 20px;
-  font-weight: bold;
-  color: #acacac;
-}
-
-.value {
-  position: absolute;
-  top: 27px;
-  right: 34px;
-  font-size: 28px;
-  color: #cfcfcf;
-}
-
-.graph {
-  margin: 10px 10px 0 0;
-  padding: 0;
-  background-color: #070707;
-}
+@import '@/components/analyze/summary.css';
 </style>

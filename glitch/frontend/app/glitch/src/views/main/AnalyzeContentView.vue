@@ -6,8 +6,8 @@ import useProjectStore from '@/stores/ProjectStore'
 import useAnalyzeStore from '@/stores/AnalyzeStore'
 import GanttCharts from '@/components/analyze/GanttCharts.vue'
 import ProjectHierarchy from '@/components/analyze/ProjectHierarchy.vue'
-import ProjectTask from '@/components/analyze/ProjectTask.vue'
-import ProjectBug from '@/components/analyze/ProjectBug.vue'
+import SummaryProjectTask from '@/components/analyze/SummaryProjectTask.vue'
+import SummaryProjectBug from '@/components/analyze/SummaryProjectBug.vue'
 import ItemFrequency from '@/components/analyze/ItemFrequency.vue'
 
 import PanelEvent from '@/components/panel/PanelEvent.vue'
@@ -56,10 +56,10 @@ const common = () => {
 
         <v-col cols="auto">
           <div class="title">Summary Item</div>
-          <ProjectTask :id_project="store_project.selected_id_project" />
+          <SummaryProjectTask :id_project="store_project.selected_id_project" />
 
           <div class="title">Summary Bug & Alert</div>
-          <ProjectBug :id_project="store_project.selected_id_project" />
+          <SummaryProjectBug :id_project="store_project.selected_id_project" />
         </v-col>
       </v-row>
 
