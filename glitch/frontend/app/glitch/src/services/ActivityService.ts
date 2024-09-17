@@ -8,6 +8,7 @@ class ActivityService {
       const response = await http.get<Activity[]>(`/api/activity/${rid_items}`)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -17,6 +18,7 @@ class ActivityService {
       const response = await http.post<Activity>('/api/activity', activity)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -26,6 +28,7 @@ class ActivityService {
       const response = await http.put<Activity>('/api/activity', activity)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -34,6 +37,7 @@ class ActivityService {
     try {
       await http.delete(`/api/project/${rid}`)
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }

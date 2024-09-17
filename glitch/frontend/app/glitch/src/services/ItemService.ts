@@ -29,6 +29,7 @@ class ItemService {
       const response = await http.get<Item[]>(`/api/item/ancestor/${rid_items}`)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -38,6 +39,7 @@ class ItemService {
       const response = await http.get<Item[]>(`/api/item/incomplete/${id_project}`)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -47,6 +49,7 @@ class ItemService {
       const response = await http.get<Item[]>(`/api/item/all/${id_project}`)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -56,6 +59,7 @@ class ItemService {
       const response = await http.get<Item[]>(`/api/item/high-risk/${id_project}`)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -65,6 +69,7 @@ class ItemService {
       const response = await http.get<Item[]>(`/api/item/alert/${id_project}`)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -80,6 +85,7 @@ class ItemService {
       const response = await http.get<Item[]>(`/api/item/assignment/${id_project}/${rid_users}`)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -95,6 +101,7 @@ class ItemService {
       const response = await http.get<Item[]>(`/api/item/relation/${id_project}/${rid_items}`)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -104,6 +111,7 @@ class ItemService {
       const response = await http.get<Item[]>(`/api/item/search/${id_project}/${target}`)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -116,6 +124,7 @@ class ItemService {
       const response = await http.get<Item[]>(`/api/item/summary-user/${id_project}/${target}`)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -125,6 +134,7 @@ class ItemService {
       const response = await http.get<Project[]>('/api/projects')
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -134,6 +144,7 @@ class ItemService {
       const response = await http.post<Item>('/api/project', project)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -143,6 +154,7 @@ class ItemService {
       const response = await http.put<Item>('/api/project', project)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -151,6 +163,7 @@ class ItemService {
     try {
       await http.delete(`/api/project/${rid}`)
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -160,6 +173,7 @@ class ItemService {
       const response = await http.post<Item>('/api/event', event)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -169,6 +183,7 @@ class ItemService {
       const response = await http.put<Item>('/api/event', event)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -177,6 +192,7 @@ class ItemService {
     try {
       await http.delete(`/api/event/${rid}`)
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -186,6 +202,7 @@ class ItemService {
       const response = await http.post<Item>('/api/feature', feature)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -195,6 +212,7 @@ class ItemService {
       const response = await http.put<Item>('/api/feature', feature)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -203,6 +221,7 @@ class ItemService {
     try {
       await http.delete(`/api/feature/${rid}`)
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -212,6 +231,7 @@ class ItemService {
       const response = await http.post<Item>('/api/story', story)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -221,6 +241,7 @@ class ItemService {
       const response = await http.put<Item>('/api/story', story)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -229,6 +250,7 @@ class ItemService {
     try {
       await http.delete(`/api/story/${rid}`)
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -238,6 +260,7 @@ class ItemService {
       const response = await http.post<Item>('/api/task', task)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -247,6 +270,7 @@ class ItemService {
       const response = await http.put<Item>('/api/task', task)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -255,6 +279,7 @@ class ItemService {
     try {
       await http.delete(`/api/task/${rid}`)
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -264,6 +289,7 @@ class ItemService {
       const response = await http.put<Item>('/api/task/priority', task_priority)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -273,6 +299,7 @@ class ItemService {
       const response = await http.post<Item>('/api/bug', bug)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -282,6 +309,7 @@ class ItemService {
       const response = await http.put<Item>('/api/bug', bug)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -290,6 +318,7 @@ class ItemService {
     try {
       await http.delete(`/api/bug/${rid}`)
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -299,6 +328,7 @@ class ItemService {
       const response = await http.put<Item>('/api/bug/priority', bug_priority)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -308,6 +338,7 @@ class ItemService {
       const response = await http.get<RID[]>(`/api/item/ancestors/${rid_items}`)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -317,6 +348,7 @@ class ItemService {
       const response = await http.get<ItemHierarchy>(`/api/item/hierarchy/${id_project}`)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -326,6 +358,7 @@ class ItemService {
       const response = await http.get<ItemRange[]>(`/api/item/range/${id_project}`)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -335,6 +368,7 @@ class ItemService {
       const response = await http.get<Item[]>(`/api/item/notice/${id_project}/${select_date}`)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -344,6 +378,7 @@ class ItemService {
       const response = await http.get<ItemFrequency[]>(`/api/item/frequency/${id_project}`)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }

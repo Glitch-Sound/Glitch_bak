@@ -22,6 +22,7 @@ const store_analyze = useAnalyzeStore()
 const date_selected = ref('')
 
 onMounted(() => {
+  store_analyze.setDateSelected(new Date().toISOString().split('T')[0])
   common()
 })
 

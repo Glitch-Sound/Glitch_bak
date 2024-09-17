@@ -22,8 +22,7 @@ const date_selected = ref('')
 const date_hovered = ref('')
 
 onMounted(async () => {
-  store_analyze.setDateSelected(new Date().toISOString().split('T')[0])
-  store_project.fetchItemRange()
+  await store_project.fetchItemRange()
 
   store_project.items_range.forEach((d: any) => {
     d.datetime_start = new Date(d.datetime_start)
@@ -37,6 +36,7 @@ watch(
   () => date_selected.value,
   (value_new) => {
     store_analyze.setDateSelected(value_new)
+    store_project.fetchItemRange()
   }
 )
 
@@ -74,7 +74,7 @@ function createGanttChart() {
     .range([0, height])
     .padding(0.5)
 
-  const x_current = x(new Date())
+  const x_current = x(new Date().toISOString().split('T')[0])
 
   svg
     .append('line')

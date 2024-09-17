@@ -8,6 +8,7 @@ class UserService {
       const response = await http.get<User[]>('/api/user')
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -17,6 +18,7 @@ class UserService {
       const response = await http.get<User[]>(`/api/user/project/${id_project}`)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -26,6 +28,7 @@ class UserService {
       const response = await http.post<User>('/api/user', user)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -35,6 +38,7 @@ class UserService {
       const response = await http.put<User>('/api/user', user)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -43,6 +47,7 @@ class UserService {
     try {
       await http.delete(`/api/user/${rid}`)
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
@@ -52,6 +57,7 @@ class UserService {
       const response = await http.put<User>('/api/login', user)
       return response.data
     } catch (error) {
+      console.trace()
       throw new Error('error: ${error}')
     }
   }
