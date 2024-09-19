@@ -26,10 +26,11 @@ onMounted(async () => {
 })
 
 function createCalendar() {
-  const size_cell = 20
+  const size_cell = 18
+  const padding = 2
   const radius = 4
-  const width = 53 * size_cell
-  const height = 7 * size_cell
+  const width = 53 * (size_cell + padding)
+  const height = 7 * (size_cell + padding)
 
   svg = d3
     .select('#calendar')
@@ -83,9 +84,9 @@ function createCalendar() {
     .attr('x', (d: any) => {
       const date_start = new Date(2023, 9, 1)
       const count_week = d3.timeWeek.count(date_start, d)
-      return count_week * size_cell
+      return count_week * (size_cell + padding)
     })
-    .attr('y', (d: any) => d.getDay() * size_cell)
+    .attr('y', (d: any) => d.getDay() * (size_cell + padding))
     .attr('rx', radius)
     .attr('ry', radius)
     .attr('fill', (d: any) => {
@@ -97,12 +98,16 @@ function createCalendar() {
 
       if (data) {
         if (data.task_count > 0 && data.bug_count > 0) {
+          const count_all = data.task_count + data.bug_count
+          const ratio_task = data.task_count / count_all
+          const ratio_bug = data.bug_count / count_all
+
           const color_task = d3.color(color_scale_task(data.task_count))!.rgb()
           const color_bug = d3.color(color_scale_bug(data.bug_count))!.rgb()
           const color_blended = d3.rgb(
-            color_task.r * 0.4 + color_bug.r * 0.6,
-            color_task.g * 0.4 + color_bug.g * 0.6,
-            color_task.b * 0.4 + color_bug.b * 0.6
+            color_task.r * ratio_task + color_bug.r * ratio_bug,
+            color_task.g * ratio_task + color_bug.g * ratio_bug,
+            color_task.b * ratio_task + color_bug.b * ratio_bug
           )
           return color_blended.toString()
         } else if (data.bug_count > 0) {
@@ -111,7 +116,7 @@ function createCalendar() {
           return color_scale_task(data.task_count)
         }
       }
-      return '#0f0f0f'
+      return '#1f1f1f'
     })
     .attr('stroke', '#000000')
     .attr('stroke-width', 1.5)
