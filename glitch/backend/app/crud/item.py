@@ -1037,23 +1037,23 @@ def getItemsNotice(db: Session, id_project, select_date):
         cte_extruct_ancestor = db.query(
             Tree.rid_ancestor.label('rid')
         )\
-        .join(Item, Item.rid == Tree.rid_descendant)\
+        .join(Item,  Item.rid == Tree.rid_descendant)\
+        .join(Story, Item.rid == Story.rid_items)\
         .where(
             Item.id_project == id_project,
-            Item.type == ItemType.STORY.value,
-            Story.datetime_start <= select_date,
-            select_date <= Story.datetime_end
+            Item.state != ItemState.COMPLETE.value,
+            Story.datetime_start <= select_date
         )
 
         cte_extruct_descendant = db.query(
             Tree.rid_descendant.label('rid')
         )\
         .join(Item, Item.rid == Tree.rid_ancestor)\
+        .join(Story, Item.rid == Story.rid_items)\
         .where(
             Item.id_project == id_project,
-            Item.type == ItemType.STORY.value,
-            Story.datetime_start <= select_date,
-            select_date <= Story.datetime_end
+            Item.state != ItemState.COMPLETE.value,
+            Story.datetime_start <= select_date
         )
 
         cte_extruct = cte_extruct_ancestor.union(cte_extruct_descendant).cte(name='targets')
@@ -1111,8 +1111,6 @@ def getItemsNotice(db: Session, id_project, select_date):
             )
         )\
         .order_by(Item.path_sort)
-
-        print(query)
 
         result = query.all()
         return result
