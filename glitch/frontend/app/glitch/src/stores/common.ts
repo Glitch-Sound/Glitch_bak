@@ -1,0 +1,1 @@
+export const STORAGE_EXPIRATION_TIME = 12 * 60 * 60 * 1000

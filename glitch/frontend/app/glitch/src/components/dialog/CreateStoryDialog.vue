@@ -22,6 +22,8 @@ watch(
     if (value_new) {
       data_form.value.title = ''
       data_form.value.detail = ''
+      data_form.value.datetime_start = ''
+      data_form.value.datetime_end = ''
 
       const range = await getDateRange(ItemType.STORY, props.rid_parent)
       if (range) {

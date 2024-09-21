@@ -44,10 +44,10 @@ watch(
 )
 
 function createGanttChart() {
-  const margin = { top: 20, right: 0, bottom: 40, left: 50 }
+  const margin = { top: 20, right: 100, bottom: 40, left: 50 }
   const height_bar = 5
   const width_bat_min = 13
-  const width = 1500 - margin.left - margin.right
+  const width = 1600 - margin.left - margin.right
   const height = store_project.items_range.length * (height_bar + 2)
 
   d3.select('#gantt-chart').selectAll('svg').remove()
@@ -77,7 +77,7 @@ function createGanttChart() {
     .range([0, height])
     .padding(0.5)
 
-  const x_current = x(new Date().toISOString().split('T')[0])
+  const x_current = x(new Date())
 
   svg
     .append('line')
