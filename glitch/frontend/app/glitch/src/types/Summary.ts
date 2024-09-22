@@ -1,6 +1,6 @@
 export interface SummaryItem {
   rid: number
-  task_risk: number
+  risk: number
   task_count_idle: number
   task_count_run: number
   task_count_alert: number
@@ -10,7 +10,6 @@ export interface SummaryItem {
   task_workload_total: number
   task_number_completed: number
   task_number_total: number
-  bug_risk: number
   bug_count_idle: number
   bug_count_run: number
   bug_count_alert: number
@@ -26,7 +25,7 @@ export interface SummaryUser {
   id_project: number
   rid_users: number
   name: string
-  task_risk: number
+  risk: number
   task_count_idle: number
   task_count_run: number
   task_count_alert: number
@@ -36,7 +35,6 @@ export interface SummaryUser {
   task_workload_total: number
   task_number_completed: number
   task_number_total: number
-  bug_risk: number
   bug_count_idle: number
   bug_count_run: number
   bug_count_alert: number

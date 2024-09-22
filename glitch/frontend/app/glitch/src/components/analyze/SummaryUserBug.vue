@@ -63,7 +63,7 @@ const chartConfigs = [
     list_area: [
       {
         name: 'Risk',
-        value: (d: SummaryItem) => d.task_risk + d.bug_risk,
+        value: (d: SummaryItem) => d.risk,
         color_line: 'rgba(156, 145, 81, 0.9)',
         color_area: 'rgba(156, 145, 81, 0.2)'
       },

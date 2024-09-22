@@ -49,8 +49,8 @@ const openDialog = () => {
   dialog.value = true
 }
 
-const handleSubmit = (data: TaskUpdate) => {
-  store_item.updateTask(data)
+const handleSubmit = async (data: TaskUpdate) => {
+  await store_item.updateTask(data)
   store_summary.updateTaskBug(props.item.rid)
   dialog.value = false
 }
