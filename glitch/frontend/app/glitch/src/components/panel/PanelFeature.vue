@@ -8,6 +8,7 @@ import useItemStore from '@/stores/ItemStore'
 import CreateStoryDialog from '@/components/dialog/CreateStoryDialog.vue'
 import TypeLabel from '@/components/common/TypeLabel.vue'
 import StateLabel from '@/components/common/StateLabel.vue'
+import TitleLabel from '@/components/common/TitleLabel.vue'
 import UserLabel from '@/components/common/UserLabel.vue'
 import InformationFeature from '@/components/panel/InformationFeature.vue'
 import DetailFeature from '@/components/panel/DetailFeature.vue'
@@ -54,8 +55,8 @@ const handleSubmit = (data: StoryCreate) => {
         <StateLabel :state="props.item.state" />
       </v-col>
 
-      <v-col class="title" @click="expand = !expand">
-        {{ props.item.title }}
+      <v-col @click="expand = !expand">
+        <TitleLabel :item="props.item" />
       </v-col>
 
       <v-col cols="auto">

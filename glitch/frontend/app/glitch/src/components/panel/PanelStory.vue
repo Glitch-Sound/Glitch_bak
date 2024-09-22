@@ -10,6 +10,7 @@ import CreateTaskDialog from '@/components/dialog/CreateTaskDialog.vue'
 import CreateBugDialog from '@/components/dialog/CreateBugDialog.vue'
 import TypeLabel from '@/components/common/TypeLabel.vue'
 import StateLabel from '@/components/common/StateLabel.vue'
+import TitleLabel from '@/components/common/TitleLabel.vue'
 import UserLabel from '@/components/common/UserLabel.vue'
 import InformationStory from '@/components/panel/InformationStory.vue'
 import DetailStory from '@/components/panel/DetailStory.vue'
@@ -80,8 +81,8 @@ const handleBugSubmit = async (data: BugCreate) => {
         <StateLabel :state="props.item.state" />
       </v-col>
 
-      <v-col class="title" @click="expand = !expand">
-        {{ props.item.title }}
+      <v-col @click="expand = !expand">
+        <TitleLabel :item="props.item" />
       </v-col>
 
       <v-col cols="auto">
