@@ -117,15 +117,28 @@ def _updateItem(db: Session, target: ItemUpdateCommon):
         )\
         .filter(Item.rid == target.rid)
 
-        item.update({
-            Item.state: target.state,
-            Item.rid_users: target.rid_users,
-            Item.rid_users_review: target.rid_users_review,
-            Item.title: target.title,
-            Item.detail: target.detail,
-            Item.result: target.result,
-            Item.datetime_update: datetime_current
-        })
+        if target.state != ItemState.COMPLETE.value:
+            item.update({
+                Item.state: target.state,
+                Item.rid_users: target.rid_users,
+                Item.rid_users_review: target.rid_users_review,
+                Item.title: target.title,
+                Item.detail: target.detail,
+                Item.result: target.result,
+                Item.datetime_update: datetime_current
+            })
+        else:
+            item.update({
+                Item.state: target.state,
+                Item.risk: 0,
+                Item.risk_factors: 0,
+                Item.rid_users: target.rid_users,
+                Item.rid_users_review: target.rid_users_review,
+                Item.title: target.title,
+                Item.detail: target.detail,
+                Item.result: target.result,
+                Item.datetime_update: datetime_current
+            })
 
         item_updated = item.first()
         return item_updated

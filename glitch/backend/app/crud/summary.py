@@ -20,7 +20,7 @@ def getSummariesProject(db: Session, id_project: int):
     try:
         query = db.query(
             SummaryItem.rid_items.label('rid'),
-            SummaryItem.task_risk,
+            SummaryItem.risk,
             SummaryItem.task_count_idle,
             SummaryItem.task_count_run,
             SummaryItem.task_count_alert,
@@ -30,7 +30,6 @@ def getSummariesProject(db: Session, id_project: int):
             SummaryItem.task_workload_total,
             SummaryItem.task_number_completed,
             SummaryItem.task_number_total,
-            SummaryItem.bug_risk,
             SummaryItem.bug_count_idle,
             SummaryItem.bug_count_run,
             SummaryItem.bug_count_alert,
@@ -53,7 +52,7 @@ def getSummariesItem(db: Session, rid: int):
     try:
         query = db.query(
             SummaryItem.rid_items.label('rid'),
-            SummaryItem.task_risk,
+            SummaryItem.risk,
             SummaryItem.task_count_idle,
             SummaryItem.task_count_run,
             SummaryItem.task_count_alert,
@@ -63,7 +62,6 @@ def getSummariesItem(db: Session, rid: int):
             SummaryItem.task_workload_total,
             SummaryItem.task_number_completed,
             SummaryItem.task_number_total,
-            SummaryItem.bug_risk,
             SummaryItem.bug_count_idle,
             SummaryItem.bug_count_run,
             SummaryItem.bug_count_alert,
@@ -92,7 +90,7 @@ def getSummariesUser(db: Session, id_project: int, rid_users: int):
             SummaryUser.id_project,
             UserAlias.rid.label('rid_users'),
             UserAlias.name.label('name'),
-            SummaryUser.task_risk,
+            SummaryUser.risk,
             SummaryUser.task_count_idle,
             SummaryUser.task_count_run,
             SummaryUser.task_count_alert,
@@ -102,7 +100,6 @@ def getSummariesUser(db: Session, id_project: int, rid_users: int):
             SummaryUser.task_workload_total,
             SummaryUser.task_number_completed,
             SummaryUser.task_number_total,
-            SummaryUser.bug_risk,
             SummaryUser.bug_count_idle,
             SummaryUser.bug_count_run,
             SummaryUser.bug_count_alert,
@@ -124,8 +121,6 @@ def getSummariesUser(db: Session, id_project: int, rid_users: int):
 
     except Exception as e:
         raise e
-
-
 
 
 def _getSummary(list_sum_workload: any, list_sum_number: any, list_count: any):
@@ -266,6 +261,14 @@ def createSummaryItem(db: Session, rid_target: int):
             .group_by(Item.type, Item.state)\
             .all()
 
+            result_risk = db.query(
+                Item.risk.label('risk')
+            )\
+            .filter(
+                Item.rid == tree.rid_ancestor
+            )\
+            .one()
+
             result_sum, result_count = _getSummary(list_sum_workload, list_sum_number, list_count)
 
             summary_item = db.query(SummaryItem).filter(
@@ -276,6 +279,7 @@ def createSummaryItem(db: Session, rid_target: int):
                 date_previous = getPreviousDate()
                 summary = SummaryItem(
                     rid_items=tree.rid_ancestor,
+                    risk=0,
                     task_count_idle=0,
                     task_count_run=0,
                     task_count_alert=0,
@@ -308,6 +312,7 @@ def createSummaryItem(db: Session, rid_target: int):
             if not summary_item:
                 summary = SummaryItem(
                     rid_items=tree.rid_ancestor,
+                    risk=result_risk.risk,
                     task_count_idle=result_count['task_count_idle'],
                     task_count_run=result_count['task_count_run'],
                     task_count_alert=result_count['task_count_alert'],
@@ -338,6 +343,7 @@ def createSummaryItem(db: Session, rid_target: int):
                 )
 
                 summary.update({
+                    SummaryItem.risk: result_risk.risk,
                     SummaryItem.task_count_idle: result_count['task_count_idle'],
                     SummaryItem.task_count_run: result_count['task_count_run'],
                     SummaryItem.task_count_alert: result_count['task_count_alert'],

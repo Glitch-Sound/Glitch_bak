@@ -12,7 +12,7 @@ class SummaryItem(Base):
 
     rid                   = Column(Integer, primary_key=True)
     rid_items             = Column(Integer, ForeignKey('items.rid'))
-    task_risk             = Column(Integer, default=0)
+    risk                  = Column(Integer, default=0)
     task_count_idle       = Column(Integer, default=0)
     task_count_run        = Column(Integer, default=0)
     task_count_alert      = Column(Integer, default=0)
@@ -22,7 +22,6 @@ class SummaryItem(Base):
     task_workload_total   = Column(Integer, default=0)
     task_number_completed = Column(Integer, default=0)
     task_number_total     = Column(Integer, default=0)
-    bug_risk              = Column(Integer, default=0)
     bug_count_idle        = Column(Integer, default=0)
     bug_count_run         = Column(Integer, default=0)
     bug_count_alert       = Column(Integer, default=0)

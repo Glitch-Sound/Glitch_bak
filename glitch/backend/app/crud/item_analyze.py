@@ -96,14 +96,20 @@ def _getRiskDeadline(datetime_limit: str, datetime_current: str, item):
                 day_active += 1
             date += delta
 
+        workload = 0
+        if item.task_workload is not None:
+            workload = item.task_workload
+        else:
+            workload = item.bug_workload
+
         risk         = 0
         risk_factors = 0
 
-        if (day_active - item.task_workload + math.ceil(item.task_workload / 2)) <= 0:
+        if (day_active - workload + math.ceil(workload / 2)) <= 0:
             risk         += RISK_ITEM['BUFFER_LOW'][0]
             risk_factors |= RISK_ITEM['BUFFER_LOW'][1]
 
-        if (day_active - item.task_workload) <= 0:
+        if (day_active - workload) <= 0:
             risk         += RISK_ITEM['BUFFER_NONE'][0]
             risk_factors |= RISK_ITEM['BUFFER_NONE'][1]
 
@@ -114,18 +120,24 @@ def _getRiskDeadline(datetime_limit: str, datetime_current: str, item):
 
 
 def _checkRiskWorkload(item):
+    workload = 0
+    if item.task_workload is not None:
+        workload = item.task_workload
+    else:
+        workload = item.bug_workload
+
     risk         = 0
     risk_factors = 0
 
-    if item.task_workload == WorkloadType.WITHIN_2_DAYS.value:
+    if workload == WorkloadType.WITHIN_2_DAYS.value:
         risk         += RISK_ITEM['WORKLOAD_2'][0]
         risk_factors |= RISK_ITEM['WORKLOAD_2'][1]
 
-    if item.task_workload == WorkloadType.WITHIN_3_DAYS.value:
+    if workload == WorkloadType.WITHIN_3_DAYS.value:
         risk         += RISK_ITEM['WORKLOAD_3'][0]
         risk_factors |= RISK_ITEM['WORKLOAD_3'][1]
 
-    if item.task_workload == WorkloadType.WITHIN_A_WEEK.value:
+    if workload == WorkloadType.WITHIN_A_WEEK.value:
         risk         += RISK_ITEM['WORKLOAD_5'][0]
         risk_factors |= RISK_ITEM['WORKLOAD_5'][1]
 
@@ -133,18 +145,22 @@ def _checkRiskWorkload(item):
 
 
 def _checkRiskNumber(item):
+    number_total = 0
+    if item.task_number_total is not None:
+        number_total = item.task_number_total
+
     risk         = 0
     risk_factors = 0
 
-    if NUMBER_OVER_LV1 < item.task_number_total:
+    if NUMBER_OVER_LV1 < number_total:
         risk         += RISK_ITEM['NUMBER_OVER_LV1'][0]
         risk_factors |= RISK_ITEM['NUMBER_OVER_LV1'][1]
 
-    if NUMBER_OVER_LV1 < item.task_number_total:
+    if NUMBER_OVER_LV1 < number_total:
         risk         += RISK_ITEM['NUMBER_OVER_LV2'][0]
         risk_factors |= RISK_ITEM['NUMBER_OVER_LV2'][1]
 
-    if NUMBER_OVER_LV1 < item.task_number_total:
+    if NUMBER_OVER_LV1 < number_total:
         risk         += RISK_ITEM['NUMBER_OVER_LV3'][0]
         risk_factors |= RISK_ITEM['NUMBER_OVER_LV3'][1]
 
@@ -158,20 +174,17 @@ def _setRiskItem(db: Session, rid_item: int, datetime_limit: str, datetime_curre
         risk         = 0
         risk_factors = 0
 
-        if item.task_type == TaskType.WORKLOAD.value:
-            tmp_risk, tmp_risk_factors = _getRiskDeadline(datetime_limit, datetime_current, item)
-            risk         += tmp_risk
-            risk_factors |= tmp_risk_factors
+        tmp_risk, tmp_risk_factors = _getRiskDeadline(datetime_limit, datetime_current, item)
+        risk         += tmp_risk
+        risk_factors |= tmp_risk_factors
 
-            tmp_risk, tmp_risk_factors = _checkRiskWorkload(item)
-            risk         += tmp_risk
-            risk_factors |= tmp_risk_factors
+        tmp_risk, tmp_risk_factors = _checkRiskWorkload(item)
+        risk         += tmp_risk
+        risk_factors |= tmp_risk_factors
 
-        else:
-            tmp_risk, tmp_risk_factors = _checkRiskNumber(item)
-            risk         += tmp_risk
-            risk_factors |= tmp_risk_factors
-
+        tmp_risk, tmp_risk_factors = _checkRiskNumber(item)
+        risk         += tmp_risk
+        risk_factors |= tmp_risk_factors
 
         # TODO:delete
         print(risk)
