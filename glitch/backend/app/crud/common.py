@@ -34,6 +34,14 @@ class TaskType(Enum):
     WORKLOAD = 1
     NUMBER   = 2
 
+class WorkloadType(Enum):
+    WITHIN_AN_HOUR    =  1
+    WITHIN_HALF_A_DAY =  3
+    WITHIN_A_DAY      =  7
+    WITHIN_2_DAYS     = 14
+    WITHIN_3_DAYS     = 21
+    WITHIN_A_WEEK     = 35
+
 
 def getWeekAgoDate():
     current_utc_time = datetime.now(pytz.timezone('Asia/Tokyo'))

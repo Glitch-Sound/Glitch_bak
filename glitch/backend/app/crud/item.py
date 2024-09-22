@@ -7,6 +7,7 @@ sys.path.append('~/app')
 
 from crud.common import getWeekAgoDate, getCurrentDatetime, ItemType, ItemState, ExtractType, TaskType
 from crud.summary import createSummaryItem, createSummaryUser
+from crud.item_analyze import analyzeItem
 
 from schema import item as schema_item
 from model.item import Item
@@ -18,17 +19,6 @@ from model.story import Story
 from model.task import Task
 from model.bug import Bug
 from model.user import User
-
-
-RISK_1 = 0b00000001
-RISK_2 = 0b00000010
-RISK_3 = 0b00000100
-RISK_4 = 0b00001000
-RISK_5 = 0b00010000
-RISK_6 = 0b00100000
-RISK_7 = 0b01000000
-RISK_8 = 0b10000000
-
 
 class ItemParam():
     def __init__(self, type_extract: ExtractType, id_project: int, rid_users: int = None, rid_items: int = None, search: str  = None):
@@ -703,6 +693,7 @@ def updateStory(db: Session, target:schema_item.StoryUpdate):
             Story.datetime_end: target.datetime_end
 
         })
+
         db.commit()
         db.refresh(item)
         return item
@@ -752,6 +743,7 @@ def createTask(db: Session, target:schema_item.TaskCreate):
         _createTree(db, ItemType.TASK, target.rid_items, item.rid)
         db.flush()
 
+        analyzeItem(db, item.rid)
         createSummaryItem(db, item.rid)
         createSummaryUser(db, target.id_project, target.rid_users)
         db.commit()
@@ -796,6 +788,7 @@ def updateTask(db: Session, target:schema_item.TaskUpdate):
         )\
         .filter(Item.rid == target.rid)
 
+        analyzeItem(db, target.rid)
         createSummaryItem(db, item.rid)
         createSummaryUser(db, id_project, target.rid_users)
         db.commit()
@@ -867,6 +860,7 @@ def createBug(db: Session, target:schema_item.BugCreate):
         _createTree(db, ItemType.BUG, target.rid_items, item.rid)
         db.flush()
 
+        analyzeItem(db, item.rid)
         createSummaryItem(db, item.rid)
         createSummaryUser(db, target.id_project, target.rid_users)
         db.commit()
@@ -908,6 +902,7 @@ def updateBug(db: Session, target:schema_item.BugUpdate):
         )\
         .filter(Item.rid == target.rid)
 
+        analyzeItem(db, target.rid)
         createSummaryItem(db, item.rid)
         createSummaryUser(db, id_project, target.rid_users)
         db.commit()
