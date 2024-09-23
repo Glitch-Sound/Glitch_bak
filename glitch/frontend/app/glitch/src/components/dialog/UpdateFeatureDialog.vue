@@ -57,6 +57,7 @@ const handleStateSelected = (state: ItemState) => {
 
           <UserReviewSelect
             v-if="is_review"
+            :rules="[rules.required]"
             v-model="data_form.rid_users_review"
             @itemSelected="handleUserReviewSelected"
           />

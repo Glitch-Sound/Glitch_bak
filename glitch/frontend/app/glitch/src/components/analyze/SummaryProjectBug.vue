@@ -216,7 +216,7 @@ function createChartDetail(type: SummaryType, data: SummaryItem[], max_value: nu
           <v-card-text>
             <div class="title-sub">caution</div>
             <div class="title">
-              <span>Alert</span>
+              <span>Risk & Alert</span>
               <span class="value" v-if="is_enable_alert"> {{ value_alert }} alert </span>
               <span class="value" v-else>-</span>
             </div>

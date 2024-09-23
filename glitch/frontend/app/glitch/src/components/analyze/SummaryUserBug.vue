@@ -116,7 +116,7 @@ const { is_enable, value } = useSummaryChart(props.rid_users, chartConfigs)
           <v-card-text>
             <div class="title-sub">caution</div>
             <div class="title">
-              <span>Alert</span>
+              <span>Risk & Alert</span>
               <span class="value" v-if="is_enable.alert">{{ value.alert }} alert</span>
               <span class="value" v-else>-</span>
             </div>
