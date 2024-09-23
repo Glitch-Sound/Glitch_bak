@@ -15,7 +15,7 @@
 }
 
 .type {
-    width: 110px;
+    width: 115px;
     margin: 0;
 }
 
@@ -32,11 +32,11 @@
 }
 
 .type-task {
-    padding-left: 80px;
+    padding-left: 85px;
 }
 
 .type-bug {
-    padding-left: 80px;
+    padding-left: 85px;
 }
 
 .state {

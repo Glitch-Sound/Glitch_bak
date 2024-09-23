@@ -145,9 +145,17 @@ const useItemStore = defineStore('item', {
       this.extract_rid_item = rid_item
       this.is_update = true
     },
+    setExtractItemUpdate() {
+      this.type_extract = ExtractType.RELATION
+      this.is_update = true
+    },
     setExtractSearch(target: string) {
       this.type_extract = ExtractType.SEARCH
       this.extract_search_target = target
+      this.is_update = true
+    },
+    setExtractSearchUpdate() {
+      this.type_extract = ExtractType.SEARCH
       this.is_update = true
     },
     setEnabledType(type: ItemType) {

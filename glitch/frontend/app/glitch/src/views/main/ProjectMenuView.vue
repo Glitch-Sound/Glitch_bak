@@ -51,7 +51,7 @@ const handleSubmit = async (data: EventCreate) => {
       <v-list-item @click="store_item.setExtractAll()">
         <v-icon icon="mdi-moon-full" />All
       </v-list-item>
-      <v-list-item disabled @click="store_item.setExtractHighRisk()">
+      <v-list-item @click="store_item.setExtractHighRisk()">
         <v-icon icon="mdi-fire" />High Risk
       </v-list-item>
       <v-list-item @click="store_item.setExtractAlert()">
@@ -60,8 +60,18 @@ const handleSubmit = async (data: EventCreate) => {
       <v-list-item @click="store_item.setExtractAssignment()">
         <v-icon icon="mdi-account" />Assignment
       </v-list-item>
-      <v-list-item disabled> <v-icon icon="mdi-magnify" />Search </v-list-item>
-      <v-list-item disabled> <v-icon icon="mdi-relation-many-to-many" />Relation </v-list-item>
+      <v-list-item
+        @click="store_item.setExtractSearchUpdate()"
+        :disabled="store_item.extract_search_target === ''"
+      >
+        <v-icon icon="mdi-magnify" />Search
+      </v-list-item>
+      <v-list-item
+        @click="store_item.setExtractItemUpdate()"
+        :disabled="store_item.extract_rid_item === 0"
+      >
+        <v-icon icon="mdi-relation-many-to-many" />Relation
+      </v-list-item>
     </v-sheet>
 
     <v-sheet color="#101010" class="rounded-lg mt-1 ml-1 py-3">
