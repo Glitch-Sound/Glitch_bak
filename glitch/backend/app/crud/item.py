@@ -190,7 +190,19 @@ def _extructItem(db: Session, params: ItemParam):
                 .where(Tree.rid_descendant.in_(subquery_target))
 
             case ExtractType.HIGH_RISK.value:
-                pass
+                subquery_target = (
+                    select(Item.rid)
+                    .where(
+                        Item.state != ItemState.COMPLETE.value,
+                        400 <= Item.risk
+                    )
+                ).subquery()
+
+                cte_extruct = db.query(
+                    distinct(Tree.rid_ancestor).label('rid')
+
+                )\
+                .where(Tree.rid_descendant.in_(subquery_target))
 
             case ExtractType.ALERT.value:
                 subquery_target = (
