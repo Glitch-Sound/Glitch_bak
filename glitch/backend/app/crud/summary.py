@@ -1,4 +1,4 @@
-from sqlalchemy import desc
+from sqlalchemy import desc, func, case, cast, Integer
 from sqlalchemy.orm import Session, aliased
 from sqlalchemy.sql import func
 
@@ -411,6 +411,15 @@ def createSummaryUser(db: Session, id_project: int, rid_users: int):
         .group_by(Item.type, Item.state)\
         .all()
 
+        result_risk = db.query(
+            cast(func.avg(Item.risk), Integer).label('risk')
+        )\
+        .filter(
+            Item.id_project == id_project,
+            Item.rid_users  == rid_users
+        )\
+        .one()
+
         result_sum, result_count = _getSummary(list_sum_workload, list_sum_number, list_count)
 
         summary_user = db.query(
@@ -426,6 +435,7 @@ def createSummaryUser(db: Session, id_project: int, rid_users: int):
             summary = SummaryUser(
                 rid_users=rid_users,
                 id_project=id_project,
+                risk=0,
                 task_count_idle=0,
                 task_count_run=0,
                 task_count_alert=0,
@@ -461,6 +471,7 @@ def createSummaryUser(db: Session, id_project: int, rid_users: int):
             summary = SummaryUser(
                 rid_users=rid_users,
                 id_project=id_project,
+                risk=result_risk.risk,
                 task_count_idle=result_count['task_count_idle'],
                 task_count_run=result_count['task_count_run'],
                 task_count_alert=result_count['task_count_alert'],
@@ -492,6 +503,7 @@ def createSummaryUser(db: Session, id_project: int, rid_users: int):
             )
 
             summary.update({
+                SummaryUser.risk: result_risk.risk,
                 SummaryUser.task_count_idle: result_count['task_count_idle'],
                 SummaryUser.task_count_run: result_count['task_count_run'],
                 SummaryUser.task_count_alert: result_count['task_count_alert'],
