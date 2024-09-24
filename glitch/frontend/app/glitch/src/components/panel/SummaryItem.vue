@@ -98,7 +98,7 @@ function createChart() {
   createChartDetail(SummaryType.RISK_ALERT, list_data, max_value_alert)
 }
 
-function createChartDetail(type: SummaryType, data: SummaryItem[], max_values: number) {
+function createChartDetail(type: SummaryType, data: SummaryItem[], max_value: number) {
   const date_end = d3.max(data, (d: any) => new Date(d.date_entry)) as Date
   const date_start = new Date(date_end)
   date_start.setDate(date_end.getDate() - 21)
@@ -117,7 +117,7 @@ function createChartDetail(type: SummaryType, data: SummaryItem[], max_values: n
       svg = d3.select(`#graph-workload-${props.item.rid}`).append('svg')
       const y_workload = d3
         .scaleLinear()
-        .domain([0, (max_values as number) + 2])
+        .domain([0, (max_value as number) + 2])
         .nice()
         .range([height, 0])
       yScales = [y_workload, y_workload]
@@ -141,7 +141,7 @@ function createChartDetail(type: SummaryType, data: SummaryItem[], max_values: n
       svg = d3.select(`#graph-number-${props.item.rid}`).append('svg')
       const y_number = d3
         .scaleLinear()
-        .domain([0, (max_values as number) + 2])
+        .domain([0, (max_value as number) + 2])
         .nice()
         .range([height, 0])
       yScales = [y_number, y_number]
@@ -165,7 +165,7 @@ function createChartDetail(type: SummaryType, data: SummaryItem[], max_values: n
       svg = d3.select(`#graph-bug-${props.item.rid}`).append('svg')
       const y_bug = d3
         .scaleLinear()
-        .domain([0, (max_values as number) + 2])
+        .domain([0, (max_value as number) + 2])
         .nice()
         .range([height, 0])
       yScales = [y_bug, y_bug]
@@ -190,7 +190,7 @@ function createChartDetail(type: SummaryType, data: SummaryItem[], max_values: n
       const y_risk = d3.scaleLinear().domain([0, 1100]).nice().range([height, 0])
       const y_alert = d3
         .scaleLinear()
-        .domain([0, (max_values as number) + 2])
+        .domain([0, (max_value as number) + 2])
         .nice()
         .range([height, 0])
       yScales = [y_risk, y_alert]

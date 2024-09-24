@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { onMounted, watch } from 'vue'
+import { onMounted, watch, computed } from 'vue'
+import { useRoute } from 'vue-router'
 
 import { ItemType } from '@/types/Item'
 import useProjectStore from '@/stores/ProjectStore'
@@ -14,13 +15,17 @@ import PanelStory from '@/components/panel/PanelStory.vue'
 import PanelTask from '@/components/panel/PanelTask.vue'
 import PanelBug from '@/components/panel/PanelBug.vue'
 
+const route = useRoute()
 const store_project = useProjectStore()
 const store_item = useItemStore()
 const store_progress = useProgressStore()
 
+const rid_user = computed(() => route.params.target)
+
 onMounted(async () => {
+  store_progress.setUser(Number(rid_user.value))
   if (store_project.selected_id_project) {
-    common(store_progress.rid_users)
+    common()
   }
 })
 
@@ -28,22 +33,26 @@ watch(
   () => store_item.is_update,
   async (value_new) => {
     if (value_new) {
-      common(store_progress.rid_users)
+      common()
     }
   }
 )
 
 watch(
   () => store_progress.rid_users,
-  async (value_new) => {
-    common(value_new)
+  (rid_users) => {
+    store_progress.setUser(rid_users)
+    common()
   }
 )
 
-const common = (rid_users: number) => {
-  if (store_project.selected_id_project && rid_users) {
-    store_progress.fetchSummariesUser(store_project.selected_id_project, rid_users)
-    store_progress.fetchItems(store_project.selected_id_project, rid_users)
+const common = async () => {
+  if (store_project.selected_id_project && store_progress.rid_users) {
+    await store_progress.fetchSummariesUser(
+      store_project.selected_id_project,
+      store_progress.rid_users
+    )
+    await store_progress.fetchItems(store_project.selected_id_project, store_progress.rid_users)
   }
 }
 </script>

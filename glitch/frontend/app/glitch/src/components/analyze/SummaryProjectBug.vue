@@ -81,18 +81,20 @@ function createChartDetail(type: SummaryType, data: SummaryItem[], max_value: nu
   const height = 80
 
   const x = d3.scaleTime().domain([date_start, date_end]).range([0, width])
-  const y = d3
-    .scaleLinear()
-    .domain([0, max_value + 5])
-    .nice()
-    .range([height, 0])
 
   let svg: any
   let list_area: any[] = []
+  let yScales: any[] = []
 
   switch (type) {
-    case SummaryType.WORKLOAD:
+    case SummaryType.WORKLOAD: {
       svg = d3.select(`#graph-bug-workload`).append('svg')
+      const y_workload = d3
+        .scaleLinear()
+        .domain([0, (max_value as number) + 2])
+        .nice()
+        .range([height, 0])
+      yScales = [y_workload, y_workload]
       list_area = [
         {
           name: 'Total',
@@ -102,9 +104,16 @@ function createChartDetail(type: SummaryType, data: SummaryItem[], max_value: nu
         }
       ]
       break
+    }
 
-    case SummaryType.BUG:
+    case SummaryType.BUG: {
       svg = d3.select(`#graph-bug`).append('svg')
+      const y_bug = d3
+        .scaleLinear()
+        .domain([0, (max_value as number) + 2])
+        .nice()
+        .range([height, 0])
+      yScales = [y_bug, y_bug]
       list_area = [
         {
           name: 'Total',
@@ -120,9 +129,17 @@ function createChartDetail(type: SummaryType, data: SummaryItem[], max_value: nu
         }
       ]
       break
+    }
 
-    case SummaryType.RISK:
+    case SummaryType.RISK: {
       svg = d3.select(`#graph-alert`).append('svg')
+      const y_risk = d3.scaleLinear().domain([0, 1100]).nice().range([height, 0])
+      const y_alert = d3
+        .scaleLinear()
+        .domain([0, (max_value as number) + 2])
+        .nice()
+        .range([height, 0])
+      yScales = [y_risk, y_alert]
       list_area = [
         {
           name: 'Risk',
@@ -138,16 +155,19 @@ function createChartDetail(type: SummaryType, data: SummaryItem[], max_value: nu
         }
       ]
       break
+    }
   }
 
   svg.attr('width', width).attr('height', height).append('g')
 
-  list_area.forEach((area) => {
+  list_area.forEach((area, index) => {
+    const yScale = yScales[index]
+
     const areaPath = d3
       .area<SummaryItem>()
       .x((d: any) => x(new Date(d.date_entry)))
-      .y0(y(0))
-      .y1((d: any) => y(area.value(d)))
+      .y0(yScale(0))
+      .y1((d: any) => yScale(area.value(d)))
       .curve(d3.curveLinear)
 
     svg.append('path').datum(data).attr('fill', area.color_area).attr('d', areaPath)
@@ -155,7 +175,7 @@ function createChartDetail(type: SummaryType, data: SummaryItem[], max_value: nu
     const linePath = d3
       .line<SummaryItem>()
       .x((d: any) => x(new Date(d.date_entry)))
-      .y((d: any) => y(area.value(d)))
+      .y((d: any) => yScale(area.value(d)))
       .curve(d3.curveLinear)
 
     svg
@@ -166,6 +186,26 @@ function createChartDetail(type: SummaryType, data: SummaryItem[], max_value: nu
       .attr('stroke-width', 1.2)
       .attr('d', linePath)
   })
+
+  if (type === SummaryType.RISK) {
+    svg
+      .append('g')
+      .call(d3.axisLeft(yScales[0]).ticks(5))
+      .attr('color', '#393939')
+      .attr('stroke-width', 1)
+    svg
+      .append('g')
+      .call(d3.axisRight(yScales[1]).ticks(5))
+      .attr('transform', `translate(${width},0)`)
+      .attr('color', '#393939')
+      .attr('stroke-width', 1)
+  } else {
+    svg
+      .append('g')
+      .call(d3.axisLeft(yScales[0]).ticks(5))
+      .attr('color', '#393939')
+      .attr('stroke-width', 1)
+  }
 
   svg
     .append('g')

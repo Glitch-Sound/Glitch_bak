@@ -39,8 +39,9 @@ export function useSummaryChart(rid_users: number, chartConfigs: ChartConfig[]) 
   const value = ref<{ [key: string]: number }>({})
 
   watch(
-    () => store_progress.summaries_user.get(rid_users),
-    () => {
+    () => store_progress.rid_users,
+    (rid_users) => {
+      console.log(rid_users)
       createChart()
     }
   )
@@ -78,12 +79,9 @@ export function useSummaryChart(rid_users: number, chartConfigs: ChartConfig[]) 
     const width = 260
     const height = 80
 
+    const yDomainMax = type === SummaryType.RISK ? 1100 : max_value + 5
     const x = d3.scaleTime().domain([date_start, date_end]).range([0, width])
-    const y = d3
-      .scaleLinear()
-      .domain([0, max_value + 5])
-      .nice()
-      .range([height, 0])
+    const y = d3.scaleLinear().domain([0, yDomainMax]).nice().range([height, 0])
 
     const svg = d3
       .select(selector)
