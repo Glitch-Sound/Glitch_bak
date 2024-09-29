@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { ExtractType } from '@/types/Item'
@@ -24,6 +24,10 @@ const link_analyze = ref('/')
 const link_disabled = ref(true)
 const dialog_project = ref(false)
 const dialog_search = ref(false)
+
+onMounted(() => {
+  common()
+})
 
 const toggleDialogProject = () => {
   dialog_project.value = !dialog_project.value
