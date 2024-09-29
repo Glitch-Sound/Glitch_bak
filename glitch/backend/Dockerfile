@@ -3,6 +3,9 @@ FROM python:slim-bookworm
 ARG MODE=development
 ENV MODE=$MODE
 
+ARG BACKEND_PORT=8000
+ENV BACKEND_PORT=$BACKEND_PORT
+
 WORKDIR /app
 
 COPY ./requirements.txt /app/requirements.txt

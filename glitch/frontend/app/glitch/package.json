@@ -6,12 +6,12 @@
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
+    "start": "vite preview --host 0.0.0.0 --port 5173",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-    "format": "prettier --write src/",
-    "start": "vite preview --host 0.0.0.0 --port $FRONTEND_PORT"
+    "format": "prettier --write src/"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
