@@ -13,7 +13,13 @@ export const useDialog = (props: any, emits: any) => {
     required: (value: string) => !!value || 'Required field',
     alphanumeric: (value: string) =>
       /^[a-zA-Z0-9]+$/.test(value) || 'Please use alphanumeric characters only',
-    numeric: (value: string) => /^[0-9]+$/.test(value) || 'Please use numbers only'
+    numeric: (value: string) => /^[0-9]+$/.test(value) || 'Please use numbers only',
+    username: (value: string) =>
+      /^[a-zA-Z0-9\-_. ]+$/.test(value) ||
+      'Only letters, numbers, hyphens, underscores, dots, and spaces are allowed',
+    password: (value: string) =>
+      /^[a-zA-Z0-9\-_.]+$/.test(value) ||
+      'Only letters, numbers, hyphens, underscores, and dots are allowed'
   }
 
   const submitData = () => {

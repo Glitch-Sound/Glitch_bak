@@ -1,3 +1,5 @@
+version: '3'
+
 services:
 
   frontend:
@@ -10,7 +12,7 @@ services:
       - /app/glitch/node_modules
     tty: true
     stdin_open: true
-    depends_on: 
+    depends_on:
       - backend
 
   backend:
@@ -22,3 +24,17 @@ services:
       - ./backend/app:/app
     tty: true
     stdin_open: true
+
+  nginx:
+    build: ./nginx
+    container_name: glitch_nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - frontend
+      - backend
+    environment:
+      - FRONTEND_PATH=${FRONTEND_PATH}
+      - DISABLE_CACHE=${DISABLE_CACHE}

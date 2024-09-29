@@ -25,14 +25,14 @@ const { dialog, valid, data_form, ref_form, rules, submitData } = useDialog(prop
         <v-form ref="ref_form" v-model="valid" lazy-validation>
           <v-text-field
             v-model="data_form.user"
-            :rules="[rules.required, rules.alphanumeric]"
+            :rules="[rules.required, rules.password]"
             label="User"
             required
           />
 
           <v-text-field
             v-model="data_form.password"
-            :rules="[rules.required, rules.alphanumeric]"
+            :rules="[rules.required, rules.password]"
             label="Password"
             type="password"
             required

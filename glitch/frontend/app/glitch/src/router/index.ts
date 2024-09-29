@@ -9,8 +9,10 @@ import SettingMainView from '@/views/setting/SettingMainView.vue'
 import SettingUserView from '@/views/setting/SettingUserView.vue'
 import SettingProjectView from '@/views/setting/SettingProjectView.vue'
 
+const base = import.meta.env.VITE_APP_BASE_URL || '/'
+
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(base),
   routes: [
     {
       path: '/',

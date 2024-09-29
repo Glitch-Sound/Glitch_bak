@@ -1,0 +1,5 @@
+# dev.
+docker compose --env-file .env.development up --build
+
+# prod.
+docker compose --env-file .env.production up --build
