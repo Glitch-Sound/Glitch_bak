@@ -1,14 +1,17 @@
 FROM node:lts-buster-slim
 
+ARG MODE=development
+ENV NODE_ENV=$MODE
+
 WORKDIR /app/glitch
 
 COPY ./app/glitch/package*.json ./
 
-RUN apt-get update && \
-    apt-get install -y build-essential && \
-    npm install -g npm && \
-    npm install
+RUN npm install
 
-COPY ./app/glitch .
+COPY ./app/glitch ./
 
-CMD ["npm", "run", "dev"]
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
