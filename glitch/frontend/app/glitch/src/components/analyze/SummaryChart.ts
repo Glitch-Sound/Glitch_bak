@@ -37,14 +37,17 @@ export function useSummaryChart(
   rid_users: number,
   chartConfigs: ChartConfig[]
 ) {
-  if (!id_project) {
-    return
-  }
-
   const store_progress = useProgressStore()
 
   const is_enable = ref<{ [key: string]: boolean }>({})
   const value = ref<{ [key: string]: number }>({})
+
+  if (!id_project) {
+    return {
+      is_enable,
+      value
+    }
+  }
 
   createChart(id_project, rid_users)
 
