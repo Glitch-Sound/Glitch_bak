@@ -70,10 +70,16 @@ const common = async () => {
 
         <v-col cols="auto">
           <div class="title">Summary Item</div>
-          <SummaryUserTask :rid_users="store_progress.rid_users" />
+          <SummaryUserTask
+            :id_project="store_project.selected_id_project"
+            :rid_users="store_progress.rid_users"
+          />
 
           <div class="title">Summary Bug & Alert</div>
-          <SummaryUserBug :rid_users="store_progress.rid_users" />
+          <SummaryUserBug
+            :id_project="store_project.selected_id_project"
+            :rid_users="store_progress.rid_users"
+          />
         </v-col>
       </v-row>
 

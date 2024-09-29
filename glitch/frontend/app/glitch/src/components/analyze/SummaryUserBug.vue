@@ -8,6 +8,7 @@ import type { SummaryItem } from '@/types/Summary'
 import { useSummaryChart, SummaryType } from '@/components/analyze/SummaryChart'
 
 const props = defineProps<{
+  id_project: number | null
   rid_users: number
 }>()
 
@@ -77,7 +78,7 @@ const chartConfigs = [
   }
 ]
 
-const { is_enable, value } = useSummaryChart(props.rid_users, chartConfigs)
+const { is_enable, value } = useSummaryChart(props.id_project, props.rid_users, chartConfigs)
 </script>
 
 <template>

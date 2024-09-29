@@ -32,21 +32,31 @@ interface ChartConfig {
   list_area: ChartArea[]
 }
 
-export function useSummaryChart(rid_users: number, chartConfigs: ChartConfig[]) {
+export function useSummaryChart(
+  id_project: number | null,
+  rid_users: number,
+  chartConfigs: ChartConfig[]
+) {
+  if (!id_project) {
+    return
+  }
+
   const store_progress = useProgressStore()
 
   const is_enable = ref<{ [key: string]: boolean }>({})
   const value = ref<{ [key: string]: number }>({})
 
+  createChart(id_project, rid_users)
+
   watch(
     () => store_progress.rid_users,
-    (rid_users) => {
-      console.log(rid_users)
-      createChart()
+    (value_new) => {
+      createChart(id_project, value_new)
     }
   )
 
-  function createChart() {
+  async function createChart(id_project: number, rid_users: number) {
+    await store_progress.fetchSummariesUser(id_project, rid_users)
     const list_data = store_progress.summaries_user.get(rid_users)
     if (!list_data || list_data.length === 0) {
       return
