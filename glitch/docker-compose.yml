@@ -6,7 +6,9 @@ services:
     build: ./frontend
     container_name: glitch_frontend
     ports:
-      - "5173:5173"
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+    environment:
+      - FRONTEND_PORT=${FRONTEND_PORT}
     volumes:
       - ./frontend/app:/app
       - /app/glitch/node_modules
