@@ -1,57 +1,24 @@
-version: '3'
-
 services:
 
   frontend:
-    build:
-      context: ./frontend
-      args:
-        MODE: ${MODE:-development}
+    build: ./frontend
     container_name: glitch_frontend
     ports:
       - "5173:5173"
-    environment:
-      - NODE_ENV=${MODE:-development}
     volumes:
       - ./frontend/app:/app
+      - /app/glitch/node_modules
     tty: true
     stdin_open: true
-    depends_on:
+    depends_on: 
       - backend
 
   backend:
-    build:
-      context: ./backend
-      args:
-        MODE: ${MODE:-development}
+    build: ./backend
     container_name: glitch_backend
     ports:
       - "8000:8000"
-    environment:
-      - BACKEND_PORT=8000
-      - MODE=${MODE:-development}
     volumes:
       - ./backend/app:/app
-    tty: true
-    stdin_open: true
-
-  nginx:
-    build:
-      context: ./nginx
-      args:
-        MODE: ${MODE:-development}
-    container_name: glitch_nginx
-    ports:
-      - "8888:80"
-    depends_on:
-      - frontend
-      - backend
-    environment:
-      - FRONTEND_HOST=frontend
-      - BACKEND_HOST=backend
-      - MODE=${MODE:-development}
-    volumes:
-      - ./nginx/templates:/etc/nginx/templates
-      - ./nginx/entrypoint.sh:/entrypoint.sh
     tty: true
     stdin_open: true
