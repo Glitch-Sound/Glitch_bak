@@ -1,3 +1,4 @@
+from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 import sys
@@ -9,7 +10,7 @@ from model.activity import Activity
 from model.user import User
 
 
-def getActivities(db: Session, rid_items: int):
+def getActivities(db: Session, rid_items: int, search_query: str = None):
     try:
         query = db.query(
             Activity.rid,
@@ -23,9 +24,15 @@ def getActivities(db: Session, rid_items: int):
         .filter(
             Activity.is_deleted == 0,
             Activity.rid_items == rid_items
-        )\
-        .order_by(Activity.rid)
+        )
 
+        if search_query:
+            fts_query = text("""
+                SELECT rowid FROM activities_fts WHERE activities_fts.activity MATCH :search_query
+            """)
+            query = query.filter(Activity.rid.in_(fts_query)).params(search_query=search_query)
+
+        query = query.order_by(Activity.rid)
         result = query.all()
         return result
 

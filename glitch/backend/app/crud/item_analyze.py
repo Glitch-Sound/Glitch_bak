@@ -186,11 +186,6 @@ def _setRiskItem(db: Session, rid_item: int, datetime_limit: str, datetime_curre
         risk         += tmp_risk
         risk_factors |= tmp_risk_factors
 
-        # TODO:delete
-        print(risk)
-        print(bin(risk_factors))
-
-
         target_item = db.query(
             Item
         )\
@@ -228,34 +223,6 @@ def _setRiskParent(db: Session, rid_item: int):
         raise e
 
 
-def _setRiskStory(db: Session, rid_item: int):
-    pass
-
-
-def _setRiskFeature(db: Session, rid_item: int):
-    try:
-        print(rid_item)
-
-    except Exception as e:
-        raise e
-
-
-def _setRiskEvent(db: Session, rid_item: int):
-    try:
-        print(rid_item)
-
-    except Exception as e:
-        raise e
-
-
-def _setRiskProject(db: Session, rid_item: int):
-    try:
-        print(rid_item)
-
-    except Exception as e:
-        raise e
-
-
 def _setRiskParents(db: Session, rid_item: int):
     try:
         result = db.query(
@@ -282,16 +249,11 @@ def _setRiskParents(db: Session, rid_item: int):
 
 def analyzeItem(db: Session, rid_item: int):
     try:
-        print('----------------- analyze start')
-
         datetime_limit   = _getDateLimit(db, rid_item)
         datetime_current = getCurrentDatetime()
 
         _setRiskItem(db, rid_item, datetime_limit, datetime_current)
-
         _setRiskParents(db, rid_item)
-
-        print('----------------- analyze end')
 
     except Exception as e:
         raise e
