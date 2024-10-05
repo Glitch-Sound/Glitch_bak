@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: ./nginx/Dockerfile
+    container_name: nginx_proxy
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - webnet
+
+networks:
+  webnet:

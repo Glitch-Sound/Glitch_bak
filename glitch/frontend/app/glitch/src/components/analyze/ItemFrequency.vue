@@ -53,11 +53,11 @@ function createCalendar() {
   const max_bug = d3.max(store_analyze.items_frequency, (d: ItemFrequency) => d.bug_count)
 
   const color_scale_task = d3
-    .scaleQuantize()
+    .scaleQuantize<string>()
     .domain([0, max_task || 1])
     .range(colors_task)
   const color_scale_bug = d3
-    .scaleQuantize()
+    .scaleQuantize<string>()
     .domain([0, max_bug || 1])
     .range(colors_bug)
 

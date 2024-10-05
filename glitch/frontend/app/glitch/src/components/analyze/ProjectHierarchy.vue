@@ -17,16 +17,30 @@ onMounted(async () => {
   createSunburstChart()
 })
 
+interface HierarchyData {
+  rid: number
+  rid_users: number
+  name: string
+  title: string
+  workload_task?: number
+  workload_bug?: number
+  children?: HierarchyData[]
+}
+
 function createSunburstChart() {
   const width = 350
   const radius = 150
   const radius_ratio_inncer = 0.6
-  const partition = d3.partition().size([2 * Math.PI, radius * (1 - radius_ratio_inncer)])
+  const partition = d3
+    .partition<HierarchyData>()
+    .size([2 * Math.PI, radius * (1 - radius_ratio_inncer)])
 
   const root = d3
-    .hierarchy(store_progress.hierarchy)
-    .sum((d: any) => d.workload_task + d.workload_bug)
-    .sort((a: any, b: any) => b.value - a.value)
+    .hierarchy<HierarchyData>(store_progress.hierarchy as HierarchyData)
+    .sum((d: HierarchyData) => (d.workload_task || 0) + (d.workload_bug || 0))
+    .sort((a: d3.HierarchyNode<HierarchyData>, b: d3.HierarchyNode<HierarchyData>) => {
+      return (b.value || 0) - (a.value || 0)
+    })
 
   partition(root)
 

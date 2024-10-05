@@ -172,7 +172,16 @@ function createChartDetail(type: SummaryType, data: SummaryItem[], max_value: nu
   svg
     .append('g')
     .call(
-      d3.axisBottom(x).ticks(d3.timeDay.every(1)).tickFormat(d3.timeFormat('%m-%d')).tickSize(0)
+      d3
+        .axisBottom(x)
+        .ticks(d3.timeDay.every(1))
+        .tickFormat((domainValue: Date | d3.NumberValue) => {
+          if (domainValue instanceof Date) {
+            return d3.timeFormat('%m-%d')(domainValue)
+          }
+          return String(domainValue)
+        })
+        .tickSize(0)
     )
     .attr('transform', `translate(0,${height})`)
     .attr('color', '#393939')

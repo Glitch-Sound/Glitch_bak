@@ -117,7 +117,10 @@ function createGanttChart() {
       const width_calculated = x(d.datetime_end) - x(d.datetime_start)
       return width_calculated === 0 ? x(d.datetime_start) - width_bat_min : x(d.datetime_start)
     })
-    .attr('y', (d: any) => y(d.rid + ':' + d.title))
+    .attr('y', (d: any) => {
+      const yValue = y(d.rid + ':' + d.title)
+      return yValue !== undefined ? yValue : 0
+    })
     .attr('width', (d: any) => {
       const width = x(d.datetime_end) - x(d.datetime_start)
       return width === 0 ? width_bat_min : Math.max(width, width_bat_min)
