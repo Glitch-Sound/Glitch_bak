@@ -1,4 +1,4 @@
-from sqlalchemy import select, distinct, and_, or_, func, case
+from sqlalchemy import select, distinct, and_, or_, func, case, text
 from sqlalchemy.orm import Session, aliased
 from sqlalchemy.sql import func
 
@@ -122,7 +122,7 @@ def _updateItem(db: Session, target: ItemUpdateCommon):
                 Item.state: target.state,
                 Item.rid_users: target.rid_users,
                 Item.rid_users_review: target.rid_users_review,
-                Item.title: target.title,
+                Item.title:  target.title,
                 Item.detail: target.detail,
                 Item.result: target.result,
                 Item.datetime_update: datetime_current
@@ -240,19 +240,42 @@ def _extructItem(db: Session, params: ItemParam):
                 cte_extruct = cte_extruct_ancestor.union(cte_extruct_descendant)
 
             case ExtractType.SEARCH.value:
+                fts_query_title = text("""
+                    SELECT rowid FROM items_fts WHERE items_fts.title MATCH :search_query
+                """)
+                fts_query_detail = text("""
+                    SELECT rowid FROM items_fts WHERE items_fts.detail MATCH :search_query
+                """)
+                fts_query_result= text("""
+                    SELECT rowid FROM items_fts WHERE items_fts.result MATCH :search_query
+                """)
+
                 subquery_target = (
                     select(Item.rid)
                     .where(
                         and_(
                             Item.id_project == params.id_project,
                             or_(
-                                Item.title.like(f"%{params.search}%"),
-                                Item.detail.like(f"%{params.search}%"),
-                                Item.result.like(f"%{params.search}%")
+                                Item.rid.in_(fts_query_title),
+                                Item.rid.in_(fts_query_detail),
+                                Item.rid.in_(fts_query_result)
                             )
                         )
                     )
-                ).subquery()
+                )\
+                .params(search_query=params.search)\
+                .subquery()
+
+
+
+                # Item.title.like(f"%{params.search}%"),
+                # Item.detail.like(f"%{params.search}%"),
+                # Item.result.like(f"%{params.search}%")
+                # fts_query = text("""
+                #     SELECT rowid FROM activities_fts WHERE activities_fts.activity MATCH :search_query
+                # """)
+                # query = query.filter(Activity.rid.in_(fts_query)).params(search_query=search_query)
+
 
                 cte_extruct = db.query(
                     distinct(Tree.rid_ancestor).label('rid')
@@ -438,6 +461,7 @@ def createProject(db: Session, target: schema_item.ProjectCreate):
             type=ItemType.PROJECT.value,
             title=target.title,
             detail=target.detail,
+            result='',
             datetime_entry=datetime_current,
             datetime_update=datetime_current
         )
@@ -521,6 +545,7 @@ def createEvent(db: Session, target:schema_item.EventCreate):
             type=ItemType.EVENT.value,
             title=target.title,
             detail=target.detail,
+            result='',
             datetime_entry=datetime_current,
             datetime_update=datetime_current
         )
@@ -599,6 +624,7 @@ def createFeature(db: Session, target:schema_item.FeatureCreate):
             type=ItemType.FEATURE.value,
             title=target.title,
             detail=target.detail,
+            result='',
             datetime_entry=datetime_current,
             datetime_update=datetime_current
         )
@@ -667,6 +693,7 @@ def createStory(db: Session, target:schema_item.StoryCreate):
             type=ItemType.STORY.value,
             title=target.title,
             detail=target.detail,
+            result='',
             datetime_entry=datetime_current,
             datetime_update=datetime_current
         )
@@ -749,6 +776,7 @@ def createTask(db: Session, target:schema_item.TaskCreate):
             type=ItemType.TASK.value,
             title=target.title,
             detail=target.detail,
+            result='',
             datetime_entry=datetime_current,
             datetime_update=datetime_current
         )
@@ -869,6 +897,7 @@ def createBug(db: Session, target:schema_item.BugCreate):
             type=ItemType.BUG.value,
             title=target.title,
             detail=target.detail,
+            result='',
             datetime_entry=datetime_current,
             datetime_update=datetime_current
         )
