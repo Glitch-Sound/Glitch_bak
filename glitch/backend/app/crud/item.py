@@ -786,7 +786,7 @@ def createTask(db: Session, target:schema_item.TaskCreate):
         db.flush()
 
         analyzeItem(db, item.rid)
-        createSummaryItem(db, item.rid)
+        createSummaryItem(db, target.id_project, item.rid)
         createSummaryUser(db, target.id_project, target.rid_users)
         db.commit()
 
@@ -831,7 +831,7 @@ def updateTask(db: Session, target:schema_item.TaskUpdate):
         .filter(Item.rid == target.rid)
 
         analyzeItem(db, target.rid)
-        createSummaryItem(db, item.rid)
+        createSummaryItem(db, id_project, item.rid)
         createSummaryUser(db, id_project, target.rid_users)
         db.commit()
 
@@ -904,7 +904,7 @@ def createBug(db: Session, target:schema_item.BugCreate):
         db.flush()
 
         analyzeItem(db, item.rid)
-        createSummaryItem(db, item.rid)
+        createSummaryItem(db, target.id_project, item.rid)
         createSummaryUser(db, target.id_project, target.rid_users)
         db.commit()
 
@@ -946,7 +946,7 @@ def updateBug(db: Session, target:schema_item.BugUpdate):
         .filter(Item.rid == target.rid)
 
         analyzeItem(db, target.rid)
-        createSummaryItem(db, item.rid)
+        createSummaryItem(db, id_project, item.rid)
         createSummaryUser(db, id_project, target.rid_users)
         db.commit()
 
@@ -1177,3 +1177,13 @@ def getFrequency(db: Session, id_project):
 
     except Exception as e:
         raise e
+
+
+def scheduledTask():
+    print('----------------------------------------------------------------')
+    print('----------------------------------------------------------------')
+    print('----------------------------------------------------------------')
+    print("毎日夜中0時に定期実行されるタスク")
+    print('----------------------------------------------------------------')
+    print('----------------------------------------------------------------')
+    print('----------------------------------------------------------------')

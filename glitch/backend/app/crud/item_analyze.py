@@ -14,7 +14,6 @@ from model.story import Story
 from model.task import Task
 from model.bug import Bug
 from model.user import User
-from model.summary_item import SummaryItem
 
 
 import jpholiday

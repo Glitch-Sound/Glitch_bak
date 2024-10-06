@@ -39,7 +39,7 @@ def getSummariesProject(db: Session, id_project: int):
             SummaryItem.bug_workload_total,
             SummaryItem.date_entry
         )\
-        .filter(SummaryUser.id_project == id_project)\
+        .filter(SummaryItem.id_project == id_project)\
         .order_by(SummaryItem.date_entry)
 
         result = query.all()
@@ -203,7 +203,7 @@ def _getSummary(list_sum_workload: any, list_sum_number: any, list_count: any):
     return result_sum, result_count
 
 
-def createSummaryItem(db: Session, rid_target: int):
+def createSummaryItem(db: Session, id_project: int, rid_target: int):
     try:
         trees = db.query(
             Tree
@@ -278,6 +278,7 @@ def createSummaryItem(db: Session, rid_target: int):
             if not summary_item:
                 date_previous = getPreviousDate()
                 summary = SummaryItem(
+                    id_project=id_project,
                     rid_items=tree.rid_ancestor,
                     risk=0,
                     task_count_idle=0,
@@ -311,6 +312,7 @@ def createSummaryItem(db: Session, rid_target: int):
 
             if not summary_item:
                 summary = SummaryItem(
+                    id_project=id_project,
                     rid_items=tree.rid_ancestor,
                     risk=result_risk.risk,
                     task_count_idle=result_count['task_count_idle'],
