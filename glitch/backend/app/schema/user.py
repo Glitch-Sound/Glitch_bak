@@ -8,7 +8,7 @@ class User(BaseModel):
     is_admin: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class UserCreate(BaseModel):
@@ -18,7 +18,7 @@ class UserCreate(BaseModel):
     is_admin: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class UserUpdate(BaseModel):
@@ -29,7 +29,7 @@ class UserUpdate(BaseModel):
     is_admin: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class Login(BaseModel):
@@ -37,4 +37,4 @@ class Login(BaseModel):
     password: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True

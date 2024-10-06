@@ -187,7 +187,7 @@ def _extructItem(db: Session, params: ItemParam):
                 cte_extruct = db.query(
                     distinct(Tree.rid_descendant).label('rid')
                 )\
-                .where(Tree.rid_descendant.in_(subquery_target))
+                .where(Tree.rid_descendant.in_(select(subquery_target)))
 
             case ExtractType.HIGH_RISK.value:
                 subquery_target = (
@@ -202,7 +202,7 @@ def _extructItem(db: Session, params: ItemParam):
                     distinct(Tree.rid_ancestor).label('rid')
 
                 )\
-                .where(Tree.rid_descendant.in_(subquery_target))
+                .where(Tree.rid_descendant.in_(select(subquery_target)))
 
             case ExtractType.ALERT.value:
                 subquery_target = (
@@ -214,7 +214,7 @@ def _extructItem(db: Session, params: ItemParam):
                     distinct(Tree.rid_ancestor).label('rid')
 
                 )\
-                .where(Tree.rid_descendant.in_(subquery_target))
+                .where(Tree.rid_descendant.in_(select(subquery_target)))
 
             case ExtractType.ASSIGNMENT.value:
                 subquery_target = (
@@ -225,7 +225,7 @@ def _extructItem(db: Session, params: ItemParam):
                 cte_extruct = db.query(
                     distinct(Tree.rid_ancestor).label('rid')
                 )\
-                .where(Tree.rid_descendant.in_(subquery_target))
+                .where(Tree.rid_descendant.in_(select(subquery_target)))
 
             case ExtractType.RELATION.value:
                 cte_extruct_ancestor = db.query(
@@ -266,21 +266,10 @@ def _extructItem(db: Session, params: ItemParam):
                 .params(search_query=params.search)\
                 .subquery()
 
-
-
-                # Item.title.like(f"%{params.search}%"),
-                # Item.detail.like(f"%{params.search}%"),
-                # Item.result.like(f"%{params.search}%")
-                # fts_query = text("""
-                #     SELECT rowid FROM activities_fts WHERE activities_fts.activity MATCH :search_query
-                # """)
-                # query = query.filter(Activity.rid.in_(fts_query)).params(search_query=search_query)
-
-
                 cte_extruct = db.query(
                     distinct(Tree.rid_ancestor).label('rid')
                 )\
-                .where(Tree.rid_descendant.in_(subquery_target))
+                .where(Tree.rid_descendant.in_(select(subquery_target)))
 
             case ExtractType.ANCESTOR.value:
                 cte_extruct = db.query(
@@ -302,7 +291,7 @@ def _extructItem(db: Session, params: ItemParam):
                 cte_extruct = db.query(
                     distinct(Tree.rid_ancestor).label('rid')
                 )\
-                .where(Tree.rid_descendant.in_(subquery_target))
+                .where(Tree.rid_descendant.in_(select(subquery_target)))
 
         return cte_extruct.cte(name='targets')
 

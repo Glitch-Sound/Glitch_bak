@@ -24,7 +24,7 @@ class SummaryItem(BaseModel):
     date_entry: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class SummaryUser(BaseModel):
@@ -52,4 +52,4 @@ class SummaryUser(BaseModel):
     date_entry: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True

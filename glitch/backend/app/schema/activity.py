@@ -11,7 +11,7 @@ class Activity(BaseModel):
     name: Optional[str] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class ActivityCreate(BaseModel):
@@ -20,7 +20,7 @@ class ActivityCreate(BaseModel):
     activity: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class ActivityUpdate(BaseModel):
@@ -28,4 +28,4 @@ class ActivityUpdate(BaseModel):
     activity: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True

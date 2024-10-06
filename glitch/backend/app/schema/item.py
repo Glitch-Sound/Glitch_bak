@@ -6,7 +6,7 @@ class RID(BaseModel):
     rid: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class Item(BaseModel):
@@ -38,7 +38,7 @@ class Item(BaseModel):
     bug_workload: Optional[int] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class Project(BaseModel):
@@ -58,7 +58,7 @@ class Project(BaseModel):
     project_datetime_end: Optional[str] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class ProjectCreate(BaseModel):
@@ -69,7 +69,7 @@ class ProjectCreate(BaseModel):
     datetime_end: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class ProjectUpdate(BaseModel):
@@ -84,7 +84,7 @@ class ProjectUpdate(BaseModel):
     datetime_end: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class EventCreate(BaseModel):
@@ -96,7 +96,7 @@ class EventCreate(BaseModel):
     datetime_end: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class EventUpdate(BaseModel):
@@ -110,7 +110,7 @@ class EventUpdate(BaseModel):
     datetime_end: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class FeatureCreate(BaseModel):
@@ -121,7 +121,7 @@ class FeatureCreate(BaseModel):
     detail: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class FeatureUpdate(BaseModel):
@@ -134,7 +134,7 @@ class FeatureUpdate(BaseModel):
     result: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class StoryCreate(BaseModel):
@@ -147,7 +147,7 @@ class StoryCreate(BaseModel):
     datetime_end: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class StoryUpdate(BaseModel):
@@ -162,7 +162,7 @@ class StoryUpdate(BaseModel):
     datetime_end: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class TaskCreate(BaseModel):
@@ -177,7 +177,7 @@ class TaskCreate(BaseModel):
     number_total: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class TaskUpdate(BaseModel):
@@ -194,7 +194,7 @@ class TaskUpdate(BaseModel):
     number_total: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class TaskPriorityUpdate(BaseModel):
@@ -202,7 +202,7 @@ class TaskPriorityUpdate(BaseModel):
     priority: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class BugCreate(BaseModel):
@@ -214,7 +214,7 @@ class BugCreate(BaseModel):
     workload: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class BugUpdate(BaseModel):
@@ -228,7 +228,7 @@ class BugUpdate(BaseModel):
     workload: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class BugPriorityUpdate(BaseModel):
@@ -236,7 +236,7 @@ class BugPriorityUpdate(BaseModel):
     priority: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class ItemRange(BaseModel):
@@ -248,7 +248,7 @@ class ItemRange(BaseModel):
     datetime_end: str
 
     class Config:
-        orm_mode = True 
+        from_attributes = True 
 
 
 class ItemHierarchy(BaseModel):
@@ -262,7 +262,7 @@ class ItemHierarchy(BaseModel):
     children: Optional[List['ItemHierarchy']] = None
 
     class Config:
-        orm_mode = True 
+        from_attributes = True 
 
 
 class ItemFrequency(BaseModel):
@@ -271,4 +271,4 @@ class ItemFrequency(BaseModel):
     bug_count: int
 
     class Config:
-        orm_mode = True 
+        from_attributes = True 
