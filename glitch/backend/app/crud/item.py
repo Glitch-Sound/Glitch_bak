@@ -1179,11 +1179,43 @@ def getFrequency(db: Session, id_project):
         raise e
 
 
-def scheduledTask():
-    print('----------------------------------------------------------------')
-    print('----------------------------------------------------------------')
-    print('----------------------------------------------------------------')
-    print("毎日夜中0時に定期実行されるタスク")
-    print('----------------------------------------------------------------')
-    print('----------------------------------------------------------------')
-    print('----------------------------------------------------------------')
+def updateSummary(db: Session):
+    try:
+        db.begin()
+
+        targets_item = db.query(
+            Items.rid,
+            Items.id_project
+        )\
+        .filter(
+            Item.is_deleted == 0,
+            Item.type.in_([5, 6]),
+            Item.state != ItemState.COMPLETE.value,
+        )\
+        .all()
+
+        for target in targets_item:
+            createSummaryItem(db, target.id_project, target.rid)
+
+        targets_user = db.query(
+            Items.id_project,
+            Items.rid_users
+        )\
+        .filter(
+            Item.is_deleted == 0,
+            Item.type.in_([5, 6]),
+            Item.state != ItemState.COMPLETE.value,
+        )\
+        .group_by(
+            Items.id_project,
+            Items.rid_users
+        )\
+        .all()
+
+        for target in targets_user:
+            createSummaryUser(db, target.id_project, target.rid_users)
+
+        db.commit()
+
+    except Exception as e:
+        raise e

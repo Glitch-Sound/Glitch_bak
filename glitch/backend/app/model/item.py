@@ -47,4 +47,5 @@ class Item(Base):
         Index('idx_items_01', 'is_deleted', 'type', 'rid'),
         Index('idx_items_02', 'is_deleted', 'rid', 'path_sort', 'priority'),
         Index('idx_items_03', 'is_deleted', 'id_project', 'datetime_entry'),
+        Index('idx_items_04', 'is_deleted', 'type', 'state'),
     )

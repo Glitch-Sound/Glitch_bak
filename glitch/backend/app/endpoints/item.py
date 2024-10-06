@@ -8,10 +8,20 @@ sys.path.append('~/app')
 from database import get_db
 from schema import item as schema_item
 from crud import item as crud_item
-from crud.item import ItemParam, ExtractType
+from crud.item import ItemParam, ExtractType, updateSummary
+from crud import item as crud_item
 
 
 router = APIRouter()
+
+def scheduledItem(db: Session = Depends(get_db)):
+    try:
+        print("scheduled task.")
+        updateSummary(db)
+
+    except Exception as e:
+        print(traceback.format_exc())
+
 
 @router.get('/item/ancestor/{target}', response_model=list[schema_item.Item])
 def get_items_relation(target: int, db: Session = Depends(get_db)):
