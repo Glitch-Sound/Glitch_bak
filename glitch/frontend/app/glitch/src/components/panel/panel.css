@@ -14,34 +14,34 @@
     padding-top: 10px;
 }
 
+.state {
+    width: 105px;
+    text-align: center;
+}
+
 .type {
-    width: 115px;
+    width: 150px;
     margin: 0;
 }
 
-.type-event {
+.type-event, .title-event {
     padding-left: 0px;
 }
 
-.type-feature {
-    padding-left: 40px;
+.type-feature, .title-feature {
+    padding-left: 35px;
 }
 
-.type-story {
+.type-story, .title-story {
     padding-left: 60px;
 }
 
-.type-task {
-    padding-left: 85px;
+.type-task, .title-task {
+    padding-left: 90px;
 }
 
-.type-bug {
-    padding-left: 85px;
-}
-
-.state {
-    width: 130px;
-    text-align: center;
+.type-bug, .title-bug {
+    padding-left: 90px;
 }
 
 .information {

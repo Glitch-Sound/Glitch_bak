@@ -90,6 +90,5 @@ const handleSubmit = async (id_project: number) => {
 
 .title {
   color: #ffffff;
-  font-weight: bold;
 }
 </style>

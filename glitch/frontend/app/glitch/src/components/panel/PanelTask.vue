@@ -25,15 +25,15 @@ const openDialog = () => {
 <template>
   <div class="panel-common">
     <v-row class="align-baseline">
-      <v-col class="type type-task" cols="auto">
-        <TypeLabel :item="props.item" />
-      </v-col>
-
       <v-col class="state" cols="auto">
         <StateLabel :state="props.item.state" />
       </v-col>
 
-      <v-col @click="expand = !expand">
+      <v-col class="type type-task" cols="auto">
+        <TypeLabel :item="props.item" />
+      </v-col>
+
+      <v-col class="title-task" @click="expand = !expand">
         <TitleLabel :item="props.item" />
       </v-col>
 

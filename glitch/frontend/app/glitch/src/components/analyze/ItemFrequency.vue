@@ -42,8 +42,9 @@ function createCalendar() {
 
   format_time = d3.timeFormat('%Y-%m-%d')
 
-  const date_end = new Date(2024, 8, 30)
-  const date_start = new Date(date_end.getFullYear() - 1, date_end.getMonth(), 1)
+  const date_end = new Date()
+  date_end.setMonth(date_end.getMonth() + 1)
+  const date_start = d3.timeYear.offset(date_end, -1)
   const days = d3.timeDays(date_start, date_end)
 
   const colors_task = ['rgba(0, 0, 255, 0.2)', 'rgba(0, 0, 255, 0.8)']
@@ -82,7 +83,6 @@ function createCalendar() {
     .attr('width', size_cell)
     .attr('height', size_cell)
     .attr('x', (d: any) => {
-      const date_start = new Date(2023, 9, 1)
       const count_week = d3.timeWeek.count(date_start, d)
       return count_week * (size_cell + padding)
     })

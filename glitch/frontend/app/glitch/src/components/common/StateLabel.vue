@@ -10,7 +10,7 @@ const props = defineProps<{
 
 <template>
   <v-chip
-    size="small"
+    size="x-small"
     class="mx-1"
     :value="ItemState.IDLE"
     v-if="props.state == ItemState.IDLE"
@@ -21,7 +21,7 @@ const props = defineProps<{
   </v-chip>
 
   <v-chip
-    size="small"
+    size="x-small"
     class="mx-1"
     :value="ItemState.RUN"
     v-if="props.state == ItemState.RUN"
@@ -32,7 +32,7 @@ const props = defineProps<{
   </v-chip>
 
   <v-chip
-    size="small"
+    size="x-small"
     class="mx-1"
     :value="ItemState.ALERT"
     v-if="props.state == ItemState.ALERT"
@@ -43,7 +43,7 @@ const props = defineProps<{
   </v-chip>
 
   <v-chip
-    size="small"
+    size="x-small"
     class="mx-1"
     :value="ItemState.REVIEW"
     v-if="props.state == ItemState.REVIEW"
@@ -54,7 +54,7 @@ const props = defineProps<{
   </v-chip>
 
   <v-chip
-    size="small"
+    size="x-small"
     class="mx-1"
     :value="ItemState.COMPLETE"
     v-if="props.state == ItemState.COMPLETE"

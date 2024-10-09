@@ -45,15 +45,15 @@ const handleSubmit = (data: FeatureCreate) => {
 <template>
   <div class="panel-common panel-event">
     <v-row class="align-baseline">
-      <v-col class="type" cols="auto">
-        <TypeLabel :item="props.item" />
-      </v-col>
-
       <v-col class="state" cols="auto">
         <StateLabel :state="props.item.state" />
       </v-col>
 
-      <v-col @click="expand = !expand">
+      <v-col class="type" cols="auto">
+        <TypeLabel :item="props.item" />
+      </v-col>
+
+      <v-col class="title-event" @click="expand = !expand">
         <TitleLabel :item="props.item" />
       </v-col>
 

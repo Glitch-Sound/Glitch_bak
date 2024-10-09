@@ -16,7 +16,9 @@ router = APIRouter()
 
 def scheduledItem(db: Session = Depends(get_db)):
     try:
+        print('----------------------------------')
         print("scheduled task.")
+        print('----------------------------------')
         updateSummary(db)
 
     except Exception as e:
