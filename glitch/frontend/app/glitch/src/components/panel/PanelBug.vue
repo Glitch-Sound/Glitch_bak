@@ -3,12 +3,14 @@ import { ref, defineProps } from 'vue'
 
 import type { Item } from '@/types/Item'
 import ActivityDialog from '@/components/dialog/ActivityDialog.vue'
-import TypeLabel from '@/components/common/TypeLabel.vue'
 import StateLabel from '@/components/common/StateLabel.vue'
+import TypeLabel from '@/components/common/TypeLabel.vue'
+import FireLabel from '@/components/common/FireLabel.vue'
 import TitleLabel from '@/components/common/TitleLabel.vue'
 import UserLabel from '@/components/common/UserLabel.vue'
 import InformationBug from '@/components/panel/InformationBug.vue'
 import DetailBug from '@/components/panel/DetailBug.vue'
+import { RISK_LOW } from '@/components/common/common'
 
 const props = defineProps<{
   item: Item
@@ -33,9 +35,20 @@ const openDialog = () => {
         <TypeLabel :item="props.item" />
       </v-col>
 
-      <v-col class="title-bug" @click="expand = !expand">
-        <TitleLabel :item="props.item" />
+      <v-col class="fire" cols="auto">
+        <FireLabel :item="props.item" />
       </v-col>
+
+      <template v-if="props.item.risk < RISK_LOW">
+        <v-col class="title-bug" @click="expand = !expand">
+          <TitleLabel :item="props.item" />
+        </v-col>
+      </template>
+      <template v-else>
+        <v-col class="title-bug-fire" @click="expand = !expand">
+          <TitleLabel :item="props.item" />
+        </v-col>
+      </template>
 
       <v-col cols="auto">
         <UserLabel :item="props.item" />

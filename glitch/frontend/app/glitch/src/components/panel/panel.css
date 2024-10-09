@@ -24,24 +24,56 @@
     margin: 0;
 }
 
-.type-event, .title-event {
+.type-event {
     padding-left: 0px;
 }
 
-.type-feature, .title-feature {
+.type-feature {
     padding-left: 35px;
 }
 
-.type-story, .title-story {
+.type-story {
     padding-left: 60px;
 }
 
-.type-task, .title-task {
+.type-task {
     padding-left: 90px;
 }
 
-.type-bug, .title-bug {
+.type-bug {
     padding-left: 90px;
+}
+
+.fire {
+    padding-left: 25px;
+}
+
+.title-event {
+    padding-left: 0px;
+}
+
+.title-feature {
+    padding-left: 25px;
+}
+
+.title-story {
+    padding-left: 50px;
+}
+
+.title-task {
+    padding-left: 35px;
+}
+
+.title-task-fire {
+    padding-left: 15px;
+}
+
+.title-bug {
+    padding-left: 35px;
+}
+
+.title-bug-fire {
+    padding-left: 15px;
 }
 
 .information {
@@ -55,7 +87,7 @@
 }
 
 .panel-detail-expand-detail {
-    margin-left: 110px;
+    margin-left: 100px;
     padding: 0 5px;
     display: flex;
     align-items: baseline;
