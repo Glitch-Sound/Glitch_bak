@@ -1,6 +1,7 @@
 
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
+from pytz import timezone
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -28,16 +29,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(router_item, prefix='/api')
-app.include_router(router_user, prefix='/api')
-app.include_router(router_activity, prefix='/api')
-app.include_router(router_summary, prefix='/api')
-
-
 scheduler = BackgroundScheduler()
-scheduler.add_job(scheduledItem, CronTrigger(hour=0, minute=0))
+scheduler.add_job(
+    scheduledItem, 
+    CronTrigger(hour=0, minute=0, timezone=timezone('Asia/Tokyo'))
+)
 scheduler.start()
 
 @app.on_event("shutdown")
 def shutdown_event():
     scheduler.shutdown()
+
+app.include_router(router_item, prefix='/api')
+app.include_router(router_user, prefix='/api')
+app.include_router(router_activity, prefix='/api')
+app.include_router(router_summary, prefix='/api')

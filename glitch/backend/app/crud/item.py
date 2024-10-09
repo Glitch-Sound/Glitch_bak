@@ -1184,8 +1184,8 @@ def updateSummary(db: Session):
         db.begin()
 
         targets_item = db.query(
-            Items.rid,
-            Items.id_project
+            Item.rid,
+            Item.id_project
         )\
         .filter(
             Item.is_deleted == 0,
@@ -1198,8 +1198,8 @@ def updateSummary(db: Session):
             createSummaryItem(db, target.id_project, target.rid)
 
         targets_user = db.query(
-            Items.id_project,
-            Items.rid_users
+            Item.id_project,
+            Item.rid_users
         )\
         .filter(
             Item.is_deleted == 0,
@@ -1207,8 +1207,8 @@ def updateSummary(db: Session):
             Item.state != ItemState.COMPLETE.value,
         )\
         .group_by(
-            Items.id_project,
-            Items.rid_users
+            Item.id_project,
+            Item.rid_users
         )\
         .all()
 

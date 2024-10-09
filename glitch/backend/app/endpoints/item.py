@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 import sys
 sys.path.append('~/app')
 
-from database import get_db
+from database import get_db, SessionLocal  
 from schema import item as schema_item
 from crud import item as crud_item
 from crud.item import ItemParam, ExtractType, updateSummary
@@ -14,11 +14,9 @@ from crud import item as crud_item
 
 router = APIRouter()
 
-def scheduledItem(db: Session = Depends(get_db)):
+def scheduledItem():
     try:
-        print('----------------------------------')
-        print("scheduled task.")
-        print('----------------------------------')
+        db = SessionLocal()
         updateSummary(db)
 
     except Exception as e:

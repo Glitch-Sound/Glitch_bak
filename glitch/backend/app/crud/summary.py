@@ -526,7 +526,3 @@ def createSummaryUser(db: Session, id_project: int, rid_users: int):
 
     except Exception as e:
         raise e
-
-
-def updateSummary():
-    return
